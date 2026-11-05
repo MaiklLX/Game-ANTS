@@ -188,7 +188,7 @@ func _contextual_hint() -> String:
 	if _campaign_levels.is_empty() or _tutorial_active:
 		return ""
 	var selected_squad: Dictionary = _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
-	return LevelGuidanceScript.get_hint(
+	return _hint_ru(LevelGuidanceScript.get_hint(
 		String(_campaign_levels[_level_index]["id"]),
 		selected_squad,
 		_colony.get_active_slot_count(),
@@ -196,6 +196,47 @@ func _contextual_hint() -> String:
 		_colony.delivered_resources
 	)
 
+
+const HINT_TRANSLATIONS := {
+  "A slot is occupied. Return that team before sending this color out.": "Место занято. Верните отряд, прежде чем отправлять этот цвет.",
+  "Seed aboard. Return to the nest to free the only slot for the other color.": "Семя уже у отряда. Вернитесь в муравейник, чтобы освободить место для другого цвета.",
+  "This squad collects only its matching color. Find that seed, then bring it home.": "Этот отряд собирает только семена своего цвета. Найдите подходящее и доставьте его домой.",
+  "A squad is still out. Select it to collect or return it before switching colors.": "Один отряд ещё в поле. Выберите его для сбора или возвращения, прежде чем менять цвет.",
+  "One seed is home. The free slot is ready for the squad matching the other color.": "Одно семя уже дома. Свободное место ждёт отряд другого цвета.",
+  "One slot, two colors: match each squad to its seed, then return before switching teams.": "Одно место и два цвета: подберите каждому отряду своё семя и возвращайтесь перед сменой команды.",
+  "The only slot is occupied. Return that squad before sending this carrier.": "Единственное место занято. Верните отряд, прежде чем отправлять этого носильщика.",
+  "Amber load full. Return to deliver both seeds and free the only slot.": "Янтарный груз собран. Вернитесь с двумя семенами и освободите единственное место.",
+  "Amber carries two. Collect both amber seeds before returning for one full haul.": "Янтарный отряд несёт два семени. Соберите оба и возвращайтесь с полным грузом.",
+  "Teal seed aboard. Return home; amber's pair needs a separate two-seed trip.": "Бирюзовое семя собрано. Возвращайтесь: за янтарной парой нужен отдельный рейс.",
+  "Teal carries one. Collect its seed, return, then send amber for the pair.": "Бирюзовый отряд несёт одно семя. Доставьте его, затем отправляйте янтарный за парой.",
+  "A carrier is still out. Select it to harvest or return it before switching squads.": "Носильщик ещё в поле. Выберите его для сбора или возвращения, прежде чем менять отряд.",
+  "A load is home. Use the free slot for the other color's remaining seeds.": "Груз доставлен. Используйте свободное место для оставшихся семян другого цвета.",
+  "Amber carries two: make one full two-seed trip, then send teal on its separate run.": "Янтарный отряд несёт два семени: завершите полный рейс, затем отправьте бирюзовый отдельно.",
+  "A slot is occupied. Return a team before deploying this squad.": "Место занято. Верните отряд, прежде чем отправлять этот.",
+  "Both squads can work in the field. Match each squad to its own color, then return them.": "Оба отряда могут работать. Направьте каждого к семенам своего цвета, затем возвращайтесь.",
+  "Seed secured. The second slot is free—the other color can deploy before returning.": "Семя собрано. Второе место свободно — отправьте отряд другого цвета до возвращения.",
+  "One slot is free. Deploy the other color so both teams can work before returning.": "Одно место свободно. Отправьте отряд другого цвета, чтобы оба работали одновременно.",
+  "Two slots and one narrow pass: deploy amber and teal before bringing either team home.": "Два места и узкий проход: отправьте янтарный и бирюзовый отряды, прежде чем возвращать любой из них.",
+  "Both slots are busy. Select a team to collect or return it before changing squads.": "Оба места заняты. Выберите отряд для сбора или возвращения, прежде чем менять команду.",
+  "One squad is already out. Deploy the other color into the free slot before returning.": "Один отряд уже в поле. Отправьте другой цвет на свободное место, прежде чем возвращаться.",
+  "Three colors, two slots. Amber carries its pair; teal and coral each need their own trip.": "Три цвета и два места. Янтарный забирает пару, бирюзовый и коралловый идут отдельными рейсами.",
+  "Both slots are busy. Select a team to harvest or return; the third color waits.": "Оба места заняты. Выберите отряд для сбора или возвращения; третий цвет подождёт.",
+  "One team is out. Use the free slot for a second color; the third waits for a return.": "Один отряд в поле. Используйте свободное место для второго цвета, третий дождётся возвращения.",
+  "A return has freed a slot. Rotate the remaining colors; amber can carry its pair together.": "Возвращение освободило место. Чередуйте оставшиеся цвета; янтарный может забрать пару за раз.",
+  "Both slots are occupied. Return a deployed team before sending this color out.": "Оба места заняты. Верните отряд, прежде чем отправлять этот цвет.",
+  "One slot is free. Deploy this color now; the third team waits for a return.": "Одно место свободно. Отправьте этот цвет сейчас, третий отряд дождётся возвращения.",
+  "Amber load is full. Deliver both seeds, then rotate in the waiting color.": "Янтарный груз собран. Доставьте оба семени, затем отправьте ожидающий цвет.",
+  "Amber can carry both seeds. Fill its second space before returning; the third color waits.": "Янтарный отряд может нести два семени. Заполните второе место; третий цвет подождёт.",
+  "One amber seed aboard. Collect its partner; the free slot can run teal or coral.": "Одно янтарное семя уже собрано. Заберите пару; свободное место займёт бирюзовый или коралловый.",
+  "Amber can carry both seeds in one trip. Use the other slot for teal or coral.": "Янтарный отряд заберёт оба семени за один рейс. Второе место отдайте бирюзовому или коралловому.",
+  "Load aboard. Return a team to rotate in the third color.": "Груз собран. Верните отряд, чтобы отправить третий цвет.",
+  "Seed aboard. Use the free slot for another color before rotating the third.": "Семя собрано. Используйте свободное место для другого цвета, прежде чем менять третий.",
+  "Both slots are occupied. Return a team before deploying the third color.": "Оба места заняты. Верните отряд, прежде чем отправлять третий цвет.",
+  "One slot is free. Deploy another color; the third team waits for a return.": "Одно место свободно. Отправьте другой цвет, третий отряд дождётся возвращения."
+}
+
+func _hint_ru(value: String) -> String:
+	return String(HINT_TRANSLATIONS.get(value, value))
 
 func _draw_slots(font: Font) -> void:
 	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "МЕСТА ДЛЯ ОТРЯДОВ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
