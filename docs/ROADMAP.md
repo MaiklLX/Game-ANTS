@@ -142,3 +142,23 @@
 **Checkpoint phrase:**
 
 `GAME-ANTS — KT-003 LEVEL DATA IN PROGRESS. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap and PR #5. Added LevelDefinition schema-v1 validation, sample level JSON, format documentation, and headless tests; CI is pending. Preserve Godot 4.7.2 baseline and deterministic BoardModel. Verify CI before expanding resource collection and board integration. PR #4 and PR #5 remain dependencies. GitHub Issues only, no external agents, never merge to main without owner approval.`
+
+
+### KT-003 — Synchronous validation test runner (2026-11-05)
+**Branch:** `feat/kt-003-level-data-schema`
+
+- Simplified the level validation test entry point to match the already-used synchronous `SceneTree._initialize()` pattern in the BoardModel test runner.
+- Removed deferred startup and the custom deferred finish path from the level test script.
+- Added explicit negative cases for zero-width boards and unsupported tile types.
+- The workflow still applies a 60-second timeout to each test command.
+
+**Verification:** commit `aea97070f8e61566204332d69d3d4f2a890b3d05` was pushed to the feature branch. The available workflow/status endpoints have not yet returned a run or status for this commit. This is a test-harness simplification, not proof that the prior hang's root cause is known or that CI now passes.
+
+**Next**
+1. Recheck the GitHub Actions run for this commit and inspect job logs if it fails or times out.
+2. Only after a green run, integrate level data with BoardModel and resource collection.
+3. Keep PRs stacked and draft until reviewed; do not merge to `main`.
+
+**Checkpoint phrase:**
+
+`GAME-ANTS — KT-003 TEST RUNNER HARDENED, CI PENDING. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. Commit aea97070f8e61566204332d69d3d4f2a890b3d05 makes the level validation test runner synchronous like the existing BoardModel runner and adds invalid-dimension and invalid-tile cases. The 60-second CI timeout remains. No passing CI result is confirmed yet; inspect the next GitHub Actions run before integrating resource collection. Godot 4.7.2-stable remains pinned. PR #4/#5 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
