@@ -490,3 +490,11 @@
 - Added `docs/CAMPAIGN_CONTENT_PLAN.md`: 10 chapters × 30 levels, chapter pacing, quality gate, append-only content update rules, and a staged production plan.
 - Current content remains five playable levels. The first goal is to author and verify the complete 30-level Meadow chapter in reviewed batches.
 - PR #9 remains Draft and targets PR #8's feature branch; neither PR is merged to `main`.
+
+
+### KT-006.1 / Meadow content batch 001–010 — CI checkpoint
+- Latest verified implementation/documentation head: ab30a620d1e37ca1fa78b19e887d36b572f14e36.
+- GitHub Actions run #204 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025158154.
+- Godot 4.7.2 import, BoardModel, LevelDefinition, ColonyModel, TurnResolver, Campaign level integration (levels 001–010), CampaignCatalog tests, and headless main-scene launch all passed.
+- The first Meadow chapter now has 10/30 authored levels. Continue with batches of five and preserve a reviewed difficulty curve.
+- PR #9 remains Draft and stacked on PR #8. No merge to main.
