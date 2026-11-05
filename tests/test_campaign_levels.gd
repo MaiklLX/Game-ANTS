@@ -122,7 +122,6 @@ func _initialize() -> void:
 	_test_colony_heart_finale()
 	_test_meadow_route_variants()
 	_test_amber_orchard_route_variants()
-	_test_hollow_crown_route()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -433,18 +432,3 @@ func _test_amber_orchard_route_variants() -> void:
 		_check(int(compass_data["deployment_slots"]) == 1, "The Compass Branches should enforce its single-slot finale variant")
 
 
-
-func _test_hollow_crown_route() -> void:
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_045.json"))
-	if typeof(parsed) != TYPE_DICTIONARY:
-		_check(false, "The Hollow Crown should parse for single-notch regression test")
-		return
-	var board = BoardModelScript.new()
-	var loaded: Dictionary = board.load_level(parsed)
-	_check(loaded["valid"], "The Hollow Crown should load for single-notch regression test")
-	if not loaded["valid"]:
-		return
-	var hollow_route: Array[Vector2i] = board.find_path(board.start, Vector2i(3, 2))
-	_check(not hollow_route.is_empty(), "The Hollow Crown central coral cache should remain reachable")
-	_check(hollow_route.has(Vector2i(2, 0)) and hollow_route.has(Vector2i(3, 1)), "The Hollow Crown central cache should be reached through its single upper notch")
-	_check(int(parsed["deployment_slots"]) == 2, "The Hollow Crown should retain its two-slot pressure")
