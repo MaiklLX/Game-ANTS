@@ -122,6 +122,15 @@ func get_squad(squad_id: String) -> Dictionary:
 	return _squads[squad_id].duplicate(true)
 
 
+func get_squad_ids() -> Array[String]:
+	var ids: Array[String] = []
+	var keys: Array = _squads.keys()
+	keys.sort()
+	for key in keys:
+		ids.append(String(key))
+	return ids
+
+
 func get_active_slot_count() -> int:
 	var count := 0
 	for squad in _squads.values():
