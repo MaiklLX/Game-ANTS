@@ -772,3 +772,10 @@
 - CI #744 passed the checkpoint-document update. CI #745 is validating this roadmap/checkpoint append.
 - This is geometry-level automated verification only. No Godot Editor screenshot, Android export, or physical-device test is claimed. PR #9 remains Draft and unmerged.
 
+
+
+### KT-011.2 follow-up — four-squad portrait fit (2026-11-05)
+- Inspection of level 100 identified four squad cards; the former 196 px single-row layout exceeded the 720 px canvas.
+- Added a compact four-squad row (156 px cards, 8 px gaps, 648 px total) and shorter status/load labels for this case. Slots, squad cards, board, status panel, and level picker now all consume vertical expansion at their intended staggered positions.
+- CI #753/#754 passed Godot 4.7.2 import, all core and campaign suites, the responsive layout contract, campaign audit, and headless main-scene launch on `d06fd323a543150ae4254497b2b596a6141fa666`.
+- Remaining: rendered Godot Editor review, safe-area inspection, Android export, and real-device touch/performance QA. PR #9 remains Draft and unmerged.
