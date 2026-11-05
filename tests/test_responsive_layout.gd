@@ -18,6 +18,8 @@ func _initialize() -> void:
 	var narrow_scale := float(LayoutScript.calculate(Vector2(320, 568))["scale"])
 	_check(LayoutScript.levels_per_page(narrow_scale) == 4, "extra-narrow phones must show four level buttons per page")
 	_check(LayoutScript.level_button_size(narrow_scale) == 100.0, "extra-narrow level buttons must grow to 100 logical px")
+	_check(LayoutScript.level_controls_width(narrow_scale) <= 720.0, "extra-narrow level picker must fit the design width")
+	_check(LayoutScript.level_controls_width(compact_scale) <= 720.0, "compact level picker must fit the design width")
 	_check(LayoutScript.levels_per_page(compact_scale) == 5, "standard compact phones must retain five level buttons per page")
 	_check(LayoutScript.is_touch_target_usable(Vector2(100, 100), narrow_scale), "extra-narrow level controls must remain at least 44 physical px")
 	_check(LayoutScript.is_touch_target_usable(Vector2(106, LayoutScript.status_action_height()), narrow_scale), "status actions must remain usable on extra-narrow phones")

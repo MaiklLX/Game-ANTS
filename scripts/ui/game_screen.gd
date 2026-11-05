@@ -318,7 +318,7 @@ func _draw_level_picker(font: Font) -> void:
 			draw_circle(rect.position + Vector2(rect.size.x - 7.0, 7.0), 3.0, COLOR_GOLD)
 
 	var next_x := buttons_start_x + page_width + 8.0
-	_next_page_rect = Rect2(next_x, 1160 + _layout_extra * 0.86, arrow_width, 88)
+	_next_page_rect = Rect2(next_x, 1160 + _layout_extra * 0.86, arrow_width, _level_button_size())
 	var has_next_page := _level_page_start + _levels_per_page() < _campaign_levels.size()
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
 	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)

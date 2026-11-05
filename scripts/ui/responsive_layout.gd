@@ -62,3 +62,9 @@ static func squad_card_height() -> float:
 
 static func status_action_height() -> float:
 	return 100.0
+
+
+static func level_controls_width(scale: float) -> float:
+	var count := levels_per_page(scale)
+	var button := level_button_size(scale)
+	return count * button + (count - 1) * 4.0 + button * 2.0 + 16.0
