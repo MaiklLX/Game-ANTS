@@ -162,3 +162,34 @@
 **Checkpoint phrase:**
 
 `GAME-ANTS — KT-003 TEST RUNNER HARDENED, CI PENDING. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. Commit aea97070f8e61566204332d69d3d4f2a890b3d05 makes the level validation test runner synchronous like the existing BoardModel runner and adds invalid-dimension and invalid-tile cases. The 60-second CI timeout remains. No passing CI result is confirmed yet; inspect the next GitHub Actions run before integrating resource collection. Godot 4.7.2-stable remains pinned. PR #4/#5 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-003 — Level validation CI green (2026-11-05)
+**Branch:** `feat/kt-003-level-data-schema`  
+**Fix commit:** `a170734a6c0d6b4ad4e465b74724addbaa8aff35`
+
+**Root cause identified**
+- The valid-sample assertion interpolated an `Array` directly with the GDScript `%` formatting operator.
+- Godot interpreted the array as a list of formatting arguments and raised `not all arguments converted during string formatting`.
+- Because the script errored before reaching its final `quit(0)`, the CI timeout then terminated the test process. The timeout was a symptom, not the root cause.
+
+**Fix**
+- Convert the validation error array to a string before interpolation: `str(result["errors"])`.
+- No engine version, project settings, or runtime architecture changes were made.
+
+**Verification: PASS**
+- GitHub Actions run **#43** completed successfully: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/41999874203).
+- Godot 4.7.2 download and version check passed.
+- Project import and parsing passed.
+- Deterministic BoardModel tests passed.
+- LevelDefinition validation tests passed.
+- Main scene headless launch passed.
+
+**Next**
+1. Integrate validated level data with BoardModel in a separate focused change.
+2. Add resource collection rules only with tests for deterministic outcomes and invalid states.
+3. Keep PRs stacked and draft until reviewed; do not merge to `main`.
+
+**Checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-003 LEVEL DATA CI GREEN. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. Fix commit a170734a6c0d6b4ad4e465b74724addbaa8aff35 converts the validation error array to str() before GDScript string formatting; this fixed the actual test failure (the 60-second timeout was only a symptom). GitHub Actions run #43 passed: Godot 4.7.2 download/version, project import, BoardModel tests, LevelDefinition tests, and headless main-scene launch. Next: integrate level data with BoardModel, then build deterministic resource collection with tests. Preserve Godot 4.7.2; keep PR #4/#5 dependencies; GitHub Issues only; no external agents; never merge to main without owner approval.`
