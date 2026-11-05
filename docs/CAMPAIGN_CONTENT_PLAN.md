@@ -72,7 +72,7 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - The opening five levels introduce narrow passages, separated upper/lower openings, staggered S-bends, split branches, and a multi-entrance junction.
 - This batch deliberately uses only existing schema-v1 rules: static obstacles, colored resources, squads, carrying capacity, and deployment slots. No new movement rule or manual path-drawing control is implied.
 - Automated route-shape tests assert genuine detours in selected levels and reachability of both branches in Root Weave.
-- The chapter is 15/30 authored; its remaining 15 levels will deepen corridor reading and expedition ordering without relying on unimplemented mechanics.
+- The chapter is 20/30 authored; its remaining 10 levels will deepen corridor reading and expedition ordering without relying on unimplemented mechanics.
 
 
 ### Root Labyrinth production batch 036–040
@@ -91,3 +91,12 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 044 The Root Divide uses upper/lower entries to split access across the board.
 - 045 The Hollow Crown is the 15-level chapter checkpoint, with four colors and two separated lanes around central heartwood.
 - Automated tests assert the long detour in 042 and reachability of both lanes in 045. All use schema v1.
+
+
+### Root Labyrinth production batch 046–050
+- 046 The Stair of Roots introduces a staggered upper-then-lower crossing.
+- 047 Crossed Passages combines three colors with two corridor gates and slot pressure.
+- 048 The Hidden Pocket places a resource in a side chamber with a single entrance; route tests assert the longer approach.
+- 049 The Deep Turn reinforces central detours and upper/lower chamber access.
+- 050 The Labyrinth Heart is the 20-level checkpoint, combining four colors and two winding passages.
+- All levels use schema v1 and are solved through the production campaign integration test.
