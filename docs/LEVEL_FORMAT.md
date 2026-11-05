@@ -7,6 +7,7 @@ Campaign levels are stored as UTF-8 JSON files under `levels/`. The file is data
 - [level_001.json](../levels/level_001.json) — first collection and return.
 - [level_002.json](../levels/level_002.json) — two resource colors with one deployment slot.
 - [level_003.json](../levels/level_003.json) — two amber seeds, one teal seed, and capacity planning.
+- [level_004.json](../levels/level_004.json) — two simultaneous squads, two deployment slots, and a narrow shared passage.
 
 ## Fields
 
