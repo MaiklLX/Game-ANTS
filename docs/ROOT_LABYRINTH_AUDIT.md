@@ -33,7 +33,7 @@ These are legitimate variations only when the route decision, resource order, or
 
 ### 3. Related four-resource crown/finale patterns
 
-Levels 035, 040, 045, 050, 055, and 060 share a broad four-color/corridor theme. `root_045` has since been redesigned as a central coral cache behind one upper notch, with four squads limited to two slots. `root_040` and `root_050` remain a route-profile pair for review; their obstacle layouts differ, and `root_050` has a stricter single-path approach to both far resources.
+Levels 035, 040, 045, 050, 055, and 060 share a broad four-color/corridor theme. `root_045` has since been redesigned as a central coral cache behind one upper notch, with four squads limited to two slots. The multiplicity-aware route-profile audit distinguishes `root_040` and `root_050`: `root_040` offers three shortest routes to each far resource, while `root_050` constrains both far resources to one shortest route. Their obstacle layouts and route-choice pressure are meaningfully different.
 
 ### 4. Test coverage gap: solvability vs. strategic variety
 
@@ -50,7 +50,7 @@ The route-shape suite checks selected representative targets, not the full route
 1. **Completed:** redesign `root_037` and `root_041`; the campaign-wide geometry audit now reports zero repeated geometry groups.
 2. **Completed:** refine `root_053` with an intermediate pickup and add route-identity regressions; CI validates the lower-first / upper-second route sequence.
 3. **Completed:** add campaign-wide geometry, gameplay-signature, route-profile, and deterministic expedition-workload audits. Route-profile matches remain review candidates, not automatic defects.
-4. **In progress:** review the 047/057/059 barrier family and the 040/050 crown pair for distinct player decisions.
+4. **Reviewed:** the 047/057/059 barrier family and 040/050 crown pair have distinct shortest-path multiplicities and obstacle topologies; retain their variations rather than making cosmetic changes.
 5. **Outstanding release gate:** perform a manual chapter playthrough in Godot Editor on a portrait-sized viewport and on real devices. CI headless launch is not visual QA.
 
 ## Decision
