@@ -33,26 +33,19 @@
   ],
   "tiles": [
     {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
       "x": 5,
       "y": 0,
       "type": "resource",
       "color": "amber"
     },
     {
-      "x": 5,
-      "y": 4,
-      "type": "resource",
-      "color": "teal"
-    },
-    {
-      "x": 3,
-      "y": 4,
-      "type": "resource",
-      "color": "coral"
-    },
-    {
-      "x": 2,
-      "y": 0,
+      "x": 4,
+      "y": 1,
       "type": "obstacle"
     },
     {
@@ -61,7 +54,17 @@
       "type": "obstacle"
     },
     {
-      "x": 2,
+      "x": 3,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
       "y": 3,
       "type": "obstacle"
     },
@@ -71,29 +74,21 @@
       "type": "obstacle"
     },
     {
-      "x": 4,
-      "y": 0,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
-      "y": 1,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
-      "y": 2,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
+      "x": 2,
       "y": 4,
       "type": "obstacle"
     },
     {
       "x": 3,
-      "y": 2,
-      "type": "obstacle"
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
     }
   ]
 }
