@@ -56,7 +56,7 @@
 - Created GitHub Issues #1–#3 for the first implementation sequence.
 
 **Known limitations**
-- DeepSeek Harness is not installed.
+- External coding agents and DeepSeek Harness are explicitly deferred; development proceeds with ChatGPT and GitHub tools.
 - Engine choice is a reasoned recommendation, not yet validated on the user's machine.
 - Game mechanics are proposals until a playable graybox is tested.
 
@@ -67,4 +67,4 @@
 
 **Checkpoint phrase for a new chat:**
 
-`GAME-ANTS — KT-001 FOUNDATION. Continue from branch foundation/kt-001-game-direction. GitHub Issues are the only task source. DeepSeek Harness is not installed; no autonomous merge to main. Next: validate Godot 4.x setup and begin KT-002 graybox prototype. Preserve all approved design and agent rules.`
+`GAME-ANTS — KT-001 FOUNDATION. Continue from branch foundation/kt-001-game-direction. GitHub Issues are the only task source. Development is handled directly with ChatGPT and GitHub tools; no DeepSeek Harness or external coding agent. Next: validate Godot 4.x setup and begin KT-002 graybox prototype. Preserve all approved design and agent rules. Never merge to main without owner approval.`
