@@ -15,7 +15,7 @@ static func load_into(data: Dictionary, board: BoardModel, colony: ColonyModel) 
 	if not board_result["valid"]:
 		return board_result
 
-	colony.configure(int(data["deployment_slots"]))
+	colony.configure(int(data["deployment_slots"]), board.start)
 	for squad_data in data["squads"]:
 		var result: Dictionary = colony.register_squad(
 			String(squad_data["id"]),
