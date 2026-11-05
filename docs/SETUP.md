@@ -22,7 +22,16 @@ The initial scene is only a technical placeholder. It is not the final game menu
 
 ## Android export
 
-Android export is not configured in this bootstrap. It will require Android export templates and the Android SDK toolchain. Keep signing keys and passwords outside the repository; never commit them.
+An internal **Android Debug** export preset is provided in `export_presets.cfg`.
+
+- Preset: `Android Debug`
+- Artifact: `build/android/Game-ANTS-debug.apk`
+- Package ID: `com.maikllx.gameants.debug` (temporary internal QA ID; not the final store identity)
+- Architectures: ARMv7 and ARM64
+- Signing: Godot's debug signing only; no release keystore or production signing material is stored in the repository.
+- CI: `.github/workflows/android-debug.yml` builds the APK on feature-branch pushes and manual dispatch; the artifact is retained for 14 days.
+
+The APK is for installation and testing on Android devices only. It is not a store-ready release. The placeholder game scene and content remain unchanged by this export setup.
 
 Official guide: https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_android.html
 
