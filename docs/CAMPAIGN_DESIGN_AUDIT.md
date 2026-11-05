@@ -114,8 +114,8 @@ For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layou
 
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
-- Audit script: added to CI and expanded with route profiles, route lengths, and deterministic expedition workloads. CI #629 passed the level-100 finale regression; CI #641 passed the Meadow 011/018 route regressions and campaign audit.
-- Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Nine route-profile similarity groups remain as review candidates; these are not exact duplicates.
+- Audit script: added to CI and expanded with route profiles, route lengths, and deterministic expedition workloads. CI #629 passed the level-100 finale regression; CI #641 passed the Meadow 011/018 route regressions; CI #651/#652 passed the latest campaign and documentation checkpoint.
+- Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Seven route-profile similarity groups remain as review candidates; these are not exact duplicates.
 - The final level 100 now records 64 deterministic movement steps across four trips, placing it at the top of its chapter and tied for second in the campaign. Every far-side resource route must cross the single central gate.
 - Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.14 steps; max 15); the final chapter averages 5.52 (max 11). The final chapter's full deterministic expedition workload averages 36.40 steps/level and peaks at 64. Meadow now averages 33.33 steps/level after its two route-profile revisions.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
