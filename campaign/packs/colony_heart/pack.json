@@ -23,6 +23,26 @@
     {
       "id": "colony_095",
       "file": "res://levels/level_095.json"
+    },
+    {
+      "id": "colony_96",
+      "file": "res://levels/level_96.json"
+    },
+    {
+      "id": "colony_97",
+      "file": "res://levels/level_97.json"
+    },
+    {
+      "id": "colony_98",
+      "file": "res://levels/level_98.json"
+    },
+    {
+      "id": "colony_99",
+      "file": "res://levels/level_99.json"
+    },
+    {
+      "id": "colony_100",
+      "file": "res://levels/level_100.json"
     }
   ]
 }
