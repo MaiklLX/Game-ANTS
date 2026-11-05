@@ -2,19 +2,13 @@ extends SceneTree
 
 const LevelDefinitionScript = preload("res://scripts/core/level_definition.gd")
 
-var _failed := false
-
 
 func _initialize() -> void:
-	call_deferred("_run_tests")
-
-
-func _run_tests() -> void:
 	var sample_text := FileAccess.get_file_as_string("res://levels/level_001.json")
 	var sample_data: Variant = JSON.parse_string(sample_text)
-	_check(typeof(sample_data) == TYPE_DICTIONARY, "sample level should parse as an object")
 	if typeof(sample_data) != TYPE_DICTIONARY:
-		_finish()
+		push_error("LevelDefinition test failed: sample level should parse as an object")
+		quit(1)
 		return
 
 	var result: Dictionary = LevelDefinitionScript.validate(sample_data)
@@ -36,17 +30,20 @@ func _run_tests() -> void:
 	var version_result: Dictionary = LevelDefinitionScript.validate(version_data)
 	_check(not version_result["valid"], "unsupported schema version should fail")
 
-	if not _failed:
-		print("LevelDefinition tests passed.")
-	_finish()
+	var bad_dimensions: Dictionary = sample_data.duplicate(true)
+	bad_dimensions["width"] = 0
+	_check(not LevelDefinitionScript.validate(bad_dimensions)["valid"], "zero-width board should fail")
+
+	var bad_tile: Dictionary = sample_data.duplicate(true)
+	bad_tile["tiles"].append({"x": 3, "y": 2, "type": "lava"})
+	_check(not LevelDefinitionScript.validate(bad_tile)["valid"], "unsupported tile type should fail")
+
+	print("LevelDefinition tests completed.")
+	quit(0)
 
 
 func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
-	_failed = true
 	push_error("LevelDefinition test failed: " + message)
-
-
-func _finish() -> void:
-	quit(1 if _failed else 0)
+	quit(1)
