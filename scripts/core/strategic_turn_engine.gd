@@ -127,7 +127,7 @@ func advance_turn(colony: ColonyModel, board: BoardModel) -> Dictionary:
 		if next_cell != board.start and occupied.has(next_cell) and String(occupied[next_cell]) != squad_id:
 			blocked.append(squad_id)
 			continue
-		if reserved.has(next_cell):
+		if reserved.has(next_cell) and next_cell != board.start:
 			blocked.append(squad_id)
 			continue
 		if current != board.start:
