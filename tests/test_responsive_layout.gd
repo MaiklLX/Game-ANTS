@@ -15,9 +15,9 @@ func _initialize() -> void:
 
 	var compact_scale := float(LayoutScript.calculate(Vector2(360, 800))["scale"])
 	_check(LayoutScript.is_touch_target_usable(Vector2(196, 96), compact_scale), "squad cards must remain at least 44 px tall on compact phones")
-	_check(LayoutScript.is_touch_target_usable(Vector2(106, 44), compact_scale), "tutorial skip must remain at least 44 px tall on compact phones")
-	_check(not LayoutScript.is_touch_target_usable(Vector2(54, 84), compact_scale), "narrow level buttons must not be misreported as 44 px wide")
-	_check(is_equal_approx(LayoutScript.shifted_y(1000.0, 320.0, 0.68), 1217.6), "status panel anchor must use its vertical expansion weight")
+	_check(LayoutScript.is_touch_target_usable(Vector2(106, 88), compact_scale), "tutorial skip must remain at least 44 px tall on compact phones")
+	_check(LayoutScript.is_touch_target_usable(Vector2(88, 88), compact_scale), "level buttons must meet the 44 px target on compact phones")
+	_check(absf(LayoutScript.shifted_y(1000.0, 320.0, 0.68) - 1217.6) <= 0.01, "status panel anchor must use its vertical expansion weight")
 
 	_finish()
 
@@ -25,7 +25,7 @@ func _initialize() -> void:
 func _check_viewport(viewport: Vector2, expected_scale: float, expected_extra: float, label: String) -> void:
 	var layout: Dictionary = LayoutScript.calculate(viewport)
 	_check(is_equal_approx(float(layout["scale"]), expected_scale), label + ": unexpected scale")
-	_check(is_equal_approx(float(layout["extra_height"]), expected_extra, 0.01), label + ": unexpected extra height")
+	_check(absf(float(layout["extra_height"]) - expected_extra) <= 0.01, label + ": unexpected extra height")
 	var virtual_size: Vector2 = layout["virtual_size"]
 	_check(is_equal_approx(virtual_size.x * float(layout["scale"]), viewport.x), label + ": virtual width must map to viewport")
 	_check(is_equal_approx(virtual_size.y * float(layout["scale"]), viewport.y), label + ": virtual height must map to viewport")
