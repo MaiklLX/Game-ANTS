@@ -5,7 +5,7 @@
 - **Version 1.0 launch campaign:** 100 hand-authored, quality-checked levels.
 - **Version 1.0 structure:** three full chapters of 30 levels (001–090), followed by a 10-level concluding chapter (091–100).
 - **Long-term campaign vision:** 300+ levels, expanded gradually through later updates. The original ten-chapter/300-level ambition remains the long-term roadmap, not a blocker for version 1.0.
-- **Current reality:** 90 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–090 (30/30). **10 levels remain** to reach the version 1.0 content target.
+- **Current reality:** 100 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–090 (30/30), and The Colony Heart: First Dawn 091–100 (10/10). **All 100 launch levels are authored** to reach the version 1.0 content target.
 - **Release principle:** reaching 100 is a content milestone, not automatic release approval. The launch gate also includes level variety and balance review, onboarding, readable portrait UI, save/progress reliability, performance, and mobile playtesting.
 
 ## Chapter rhythm
@@ -203,3 +203,21 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 - 090 The Heart of Amber: chapter finale combining two full loads, three single seeds, and three deployment slots.
 - All five use schema-v1 rules. Static checks confirm unique tile coordinates, reachable resources, and matching squad colors; campaign integration tests verify collection and return.
 - Amber Orchard is now complete: 30/30. Total catalogue: 90/100 for version 1.0; 10 levels remain for the compact launch finale.
+
+
+## Version 1.0 finale — The Colony Heart: First Dawn (091–100)
+
+This is a provisional chapter title; the 10-level finale scope is approved, while the final naming and presentation can still be refined during content review. The finale deliberately introduces no new mechanics: it recombines the proven squad colors, carrying capacities, deployment slots, and obstacle routing.
+
+- 091 First Light at the Nest: a paired amber harvest beyond a narrow gate and a near-side teal pickup.
+- 092 The First Ring: two paired harvests arranged above and below a central clearing.
+- 093 Three Seeds, Three Paths: a capacity-three amber load alongside teal and coral scouts.
+- 094 The Four Fires: four colors on opposite corners, managed with two deployment slots.
+- 095 The Shared Passage: two paired loads share one narrow gate and one active slot.
+- 096 The Rooted Crown: two full loads and a single seed circle a broken root crown.
+- 097 The Long Return: a capacity-three violet expedition with amber and teal side pickups.
+- 098 Four Branches, One Nest: four single-seed squads and two deployment slots.
+- 099 The Last Crossing: two paired loads and two lone seeds share a central bottleneck.
+- 100 The Colony Heart: final four-color trial with eight seeds and three deployment slots.
+
+All 10 levels are registered in the fourth chapter pack. Static checks and campaign integration tests cover all resource routes, squad-color matches, collection, and return. **Content count: 100/100.** This is not a release sign-off: balance, variety, onboarding, save/progress, portrait mobile QA, performance, and device testing remain mandatory.
