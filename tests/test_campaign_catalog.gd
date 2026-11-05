@@ -11,7 +11,7 @@ func _initialize() -> void:
 	_check(result["valid"], "root manifest and chapter pack should load: %s" % str(result["errors"]))
 	if result["valid"]:
 		var levels: Array = result["levels"]
-		_check(levels.size() == 70, "campaign catalogue should expose all seventy authored levels across three chapters")
+		_check(levels.size() == 75, "campaign catalogue should expose all seventy-five authored levels across three chapters")
 		_check(levels[0]["id"] == "meadow_001", "first manifest level should remain first")
 		_check(levels[29]["id"] == "meadow_030", "thirtieth manifest level should remain last")
 		_check(levels[0]["chapter_id"] == "meadow", "level should retain its chapter identity")
@@ -29,6 +29,10 @@ func _initialize() -> void:
 		_check(levels[69]["id"] == "orchard_070", "second Amber Orchard batch should remain last")
 		_check(levels[69]["chapter_id"] == "amber_orchard", "new levels should retain their chapter identity")
 		_check(levels[69]["global_index"] == 69, "new levels should keep stable flattened indices")
+		_check(levels[70]["id"] == "orchard_071", "third Amber Orchard batch should follow level 070")
+		_check(levels[74]["id"] == "orchard_075", "third Amber Orchard batch should remain last")
+		_check(levels[74]["chapter_id"] == "amber_orchard", "latest levels should retain their chapter identity")
+		_check(levels[74]["global_index"] == 74, "latest levels should keep stable flattened indices")
 
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://campaign/campaign_manifest.json"))
 	var duplicate_pack: Dictionary = manifest.duplicate(true)
