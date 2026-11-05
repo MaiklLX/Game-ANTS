@@ -57,6 +57,11 @@ const LEVEL_PATHS := [
 	"res://levels/level_048.json",
 	"res://levels/level_049.json",
 	"res://levels/level_050.json",
+	"res://levels/level_051.json",
+	"res://levels/level_052.json",
+	"res://levels/level_053.json",
+	"res://levels/level_054.json",
+	"res://levels/level_055.json",
 ]
 
 
@@ -211,6 +216,7 @@ func _test_root_labyrinth_route_shapes() -> void:
 		{"path": "res://levels/level_035.json", "target": Vector2i(3, 0), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_042.json", "target": Vector2i(4, 0), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_048.json", "target": Vector2i(4, 2), "minimum_extra_steps": 3},
+		{"path": "res://levels/level_051.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
 	]
 	for route_case in route_cases:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(route_case["path"]))
