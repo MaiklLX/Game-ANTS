@@ -238,6 +238,38 @@ func _contextual_hint() -> String:
 	))
 
 
+func _error_ru(value: String) -> String:
+	match value:
+		"No deployment slot is available.":
+			return "Нет свободного места для отряда."
+		"Squad must be deployed before collecting.":
+			return "Сначала отправьте отряд в поле."
+		"Squad carrying capacity is full.":
+			return "Отряд уже несёт полный груз."
+		"No resource is available at the target cell.":
+			return "В выбранной клетке нет семени."
+		"Resource color does not match the squad.":
+			return "Цвет семени не подходит этому отряду."
+		"Target resource is not reachable.":
+			return "До этого семени нет доступного пути."
+		"Resource could not be collected.":
+			return "Не удалось собрать семя."
+		"Squad is not deployed.":
+			return "Этот отряд ещё не отправлен в поле."
+		"Squad is already deployed.":
+			return "Этот отряд уже находится в поле."
+		"Squad must occupy a deployment slot.":
+			return "Отряду нужно свободное место для выхода."
+		"Progress file could not be opened for reading.":
+			return "Не удалось прочитать файл прогресса."
+		"Progress saving is disabled.":
+			return "Сохранение прогресса временно отключено."
+		"Could not open temporary progress file.":
+			return "Не удалось создать временный файл прогресса."
+		"Could not commit the new progress file.":
+			return "Не удалось сохранить новый файл прогресса."
+	return value
+
 func _draw_slots(font: Font) -> void:
 	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "МЕСТА ДЛЯ ОТРЯДОВ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_slot_rects.clear()
@@ -279,7 +311,7 @@ func _draw_squads(font: Font) -> void:
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
 		var carried := int(squad["несут"])
 		var capacity := int(squad["capacity"])
-		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d carried" % [carried, capacity]
+		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d собрано" % [carried, capacity]
 		var state_label := state
 		if ids.size() >= 4:
 			state_label = "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
@@ -512,11 +544,11 @@ func _load_level(index: int) -> void:
 	_last_path.clear()
 	_last_target = Vector2i(-1, -1)
 	_last_path_start = _board.start
-	_status = "Выберите отряд, чтобы начать." if result["valid"] else str(result["errors"])
+	_status = "Выберите отряд, чтобы начать." if result["valid"] else _error_ru(str(result["errors"]))
 	if result["valid"] and _progress_store != null:
 		var save_result: Dictionary = _progress_store.set_last_selected_level(String(_campaign_levels[_level_index]["id"]))
 		if not save_result.get("valid", false):
-			_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
+			_progress_warning = _error_ru(String(save_result.get("warning", "Не удалось сохранить прогресс.")))
 	if result["valid"] and not _progress_warning.is_empty():
 		_status = "Примечание к прогрессу: " + _progress_warning
 	queue_redraw()
@@ -537,7 +569,7 @@ func _select_or_deploy(squad_id: String) -> void:
 			if _tutorial_active and squad_id == "amber_workers":
 				_tutorial_step = 1
 		else:
-			_status = String(result["errors"][0])
+			_status = _error_ru(String(result["errors"][0]))
 	queue_redraw()
 
 
