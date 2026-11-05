@@ -188,8 +188,8 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 ### Amber Orchard production batch 081–085
 - 081 The Bent Orchard: a squared root bend separates a paired amber harvest from a coral pocket and a nearby teal seed.
 - 082 The Canopy Steps: two paired harvests sit on opposite sides of a rising root stair.
-- 083 The Hidden Sun: four colors are placed beyond a sheltered central lane between two root shelves.
-- 084 The Compass Branches: two separated openings in a central trunk connect four outer pockets.
+- 083 The Hidden Sun: the coral seed sits in a sheltered central lane between two root shelves, with the other colors in outer boughs.
+- 084 The Compass Branches: two separated openings connect four outer pockets; one deployment slot forces the squads to alternate upper and lower branches.
 - 085 The Orchard Keeper's Trial: a capacity-three amber branch, paired teal load, and two lone seeds test all four squad roles across three slots.
 - All five use schema-v1 rules. Static checks confirm unique tile coordinates, reachable resources, and matching squad colors; campaign integration tests verify collection and return.
 - Amber Orchard progress: 25/30. Total catalogue: 85/100 for version 1.0; 15 levels remain.
