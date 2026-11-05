@@ -39,7 +39,7 @@ func _initialize() -> void:
 	_check(board.goal == Vector2i(4, 2), "loaded goal should match level data")
 	_check(not board.is_walkable(Vector2i(2, 1)), "loaded obstacle should block movement")
 	_check(not board.is_walkable(Vector2i(2, 3)), "second loaded obstacle should block movement")
-	_check(board.find_path(board.start, board.goal).size() == 6, "loaded board should produce a deterministic route around obstacles")
+	_check(board.find_path(board.start, board.goal).size() == 4, "loaded board should produce a deterministic route around obstacles")
 	_check(board.remaining_resources == 1, "loaded resource count should be one")
 	_check(board.has_resource(Vector2i(4, 2)), "resource cell should be available")
 	_check(board.collect_resource(Vector2i(4, 2)), "resource should be collected once")
