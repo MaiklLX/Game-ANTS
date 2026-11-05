@@ -1,0 +1,76 @@
+name: Android debug APK
+
+on:
+  push:
+    branches:
+      - "feat/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug:
+    name: Export Android debug APK (Godot 4.7.2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Download Godot 4.7.2 stable
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
+            --output godot.zip
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          sudo ln -sf "$PWD/godot-bin/Godot_v4.7.2-stable_linux.x86_64" /usr/local/bin/godot
+          godot --version
+
+      - name: Install matching Android export templates
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz" \
+            --output templates.tpz
+          mkdir -p templates-unpacked "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          unzip -q templates.tpz -d templates-unpacked
+          cp templates-unpacked/templates/* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          cp templates-unpacked/version.txt "$HOME/.local/share/godot/export_templates/4.7.2.stable/version.txt"
+
+      - name: Import project
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
+        run: godot --headless --editor --path . --quit
+
+      - name: Export debug APK
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
+        run: |
+          mkdir -p build/android
+          godot --headless --path . --export-debug "Android Debug" build/android/Game-ANTS-debug.apk
+          test -s build/android/Game-ANTS-debug.apk
+          file build/android/Game-ANTS-debug.apk
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-ants-android-debug
+          path: build/android/Game-ANTS-debug.apk
+          if-no-files-found: error
+          retention-days: 14
