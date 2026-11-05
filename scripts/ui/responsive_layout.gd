@@ -32,3 +32,17 @@ static func is_touch_target_usable(rect_size: Vector2, scale: float, minimum_pix
 	if scale <= 0.0:
 		return false
 	return rect_size.x * scale >= minimum_pixels and rect_size.y * scale >= minimum_pixels
+
+
+static func squad_card_width(squad_count: int) -> float:
+	return 156.0 if squad_count >= 4 else 196.0
+
+
+static func squad_card_gap(squad_count: int) -> float:
+	return 8.0 if squad_count >= 4 else 14.0
+
+
+static func squad_row_width(squad_count: int) -> float:
+	if squad_count <= 0:
+		return 0.0
+	return squad_count * squad_card_width(squad_count) + (squad_count - 1) * squad_card_gap(squad_count)
