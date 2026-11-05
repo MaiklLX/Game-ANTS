@@ -111,3 +111,17 @@
 **Updated checkpoint phrase:**
 
 `GAME-ANTS — KT-002 BOOTSTRAP + BOARD MODEL. Continue from feat/kt-002-godot-bootstrap and draft PR #5, based on foundation/kt-001-game-direction. Godot 4.7.2-stable is pinned. Portrait Godot project, placeholder scene, setup guide, folder structure, CI workflow, deterministic BoardModel BFS, and headless board tests are committed. CI status is not yet confirmed; no local engine run or APK is claimed. Next: verify GitHub Actions execution, fix any parser/test failures, then expand Issue #2 board rules. PR #4 remains the foundation dependency. GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-002 — First green Godot CI run (2026-11-05)
+<badge>Godot CI passed</badge>
+
+- Workflow run **#20** completed successfully: [open GitHub Actions run](https://github.com/MaiklLX/Game-ANTS/actions/runs/41997296164).
+- Godot 4.7.2 Linux binary downloaded and version check passed.
+- Project import and scene parsing passed.
+- Deterministic BoardModel tests passed.
+- Main scene launched successfully in headless mode.
+- This confirms the project can be validated on GitHub's runner without a local Godot installation in the assistant environment.
+- Still not covered: visual inspection in the editor, Android export, and physical-device testing.
+
+**Next implementation step:** continue Issue #2 on a separate stacked feature branch for versioned level data and tile validation. Keep PR #5 as the engine/bootstrap dependency until reviewed.
