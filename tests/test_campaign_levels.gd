@@ -37,6 +37,11 @@ const LEVEL_PATHS := [
 		"res://levels/level_028.json",
 		"res://levels/level_029.json",
 		"res://levels/level_030.json",
+	"res://levels/level_031.json",
+	"res://levels/level_032.json",
+	"res://levels/level_033.json",
+	"res://levels/level_034.json",
+	"res://levels/level_035.json",
 ]
 
 
@@ -48,6 +53,7 @@ func _initialize() -> void:
 		_test_level(level_path)
 	_test_two_squad_deployment()
 	_test_three_squad_slot_pressure()
+	_test_root_labyrinth_route_shapes()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -181,3 +187,35 @@ func _test_three_squad_slot_pressure() -> void:
 	var coral_return: Dictionary = colony.return_squad("coral_scouts")
 	_check(teal_return["valid"] and coral_return["valid"], "remaining squads should return independently")
 	_check(TurnResolverScript.is_level_complete(board, colony), "meadow_005 should complete after respecting slot pressure")
+
+
+func _test_root_labyrinth_route_shapes() -> void:
+	var route_cases := [
+		{"path": "res://levels/level_031.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
+		{"path": "res://levels/level_033.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
+		{"path": "res://levels/level_035.json", "target": Vector2i(3, 0), "minimum_extra_steps": 3},
+	]
+	for route_case in route_cases:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(route_case["path"]))
+		if typeof(parsed) != TYPE_DICTIONARY:
+			_check(false, "%s should parse for route-shape test" % route_case["path"])
+			continue
+		var board = BoardModelScript.new()
+		var loaded: Dictionary = board.load_level(parsed)
+		_check(loaded["valid"], "%s should load for route-shape test" % route_case["path"])
+		if not loaded["valid"]:
+			continue
+		var target: Vector2i = route_case["target"]
+		var path: Array[Vector2i] = board.find_path(board.start, target)
+		var direct_distance := absi(board.start.x - target.x) + absi(board.start.y - target.y)
+		_check(not path.is_empty(), "%s should keep its featured harvest reachable" % route_case["path"])
+		_check(path.size() >= direct_distance + int(route_case["minimum_extra_steps"]), "%s should require a genuine corridor detour" % route_case["path"])
+
+	var weave_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_034.json"))
+	if typeof(weave_data) == TYPE_DICTIONARY:
+		var weave_board = BoardModelScript.new()
+		var weave_loaded: Dictionary = weave_board.load_level(weave_data)
+		_check(weave_loaded["valid"], "Root Weave should load for branch test")
+		if weave_loaded["valid"]:
+			_check(not weave_board.find_path(weave_board.start, Vector2i(5, 0)).is_empty(), "Root Weave upper branch should be reachable")
+			_check(not weave_board.find_path(weave_board.start, Vector2i(5, 4)).is_empty(), "Root Weave lower branch should be reachable")
