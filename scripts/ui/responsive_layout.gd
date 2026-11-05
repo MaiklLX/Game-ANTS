@@ -91,7 +91,7 @@ static func level_controls_width(scale: float) -> float:
 	return count * button + (count - 1) * 4.0 + button * 2.0 + 16.0
 
 
-static func font_size(base_size: int, scale: float, minimum_physical: float = 8.5) -> int:
+static func font_size(base_size: int, scale: float, minimum_physical: float = 10.5) -> int:
 	if scale <= 0.0:
 		return base_size
 	return maxi(base_size, ceili(minimum_physical / scale))
