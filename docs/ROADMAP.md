@@ -673,7 +673,7 @@
 **Decision:** Version 1.0 targets 100 quality-checked levels. The 300+ level ambition remains the long-term campaign vision for post-launch updates.
 
 - Approved launch structure: The Living Meadow 001–030, The Root Labyrinth 031–060, The Amber Orchard 061–090, and a compact 10-level conclusion 091–100.
-- Current content: 65/100 authored; 35 levels remain.
+- Current content at the KT-008.2 decision: 65/100 authored; 35 levels remained.
 - The short finale is a release-structure decision; its detailed theme and levels remain subject to design review. No unproven mechanics are required for v1.
 - Release readiness is broader than level count: variety, difficulty balance, onboarding, save/progress reliability, portrait mobile readability, performance, and device QA remain required.
 - CI run #417 passed on the prior code/documentation head `1e726ab87bb514f8c22891e87e96e1ea2030722c`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42039105315. This verifies the existing 65-level state, not the new documentation-only scope decision.
@@ -688,3 +688,5 @@
 - Amber Orchard progress: 10/30. Version 1.0 campaign progress: 70/100; 30 levels remain.
 - Automated CI is pending for the 70-level batch. No editor/device visual QA or APK is claimed.
 - Root Labyrinth design revisions remain a separate open task. PR #9 remains Draft, stacked, and unmerged.
+
+- Follow-up after KT-008.2: Amber Orchard batch 066–070 is now authored and registered. Current campaign content is 70/100; 30 levels remain. CI run #444 is in progress after correcting zero-padded manifest paths.
