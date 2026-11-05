@@ -630,6 +630,7 @@ func _select_or_deploy(squad_id: String) -> void:
 	var squad: Dictionary = _colony.get_squad(squad_id)
 	if squad.is_empty():
 		return
+	var was_selected := _selected_squad_id == squad_id
 	_selected_squad_id = squad_id
 	if not squad.get("deployed", false):
 		var result: Dictionary = _colony.deploy_squad(squad_id)
@@ -642,7 +643,7 @@ func _select_or_deploy(squad_id: String) -> void:
 			_tutorial_step = 1
 	else:
 		var order: Dictionary = _strategic_engine.get_order(squad_id)
-		if not order.is_empty() and _selected_squad_id == squad_id:
+		if not order.is_empty() and was_selected:
 			_strategic_engine.cancel_order(squad_id)
 			_status = "Приказ отменён. Выберите новую цель или назначьте возвращение."
 		elif not order.is_empty():
