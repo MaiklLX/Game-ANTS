@@ -92,6 +92,11 @@ const LEVEL_PATHS := [
 	"res://levels/level_083.json",
 	"res://levels/level_084.json",
 	"res://levels/level_085.json",
+	"res://levels/level_086.json",
+	"res://levels/level_087.json",
+	"res://levels/level_088.json",
+	"res://levels/level_089.json",
+	"res://levels/level_090.json",
 ]
 
 
