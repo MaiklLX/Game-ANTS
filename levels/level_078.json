@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "orchard_078",
   "title": "The Four Hidden Boughs",
-  "objective": "Four colors sit behind an L-shaped root screen; choose the order that keeps both field slots productive.",
+  "objective": "Amber's carrier must gather two seeds on opposite sides of the L-shaped screen while the other three colors clear their outer boughs; only two field slots are available.",
   "width": 6,
   "height": 5,
   "start": [
@@ -18,7 +18,7 @@
     {
       "id": "amber_scouts",
       "color": "amber",
-      "capacity": 1
+      "capacity": 2
     },
     {
       "id": "teal_scouts",
@@ -48,12 +48,6 @@
       "y": 0,
       "type": "resource",
       "color": "teal"
-    },
-    {
-      "x": 1,
-      "y": 4,
-      "type": "resource",
-      "color": "coral"
     },
     {
       "x": 5,
@@ -90,6 +84,18 @@
       "x": 4,
       "y": 3,
       "type": "obstacle"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
     }
   ]
 }
