@@ -512,3 +512,15 @@
 - Meadow chapter now contains 20/30 authored levels; all 20 pass the production campaign integration solver.
 - GitHub Actions run #240 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025594751.
 - Godot 4.7.2 import, all six test suites, and headless main-scene launch passed.
+
+
+### KT-006.2 — Meadow content batch 021–025 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five new level files committed; CI verification pending.
+
+- Added 021 Narrow Gate, 022 Side Pocket, 023 Three Stops, 024 The Waiting Line, and 025 Forked Harvest.
+- Meadow chapter now contains 25/30 authored levels.
+- Extended the pack manifest, deterministic campaign integration list, catalog count/order assertions, and level format guide.
+- All levels use existing schema-v1 mechanics; no unprototyped mechanics were introduced.
+- Next: complete levels 026–030 as the Meadow chapter exam, then review the chapter curve before moving to Root Labyrinth.
+- No merge to main; PR #9 remains Draft and stacked on PR #8. Headless CI is the verification gate; editor/device QA remains outstanding.
