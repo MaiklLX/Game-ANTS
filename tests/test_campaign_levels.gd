@@ -73,11 +73,15 @@ func _test_level(level_path: String) -> void:
 				_check(collect_result["valid"], "%s: squad %s should reach matching resource %s" % [level_path, squad_id, str(target)])
 				if not collect_result["valid"]:
 					return
+				_check(colony.get_squad(squad_id)["position"] == target, "%s: squad position should advance to the collected resource" % level_path)
+				if carried_this_trip == 1 and int(squad["capacity"]) > 1:
+					_check(collect_result["path"].size() == 1, "%s: consecutive pickup should route from the previous resource, not the nest" % level_path)
 				cell_index += 1
 				carried_this_trip += 1
 
 			var return_result: Dictionary = colony.return_squad(squad_id)
 			_check(return_result["valid"], "%s: squad %s should return" % [level_path, squad_id])
+			_check(colony.get_squad(squad_id)["position"] == board.start, "%s: returned squad should be back at the nest" % level_path)
 
 	_check(TurnResolverScript.is_level_complete(board, colony), "%s should be completable with its authored roster" % level_path)
 	_check(not TurnResolverScript.is_level_blocked(board, colony), "%s should not end in a blocked state" % level_path)
