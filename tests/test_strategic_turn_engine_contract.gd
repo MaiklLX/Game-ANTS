@@ -61,6 +61,24 @@ func _initialize() -> void:
 	var loss: Dictionary = short_engine.advance_turn(short_colony, short_board)
 	_check(loss["outcome"] == "lost" and short_engine.day_remaining == 0, "day expiry before delivery loses")
 
+
+	var parallel_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_004.json"))
+	var parallel_board = BoardModelScript.new()
+	_check(parallel_board.load_level(parallel_data)["valid"], "two-squad puzzle should load")
+	var parallel_colony = ColonyModelScript.new()
+	parallel_colony.configure(2, parallel_board.start)
+	_check(parallel_colony.register_squad("amber_scouts", "amber", 1)["valid"], "amber scout registers")
+	_check(parallel_colony.register_squad("teal_gatherers", "teal", 1)["valid"], "teal gatherer registers")
+	_check(parallel_colony.deploy_squad("amber_scouts")["valid"], "amber scout deploys")
+	_check(parallel_colony.deploy_squad("teal_gatherers")["valid"], "teal gatherer deploys")
+	var parallel_engine = StrategicTurnEngineScript.new()
+	parallel_engine.configure(20)
+	_check(parallel_engine.set_collect_order(parallel_colony, parallel_board, "amber_scouts", Vector2i(5, 0))["valid"], "amber target order is valid")
+	_check(parallel_engine.set_collect_order(parallel_colony, parallel_board, "teal_gatherers", Vector2i(5, 4))["valid"], "teal target order is valid")
+	var parallel_turn: Dictionary = parallel_engine.advance_turn(parallel_colony, parallel_board)
+	_check(parallel_turn["valid"] and parallel_turn["moved"].size() == 2, "both squads should advance during the same global turn")
+	_check(parallel_turn["day_remaining"] == 19, "parallel movement spends only one shared day point")
+
 	if failures.is_empty():
 		print("StrategicTurnEngine tests passed.")
 		quit(0)
