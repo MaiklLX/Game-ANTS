@@ -136,7 +136,7 @@ This remains a data-level review. It does not replace Godot Editor visual inspec
 
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
-- Audit script: added to CI and expanded with route profiles, route lengths, and deterministic expedition workloads. CI #665 passed the latest Orchard route regressions; CI #672 passed the current full campaign audit and documentation checkpoint.
+- Audit script: added to CI and expanded with route distances, shortest-path multiplicity, deterministic expedition workloads, and five-level progression bands. CI #674 passed the multiplicity audit; CI #681 passed the batch-progression audit; CI #682/#683 and #684/#685 passed the documentation checkpoints.
 - Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Two route-profile similarity groups remain after shortest-path multiplicity review; both were compared manually and retained as distinct puzzles.
 - The final level 100 now records 64 deterministic movement steps across four trips, placing it at the top of its chapter and tied for second in the campaign. Every far-side resource route must cross the single central gate.
 - Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.14 steps; max 15); the final chapter averages 5.52 (max 11). The final chapter's full deterministic expedition workload averages 36.40 steps/level and peaks at 64. Meadow averages 33.33 steps/level; Amber Orchard averages 35.13 after its route-profile revisions.
