@@ -118,18 +118,18 @@ func _draw() -> void:
 
 
 func _draw_header(font: Font) -> void:
-	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, 32, COLOR_GOLD)
+	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "CAMPAIGN")) if not _campaign_levels.is_empty() else "CAMPAIGN DATA"
-	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  " + chapter_title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 570, 13, COLOR_MUTED)
-	draw_string(font, Vector2(678, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, 18, COLOR_TEXT)
+	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  " + chapter_title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(678, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 
 	var title := String(_level_data.get("title", "New field"))
 	var objective := String(_level_data.get("objective", ""))
-	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, 30, COLOR_TEXT)
-	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, 17, COLOR_MUTED)
+	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_TEXT)
+	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_MUTED)
 	var field_hint := _contextual_hint()
 	if not field_hint.is_empty():
-		draw_string(font, Vector2(44, 219), field_hint, HORIZONTAL_ALIGNMENT_LEFT, 632, 12, COLOR_AMBER)
+		draw_string(font, Vector2(44, 219), field_hint, HORIZONTAL_ALIGNMENT_LEFT, 632, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_AMBER)
 		draw_line(Vector2(42, 236), Vector2(678, 236), COLOR_GRID, 2.0)
 	else:
 		draw_line(Vector2(42, 216), Vector2(678, 216), COLOR_GRID, 2.0)
@@ -149,7 +149,7 @@ func _contextual_hint() -> String:
 
 
 func _draw_slots(font: Font) -> void:
-	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
+	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_slot_rects.clear()
 	var slot_count: int = _colony.slot_capacity
 	var slot_width := 290.0 if slot_count == 1 else 290.0
@@ -160,12 +160,12 @@ func _draw_slots(font: Font) -> void:
 		draw_rect(rect, COLOR_PANEL_LIGHT if _slot_is_occupied(index) else COLOR_PANEL)
 		draw_rect(Rect2(rect.position, Vector2(4, rect.size.y)), COLOR_GOLD if _slot_is_occupied(index) else COLOR_GRID)
 		var occupant := _slot_occupant(index)
-		draw_string(font, rect.position + Vector2(20, 28), "SLOT %02d" % (index + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOR_MUTED)
-		draw_string(font, rect.position + Vector2(20, 53), occupant if not occupant.is_empty() else "AVAILABLE", HORIZONTAL_ALIGNMENT_LEFT, slot_width - 35, 17, COLOR_TEXT if not occupant.is_empty() else COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(20, 28), "SLOT %02d" % (index + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(20, 53), occupant if not occupant.is_empty() else "AVAILABLE", HORIZONTAL_ALIGNMENT_LEFT, slot_width - 35, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT if not occupant.is_empty() else COLOR_MUTED)
 
 
 func _draw_squads(font: Font) -> void:
-	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
+	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
 	var card_width := ResponsiveLayoutScript.squad_card_width(ids.size())
@@ -183,7 +183,7 @@ func _draw_squads(font: Font) -> void:
 			draw_rect(Rect2(rect.position, Vector2(card_width, 3)), COLOR_GOLD)
 		var squad_color: Color = _color_for(String(squad["color"]))
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
-		draw_string(font, rect.position + Vector2(54, 34), String(squad["color"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, squad_color)
+		draw_string(font, rect.position + Vector2(54, 34), String(squad["color"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
 		var state := "ON FIELD" if squad["deployed"] else "READY"
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
@@ -191,7 +191,7 @@ func _draw_squads(font: Font) -> void:
 		var state_label := state
 		if ids.size() >= 4:
 			state_label = "FIELD" if squad["deployed"] else "READY"
-		draw_string(font, rect.position + Vector2(18, 68), state_label + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, 12, COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(18, 68), state_label + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 		var meter := Rect2(rect.position + Vector2(18, 79), Vector2(card_width - 36, 4))
 		draw_rect(meter, Color("#17231d"))
 		if carried > 0 and capacity > 0:
@@ -205,8 +205,8 @@ func _draw_board(font: Font) -> void:
 	_board_cell_size = CELL_SIZE
 	_board_gap = CELL_GAP
 
-	draw_string(font, Vector2(44, 548 + _layout_extra * 0.40), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
-	draw_string(font, Vector2(676, 548 + _layout_extra * 0.40), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, COLOR_GOLD)
+	draw_string(font, Vector2(44, 548 + _layout_extra * 0.40), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(676, 548 + _layout_extra * 0.40), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
 	draw_rect(board_frame, Color("#182820"))
@@ -269,19 +269,19 @@ func _draw_status(font: Font) -> void:
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
 
 	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
-	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
+	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), accent_color if not _tutorial_active else COLOR_GOLD)
 	if _tutorial_active:
 		_tutorial_skip_rect = Rect2(548, panel.position.y + 12, 106, 100)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
-		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, 16, COLOR_TEXT)
+		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
 		_restart_rect = Rect2(548, panel.position.y + 12, 106, 100)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
-		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, 17, COLOR_TEXT)
+		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
-	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
+	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _draw_level_picker(font: Font) -> void:
@@ -290,7 +290,7 @@ func _draw_level_picker(font: Font) -> void:
 	var completed_count: int = 0
 	if _progress_store != null:
 		completed_count = int(_progress_store.get_completed_count())
-	draw_string(font, Vector2(44, 1148 + _layout_extra * 0.86), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
+	draw_string(font, Vector2(44, 1148 + _layout_extra * 0.86), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 	_level_rects.clear()
 
 	var button_width := _level_button_size()
@@ -302,7 +302,7 @@ func _draw_level_picker(font: Font) -> void:
 
 	_previous_page_rect = Rect2(controls_start_x, 1160 + _layout_extra * 0.86, arrow_width, _level_button_size())
 	draw_rect(_previous_page_rect, COLOR_PANEL if _level_page_start > 0 else COLOR_BG)
-	draw_string(font, _previous_page_rect.position + Vector2(0, 56), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
+	draw_string(font, _previous_page_rect.position + Vector2(0, 56), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, ResponsiveLayoutScript.font_size(20, _ui_scale), COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
 
 	var buttons_start_x := controls_start_x + arrow_width + 8.0
 	var visible_count := mini(_levels_per_page(), maxi(0, _campaign_levels.size() - _level_page_start))
@@ -313,7 +313,7 @@ func _draw_level_picker(font: Font) -> void:
 		var is_selected := global_index == _level_index
 		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
 		var label_color := COLOR_BG if is_selected else COLOR_TEXT
-		draw_string(font, rect.position + Vector2(0, 52), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 15, label_color)
+		draw_string(font, rect.position + Vector2(0, 52), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, ResponsiveLayoutScript.font_size(15, _ui_scale), label_color)
 		if _progress_store != null and _progress_store.is_level_completed(String(_campaign_levels[global_index]["id"])):
 			draw_circle(rect.position + Vector2(rect.size.x - 7.0, 7.0), 3.0, COLOR_GOLD)
 
@@ -321,9 +321,9 @@ func _draw_level_picker(font: Font) -> void:
 	_next_page_rect = Rect2(next_x, 1160 + _layout_extra * 0.86, arrow_width, _level_button_size())
 	var has_next_page := _level_page_start + _levels_per_page() < _campaign_levels.size()
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
-	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
+	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, ResponsiveLayoutScript.font_size(20, _ui_scale), COLOR_TEXT if has_next_page else COLOR_GRID)
 
-	draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
+	draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _levels_per_page() -> int:
@@ -701,7 +701,7 @@ func _draw_resource(center: Vector2, color_name: String) -> void:
 	draw_circle(center, 17.0, tint)
 	draw_circle(center + Vector2(-5, -5), 5.0, Color(1.0, 1.0, 1.0, 0.28))
 	draw_line(center + Vector2(5, -12), center + Vector2(12, -20), Color("#8fc28a"), 3.0)
-	draw_string(ThemeDB.fallback_font, center + Vector2(-17, 26), _symbol_for(color_name), HORIZONTAL_ALIGNMENT_CENTER, 34, 11, COLOR_BG)
+	draw_string(ThemeDB.fallback_font, center + Vector2(-17, 26), _symbol_for(color_name), HORIZONTAL_ALIGNMENT_CENTER, 34, ResponsiveLayoutScript.font_size(11, _ui_scale), COLOR_BG)
 
 
 func _draw_rock(center: Vector2) -> void:
