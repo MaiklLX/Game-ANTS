@@ -83,6 +83,26 @@
     {
       "id": "orchard_080",
       "file": "res://levels/level_080.json"
+    },
+    {
+      "id": "orchard_081",
+      "file": "res://levels/level_081.json"
+    },
+    {
+      "id": "orchard_082",
+      "file": "res://levels/level_082.json"
+    },
+    {
+      "id": "orchard_083",
+      "file": "res://levels/level_083.json"
+    },
+    {
+      "id": "orchard_084",
+      "file": "res://levels/level_084.json"
+    },
+    {
+      "id": "orchard_085",
+      "file": "res://levels/level_085.json"
     }
   ]
 }
