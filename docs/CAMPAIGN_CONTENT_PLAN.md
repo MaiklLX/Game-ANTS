@@ -2,10 +2,11 @@
 
 ## Target
 
-- **Launch campaign:** 300 hand-authored, quality-checked levels.
-- **Structure:** 10 chapters × 30 levels.
-- **Expansion:** additional chapter packs can be appended through the root campaign manifest in later updates.
-- **Current reality:** 65 authored levels: Meadow 001–030 (30/30), Root Labyrinth 031–060 (30/30; design revisions remain open), and Amber Orchard 061–065 (5/30). Chapters 4–10 remain planned content.
+- **Version 1.0 launch campaign:** 100 hand-authored, quality-checked levels.
+- **Version 1.0 structure:** three full chapters of 30 levels (001–090), followed by a 10-level concluding chapter (091–100).
+- **Long-term campaign vision:** 300+ levels, expanded gradually through later updates. The original ten-chapter/300-level ambition remains the long-term roadmap, not a blocker for version 1.0.
+- **Current reality:** 65 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–065 (5/30). **35 levels remain** to reach the version 1.0 content target.
+- **Release principle:** reaching 100 is a content milestone, not automatic release approval. The launch gate also includes level variety and balance review, onboarding, readable portrait UI, save/progress reliability, performance, and mobile playtesting.
 
 ## Chapter rhythm
 
@@ -28,13 +29,14 @@ Themes and mechanics below are design directions. Any mechanic not supported by 
 | 001–030 | The Living Meadow | Learn squad colors, deployment slots, carrying capacity, nest returns, and obstacle routing. |
 | 031–060 | The Root Labyrinth | Narrow corridors, alternate openings, forced detours, and spatial planning. |
 | 061–090 | The Amber Orchard | Efficient multi-resource trips, load planning, and squad specialization. |
-| 091–120 | The Riverbank | Candidate water/bridge terrain mechanic; only after a dedicated prototype. |
-| 121–150 | The Night Garden | Candidate visibility or light-based puzzle mechanic; only if readable on small screens. |
-| 151–180 | The Stoneworks | Candidate gates and switches; no level may rely on them before schema and tests exist. |
-| 181–210 | The Pheromone Fields | Candidate pheromone-route mechanic; prototype and compare against baseline puzzles first. |
-| 211–240 | The Ancient Nest | Multi-route coordination and candidate additional nest/colony structures. |
-| 241–270 | The Wildwood | Multi-mechanic combinations and longer strategic sequences. |
-| 271–300 | The Colony Heart | Final mastery chapter: fair, readable, high-skill puzzles using the proven mechanics. |
+| 091–100 | The Colony Heart: First Dawn (proposed launch finale) | A compact 10-level conclusion using proven launch mechanics. |
+| 101–130 | The Riverbank (post-launch) | Candidate water/bridge terrain mechanic; only after a dedicated prototype. |
+| 131–160 | The Night Garden (post-launch) | Candidate visibility or light-based puzzle mechanic; only if readable on small screens. |
+| 161–190 | The Stoneworks (post-launch) | Candidate gates and switches; no level may rely on them before schema and tests exist. |
+| 191–220 | The Pheromone Fields (post-launch) | Candidate pheromone-route mechanic; prototype and compare against baseline puzzles first. |
+| 221–250 | The Ancient Nest (post-launch) | Multi-route coordination and candidate additional nest/colony structures. |
+| 251–280 | The Wildwood (post-launch) | Multi-mechanic combinations and longer strategic sequences. |
+| 281–300 | The Colony Heart: Mastery (post-launch) | Final mastery chapter using proven mechanics. |
 
 ## Level quality gate
 
@@ -139,3 +141,15 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 64 The Middle Crossing: Upper and lower loads meet at one narrow crossing; decide which carrier should occupy the open slot first.
 - 65 The Balanced Harvest: Four colors and two full loads compete for two field slots; plan the order that keeps every carrier useful.
 - All five use schema-v1 mechanics only; the deterministic production-rule solver covers collection and return.
+
+
+## Version 1.0 scope decision — 2026-11-05
+
+The approved first-release target is **100 quality-checked levels**, not 300. The 300+ campaign remains the long-term product vision and will grow through updates after launch.
+
+- Launch chapters: Meadow 001–030, Root Labyrinth 031–060, Amber Orchard 061–090, and a compact finale 091–100.
+- Current content: 65/100 authored; 35 levels remain.
+- The 10-level finale is the agreed release structure; its exact theme and level designs remain subject to content review.
+- Do not add unprototyped mechanics merely to make the finale feel different. Version 1.0 should use proven, readable rules.
+- Do not treat 100 authored levels as sufficient by themselves: release also requires campaign variety, difficulty/balance review, onboarding, save/progress reliability, portrait mobile QA, and performance checks.
+- Chapters beyond level 100 are post-launch expansion content; the 300-level vision is not cancelled.
