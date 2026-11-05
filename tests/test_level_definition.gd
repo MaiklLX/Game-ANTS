@@ -12,7 +12,7 @@ func _initialize() -> void:
 		return
 
 	var result: Dictionary = LevelDefinitionScript.validate(sample_data)
-	_check(result["valid"], "sample level should be valid: %s" % result["errors"])
+	_check(result["valid"], "sample level should be valid: %s" % str(result["errors"]))
 	_check(result["resource_count"] == 1, "sample level should contain one resource")
 
 	var duplicate_data: Dictionary = sample_data.duplicate(true)
