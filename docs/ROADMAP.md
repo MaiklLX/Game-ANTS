@@ -808,3 +808,11 @@
 - Added responsive contract assertions for the footer visibility threshold. The narrow-phone layout retains four 100×100 level/page controls within the 720 px design width.
 - CI #777 passed on code checkpoint `b21231f4e5710ac947e9025e59f8bc670d80f8e4`: Godot 4.7.2 import, all core/campaign/progress/onboarding/guidance suites, responsive layout and typography contracts, campaign audit, and headless main-scene launch.
 - This remains code/contract verification, not rendered visual sign-off. Godot Editor screenshot review, safe-area inspection, Android export, and physical-device QA remain outstanding.
+
+
+### KT-011.6 — mobile safe-area integration (2026-11-05)
+- Added a shared safe-viewport calculation using Godot DisplayServer's display safe-area rectangle and physical screen dimensions on Android/iOS only.
+- The gameplay drawing transform and inverse tap-coordinate transform now share the same safe-area offset and scale, keeping HUD controls away from camera cutouts and system gesture zones.
+- Added headless contract cases for top/bottom and side insets, invalid platform data fallback, clipping to screen bounds, and safe-area-adjusted touch targets.
+- Dynamic level controls, squad cards, and status action hit areas preserve the 44 physical-pixel minimum after safe-area scaling; four level buttons and paging arrows still fit the 720 px design width.
+- CI validation is pending. No actual Android/iOS device, exported APK, screenshot capture, or visual sign-off is claimed. PR #9 remains Draft; main is untouched.
