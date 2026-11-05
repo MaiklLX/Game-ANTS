@@ -737,5 +737,5 @@
 - No new mechanics were introduced. The finale recombines schema-v1 squads, carrying capacities, deployment slots, and obstacle routing.
 - Campaign level tests now include all 100 level files; catalogue tests assert 100 ordered entries, fourth-chapter identity, and global index 99.
 - **Version 1.0 content target reached: 100/100.** The 300+ level long-term vision remains unchanged.
-- CI for the complete 100-level branch is pending. Reaching 100 authored levels does not equal release sign-off; variety/balance, onboarding, save/progress, portrait mobile QA, performance, and device testing remain open.
+- CI #572 passed on the corrected 100-level code head `691fc269ac1832c3a2073e32d62ad3a2ec17d5c9`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42044346311. Godot 4.7.2 import, deterministic core/schema/colony/turn suites, all 100 campaign level integration tests, 100-entry catalogue checks, and headless main-scene launch passed. Reaching 100 authored levels does not equal release sign-off; variety/balance, onboarding, save/progress, portrait mobile QA, performance, and device testing remain open.
 - Next phase: audit chapter-to-chapter difficulty and map variety, prioritize the Root Labyrinth duplication findings, then perform visual/device QA and release-readiness work.
