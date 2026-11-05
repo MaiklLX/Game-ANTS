@@ -38,7 +38,7 @@ func _initialize() -> void:
 	_print_chapter_workloads(level_workloads, "colony_heart")
 	_print_duplicate_groups("Repeated board geometry (review candidates)", geometry_groups)
 	_print_duplicate_groups("Exact gameplay signatures (high-priority review)", gameplay_groups)
-	_print_duplicate_groups("Resource route profiles (review candidates)", route_profile_groups)
+	_print_duplicate_groups("Resource route profiles (distance + shortest-path multiplicity review candidates)", route_profile_groups)
 	print("Audit is informational: shared geometry can be intentional; human design review remains required.")
 	quit(0)
 
@@ -96,19 +96,50 @@ func _route_profile_signature(data: Dictionary) -> String:
 	var loaded: Dictionary = board.load_level(data)
 	if not loaded.get("valid", false):
 		return "invalid"
+	var blocked: Dictionary = {}
+	for tile in data.get("tiles", []):
+		if String(tile["type"]) == "obstacle":
+			blocked[Vector2i(int(tile["x"]), int(tile["y"]))] = true
 	var resource_routes: Array[String] = []
 	for tile in data.get("tiles", []):
 		if String(tile["type"]) != "resource":
 			continue
 		var target := Vector2i(int(tile["x"]), int(tile["y"]))
-		var route: Array[Vector2i] = board.find_path(board.start, target)
-		resource_routes.append("%s:%d" % [String(tile["color"]), route.size()])
+		var metrics: Dictionary = _shortest_route_metrics(data, board.start, target, blocked)
+		resource_routes.append("%s:%d:%d" % [String(tile["color"]), int(metrics["distance"]), int(metrics["paths"])])
 	resource_routes.sort()
 	var squad_profile: Array[String] = []
 	for squad in data.get("squads", []):
 		squad_profile.append("%s:%d" % [String(squad["color"]), int(squad["capacity"])])
 	squad_profile.sort()
 	return "%d|%s|%s" % [int(data["deployment_slots"]), JSON.stringify(resource_routes), JSON.stringify(squad_profile)]
+
+
+func _shortest_route_metrics(data: Dictionary, start: Vector2i, target: Vector2i, blocked: Dictionary) -> Dictionary:
+	var queue: Array[Vector2i] = [start]
+	var distances: Dictionary = {}
+	var path_counts: Dictionary = {}
+	distances[start] = 0
+	path_counts[start] = 1
+	var directions: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]
+	var cursor := 0
+	while cursor < queue.size():
+		var current: Vector2i = queue[cursor]
+		cursor += 1
+		for direction in directions:
+			var next := current + direction
+			if next.x < 0 or next.y < 0 or next.x >= int(data["width"]) or next.y >= int(data["height"]) or blocked.has(next):
+				continue
+			var next_distance := int(distances[current]) + 1
+			if not distances.has(next):
+				distances[next] = next_distance
+				path_counts[next] = int(path_counts[current])
+				queue.append(next)
+			elif int(distances[next]) == next_distance:
+				path_counts[next] = int(path_counts[next]) + int(path_counts[current])
+	if not distances.has(target):
+		return {"distance": -1, "paths": 0}
+	return {"distance": int(distances[target]), "paths": int(path_counts[target])}
 
 
 func _add_group(groups: Dictionary, signature: String, level_id: String) -> void:
