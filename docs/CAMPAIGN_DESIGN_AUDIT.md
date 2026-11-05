@@ -34,10 +34,10 @@ Related motifs across levels 047, 057, and 059 and the repeated crown/finale fam
 ## Targeted revisions in progress
 
 - `root_037` — replaced the repeated single-wall footprint with a central heartwood island and upper/lower branch routes. The resource layout now asks the player to choose which side of the fork to clear first.
-- `root_041` — replaced the duplicate of `root_038` with a raised passage: a near-side pickup precedes a two-opening route to the far chamber.
+- `root_041` — replaced the duplicate of `root_038` with a single-cell bottleneck that feeds a three-way harvest junction; all far branches must pass through the same gate.
 - Stable level IDs and campaign order are preserved. No new mechanics or schema changes were introduced.
 
-Both revisions passed the current PR CI run and the renewed audit. The exact gameplay-duplicate group is now empty; the only remaining exact geometry match is the review pair below.
+The first redesign pass removed the exact duplicate, and CI #584 passed that interim version. A second refinement then made `root_041` a true single-gate branching puzzle and added route-identity regression tests for both revised maps; this newest refinement is awaiting CI. The renewed audit on the interim pass reported zero exact gameplay duplicates and one remaining geometry pair below.
 
 ## Next review sequence
 
@@ -52,6 +52,6 @@ Both revisions passed the current PR CI run and the renewed audit. The exact gam
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
 - Audit script: added to CI; run #579 passed on the baseline and run #584 passed after the map revisions.
-- Latest map revisions: `root_037` and `root_041`; Godot CI #584 passed on `6adfb20` including all campaign tests, the audit, and headless main-scene launch.
-- Latest audit: zero exact gameplay-signature duplicates; one shared geometry pair remains (`root_053` / `root_056`). Root Labyrinth averages 6.33 obstacles per level after the revisions.
+- Latest map revisions: `root_037` and `root_041`; CI #584 passed the first revision pass. The follow-up `root_041` single-gate refinement and route-identity tests are now queued in CI run #591.
+- The last completed audit (on the first revision pass) found zero exact gameplay-signature duplicate groups and one shared geometry pair (`root_053` / `root_056`). Root Labyrinth averaged 6.33 obstacles per level in that pass.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
