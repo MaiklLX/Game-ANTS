@@ -594,3 +594,15 @@
 - Godot 4.7.2 import, all core/schema/colony/turn suites, all 45 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
 - Root Labyrinth progress: 15/30; total authored catalogue: 45 levels.
 - Next batch: levels 046–050.
+
+
+### KT-007 — Root Labyrinth batch 046–050 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 046 The Stair of Roots, 047 Crossed Passages, 048 The Hidden Pocket, 049 The Deep Turn, and 050 The Labyrinth Heart.
+- Root Labyrinth now contains 20/30 authored levels; total campaign catalogue is 50 levels across two packs.
+- Extended campaign integration and catalog assertions through root_050; added a route-shape check for the single-entry side pocket in level 048.
+- All resources are reachable using existing schema-v1 rules and deterministic pathfinding.
+- Next: run full CI, then continue levels 051–055 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
