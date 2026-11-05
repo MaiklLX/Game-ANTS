@@ -97,6 +97,7 @@ var _last_path_start: Vector2i = Vector2i(-1, -1)
 var _ant_progress: float = 0.0
 var _feedback_progress: float = 1.0
 var _feedback_cell: Vector2i = Vector2i(-1, -1)
+var _feedback_kind: String = "harvest"
 var _feedback_tween: Tween
 var _is_animating: bool = false
 var _auto_dispatch: bool = false
@@ -427,10 +428,20 @@ func _draw_board(font: Font) -> void:
 				_draw_carried_load(ant_position, _color_for(String(squad.get("color", "amber"))), carried)
 	# Strategic squads and routes are rendered from active turn orders above.
 
-	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
-		var pulse_color := COLOR_GOLD
-		pulse_color.a = 1.0 - _feedback_progress
-		draw_arc(_cell_rect(_feedback_cell).get_center(), 14.0 + _feedback_progress * 22.0, 0.0, TAU, 32, pulse_color, 3.0)
+\tif _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
+\t\tvar pulse_color := COLOR_GOLD
+\t\tpulse_color.a = 1.0 - _feedback_progress
+\t\tvar feedback_center := _cell_rect(_feedback_cell).get_center()
+\t\tif _feedback_kind == "delivery":
+\t\t\tdraw_arc(feedback_center, 18.0 + _feedback_progress * 34.0, 0.0, TAU, 36, pulse_color, 3.5)
+\t\t\tdraw_arc(feedback_center, 10.0 + _feedback_progress * 20.0, 0.0, TAU, 28, pulse_color.lightened(0.25), 2.0)
+\t\telse:
+\t\t\tdraw_arc(feedback_center, 14.0 + _feedback_progress * 22.0, 0.0, TAU, 32, pulse_color, 3.0)
+\t\t\tfor particle_index in range(6):
+\t\t\t\tvar angle := TAU * float(particle_index) / 6.0
+\t\t\t\tvar particle_distance := 7.0 + _feedback_progress * 27.0
+\t\t\t\tvar particle := feedback_center + Vector2.RIGHT.rotated(angle) * particle_distance
+\t\t\t\tdraw_circle(particle, 2.8 * (1.0 - _feedback_progress * 0.65), pulse_color)
 
 
 func _draw_status(font: Font) -> void:
@@ -778,9 +789,9 @@ func _advance_strategic_turn() -> void:
 	for collected_id in result.get("collected", []):
 		var collected_squad: Dictionary = _colony.get_squad(String(collected_id))
 		if not collected_squad.is_empty():
-			_trigger_feedback(collected_squad.get("position", _board.start))
+			_trigger_feedback(collected_squad.get("position", _board.start), "harvest")
 	for delivered_id in result.get("delivered", []):
-		_trigger_feedback(_board.start)
+		_trigger_feedback(_board.start, "delivery")
 	if _tutorial_active and not result.get("delivered", []).is_empty():
 		_complete_tutorial()
 	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty() or not result.get("blocked", []).is_empty():
@@ -868,14 +879,20 @@ func _draw_ant(center: Vector2, tint: Color, scale: float = 1.0) -> void:
 	draw_circle(center + Vector2(11, -2) * body_scale, 1.1 * scale, Color("#fff1c9"))
 	draw_line(center + Vector2(12, -4) * body_scale, center + Vector2(16, -9) * body_scale, Color("#251d16"), 1.4 * scale)
 	draw_line(center + Vector2(12, 1) * body_scale, center + Vector2(18, 0) * body_scale, Color("#251d16"), 1.4 * scale)
-	draw_line(center + Vector2(-2, -4) * body_scale, center + Vector2(-7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
-	draw_line(center + Vector2(-2, 4) * body_scale, center + Vector2(-7, 10) * body_scale, Color("#251d16"), 2.0 * scale)
-	draw_line(center + Vector2(4, -4) * body_scale, center + Vector2(7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
-	draw_line(center + Vector2(4, 4) * body_scale, center + Vector2(7, 10) * body_scale, Color("#251d16"), 2.0 * scale)
+	var leg_swing := sin(_ant_wiggle * 1.7) * 4.0 if _is_animating else 0.0
+	var rear_upper := Vector2(-7, -10 + leg_swing) * body_scale
+	var rear_lower := Vector2(-7, 10 - leg_swing) * body_scale
+	var front_upper := Vector2(7, -10 - leg_swing) * body_scale
+	var front_lower := Vector2(7, 10 + leg_swing) * body_scale
+	draw_line(center + Vector2(-2, -4) * body_scale, center + rear_upper, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(-2, 4) * body_scale, center + rear_lower, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(4, -4) * body_scale, center + front_upper, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(4, 4) * body_scale, center + front_lower, Color("#251d16"), 2.0 * scale)
 
 
-func _trigger_feedback(cell: Vector2i) -> void:
+func _trigger_feedback(cell: Vector2i, kind: String = "harvest") -> void:
 	_feedback_cell = cell
+	_feedback_kind = kind
 	_feedback_progress = 0.0
 	if _feedback_tween != null and _feedback_tween.is_running():
 		_feedback_tween.kill()
