@@ -11,7 +11,7 @@ func _initialize() -> void:
 	_check(result["valid"], "root manifest and chapter pack should load: %s" % str(result["errors"]))
 	if result["valid"]:
 		var levels: Array = result["levels"]
-		_check(levels.size() == 65, "meadow pack should expose all sixty authored levels across both chapters")
+		_check(levels.size() == 70, "campaign catalogue should expose all seventy authored levels across three chapters")
 		_check(levels[0]["id"] == "meadow_001", "first manifest level should remain first")
 		_check(levels[29]["id"] == "meadow_030", "thirtieth manifest level should remain last")
 		_check(levels[0]["chapter_id"] == "meadow", "level should retain its chapter identity")
@@ -23,8 +23,12 @@ func _initialize() -> void:
 		_check(levels[59]["global_index"] == 59, "second chapter levels should keep stable flattened indices")
 		_check(levels[60]["id"] == "orchard_061", "third chapter should follow Root Labyrinth without reordering")
 		_check(levels[60]["chapter_id"] == "amber_orchard", "third chapter should retain its chapter identity")
-		_check(levels[64]["id"] == "orchard_065", "first Amber Orchard batch should remain last")
+		_check(levels[64]["id"] == "orchard_065", "first Amber Orchard batch should remain in order")
 		_check(levels[64]["global_index"] == 64, "third chapter levels should keep stable flattened indices")
+		_check(levels[65]["id"] == "orchard_066", "Amber Orchard continuation should follow level 065")
+		_check(levels[69]["id"] == "orchard_070", "second Amber Orchard batch should remain last")
+		_check(levels[69]["chapter_id"] == "amber_orchard", "new levels should retain their chapter identity")
+		_check(levels[69]["global_index"] == 69, "new levels should keep stable flattened indices")
 
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://campaign/campaign_manifest.json"))
 	var duplicate_pack: Dictionary = manifest.duplicate(true)
