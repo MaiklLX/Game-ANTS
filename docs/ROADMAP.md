@@ -398,3 +398,23 @@
 **Checkpoint phrase:**
 
 `GAME-ANTS — KT-005.2 SQUAD FEEDBACK IMPLEMENTED, CI PENDING. Continue from feat/kt-005-first-playable-levels and draft PR #8. Commit 9ea2648f59e857524247f9390d9d8f294ded58fc changes the graybox UI: three ants travel as a small formation along the validated route; collection and nest delivery trigger expanding feedback rings; completed and blocked fields have distinct status panels; terminal input is limited to retry/level selection. A process redraw loop now keeps tween-driven movement and pulses visible. This remains graybox presentation, not final pixel art. GitHub Actions runs #125 and #127 passed for the UI and checkpoint commits. No editor visual QA, Android APK, or physical-device testing has been performed. Next: verify CI, then inspect phone scaling/touch coordinates and refine nest/resource/carrying visuals. Keep PR #8 draft and stacked; never merge to main without owner approval. Godot 4.7.2-stable remains pinned; GitHub Issues only; no external agents.`
+
+
+### KT-005.3 — Meadow board visual pass (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Implementation commit:** `419e884953bc054eb0affd4204fb867f4f72044d`
+
+**Implemented**
+- Added a framed meadow board with alternating ground tones and inset tile surfaces.
+- Replaced the flat nest marker with a layered earthen nest entrance.
+- Replaced flat resource marks with seed-like bodies, highlights, leaves, and retained color initials for readability.
+- Replaced plain blocked tiles with clustered stone silhouettes.
+- Core rules, level data, movement paths, and touch coordinate conversion were not changed.
+
+**Verification:** CI is not yet visible for this commit through the available status endpoints. No passing test result is claimed for KT-005.3 yet. Recheck GitHub Actions before treating this checkpoint as green. Visual editor/device inspection remains pending.
+
+**Next**
+1. Verify the new drawing helpers compile and all five test suites pass.
+2. Inspect the board at narrow and tall portrait aspect ratios; tune visual spacing if needed.
+3. Add carried-seed feedback and improve squad-card/slot presentation.
+4. Keep PR #8 draft and do not merge to `main` without owner approval.
