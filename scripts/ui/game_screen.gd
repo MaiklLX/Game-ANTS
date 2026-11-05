@@ -265,16 +265,18 @@ func _draw_status(font: Font) -> void:
 	var accent_color := Color("#91c99a") if completed else Color("#e58b70") if blocked else COLOR_GOLD
 	draw_rect(panel, panel_color)
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
-	_restart_rect = Rect2(548, panel.position.y + 20, 106, 88)
-	draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-	draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
+
 	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
 	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
 	if _tutorial_active:
+		_tutorial_skip_rect = Rect2(548, panel.position.y + 20, 106, 88)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 21), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, 16, COLOR_TEXT)
 	else:
+		_restart_rect = Rect2(548, panel.position.y + 20, 106, 88)
+		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
+		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, 17, COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
@@ -304,7 +306,7 @@ func _draw_level_picker(font: Font) -> void:
 	var visible_count := mini(LEVELS_PER_PAGE, maxi(0, _campaign_levels.size() - _level_page_start))
 	for local_index in range(visible_count):
 		var global_index := _level_page_start + local_index
-		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1140 + _layout_extra * 0.86, button_width, 88)
+		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1160 + _layout_extra * 0.86, button_width, 88)
 		_level_rects.append(rect)
 		var is_selected := global_index == _level_index
 		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
@@ -314,10 +316,10 @@ func _draw_level_picker(font: Font) -> void:
 			draw_circle(rect.position + Vector2(rect.size.x - 7.0, 7.0), 3.0, COLOR_GOLD)
 
 	var next_x := buttons_start_x + page_width + 8.0
-	_next_page_rect = Rect2(next_x, 1140 + _layout_extra * 0.86, arrow_width, 84)
+	_next_page_rect = Rect2(next_x, 1160 + _layout_extra * 0.86, arrow_width, 88)
 	var has_next_page := _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size()
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
-	draw_string(font, _next_page_rect.position + Vector2(0, 37), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
+	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
 
 	draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
 
