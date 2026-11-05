@@ -183,7 +183,7 @@ func _draw_squads(font: Font) -> void:
 	for index in range(ids.size()):
 		var squad_id: String = ids[index]
 		var squad: Dictionary = _colony.get_squad(squad_id)
-		var rect := Rect2(start_x + index * (card_width + gap), 410 + _layout_extra * 0.18, card_width, 100)
+		var rect := Rect2(start_x + index * (card_width + gap), 410 + _layout_extra * 0.18, card_width, ResponsiveLayoutScript.squad_card_height(_ui_scale))
 		_squad_rects[squad_id] = rect
 		var selected := squad_id == _selected_squad_id
 		draw_rect(rect, COLOR_PANEL_LIGHT if selected else COLOR_PANEL)
@@ -279,13 +279,16 @@ func _draw_status(font: Font) -> void:
 
 	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
 	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), accent_color if not _tutorial_active else COLOR_GOLD)
+	var action_width := ResponsiveLayoutScript.status_action_width(_ui_scale)
+	var action_height := ResponsiveLayoutScript.status_action_height(_ui_scale)
+	var action_x := panel.position.x + panel.size.x - action_width - 24.0
 	if _tutorial_active:
-		_tutorial_skip_rect = Rect2(548, panel.position.y + 12, 106, 100)
+		_tutorial_skip_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
-		_restart_rect = Rect2(548, panel.position.y + 12, 106, 100)
+		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
