@@ -531,9 +531,12 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _handle_tap(point: Vector2) -> void:
+	if _auto_run_active and _restart_rect.has_point(point):
+		_stop_auto_run()
+		return
 	if _is_animating:
 		return
-	if _auto_run_active and not _restart_rect.has_point(point):
+	if _auto_run_active:
 		return
 	if _previous_page_rect.has_point(point) and _level_page_start > 0:
 		_level_page_start = maxi(0, _level_page_start - _levels_per_page())
@@ -771,7 +774,7 @@ func _advance_strategic_turn() -> void:
 		_turn_animation_moves.clear()
 	if _tutorial_active and not result.get("delivered", []).is_empty():
 		_complete_tutorial()
-	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty():
+	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty() or not result.get("blocked", []).is_empty():
 		_stop_auto_run()
 	if result.get("outcome", "playing") == "won":
 		_status = "Победа! Все семена доставлены домой."
