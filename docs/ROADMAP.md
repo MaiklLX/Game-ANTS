@@ -748,5 +748,16 @@
 - Game screen resumes the last selected level, shows a cleared-level count, and marks completed level buttons. All levels remain selectable; sequential unlock gating was not introduced.
 - Added `tests/test_progress_store.gd` and a dedicated CI step. CI #706/#707 verified the persistence test integration; #708/#709/#710 passed after explicit GDScript typing and quiet corrupt-JSON recovery.
 - Current save scope is completed IDs + last selected ID only. It does not save an in-progress board, score, stars, cloud data, or settings.
-- A further regression now checks that atomic replacement preserves a valid previous-save backup; CI for this final test addition is pending.
+- Atomic replacement backup rotation is covered by regression tests; CI #711/#712 passed.
 - No local editor, APK, or physical-device test is claimed. PR #9 remains Draft and unmerged.
+
+
+### KT-011 — first-session guided expedition (2026-11-05)
+- Added a three-step, context-sensitive onboarding sequence to the first field: deploy the amber squad, collect the amber seed, and return it to the nest.
+- The guide is shown in the existing colony-log panel, so it does not block the board or intercept ordinary gameplay. A visible Skip control lets experienced players dismiss it.
+- Tutorial completion is stored by ProgressStore in the existing schema-v1 save as an optional boolean. Older schema-v1 saves without this field remain compatible; no save migration or level-ID change was needed.
+- Added persistence tests for initial tutorial state, completion across reload, and compatibility with older saves. CI #718/#719 passed ProgressStore tests; CI #720/#721 passed full import, all deterministic/core/campaign/catalog/progress/audit suites, and headless main-scene launch on 8bdce10ae0e591413a35e6a16af25c3929ae8d4a.
+- Tutorial is currently limited to level 001, whose authored objective is a single amber expedition. It does not yet teach multi-squad coordination, capacity-two/three planning, or route choice.
+- No Godot Editor visual QA, APK export, physical-device touch QA, or public web build is claimed. PR #9 remains Draft and unmerged.
+
+**Current KT-011 checkpoint:** first-session tutorial and persistence tests pass CI. Next: inspect the full 100-level mobile UI in Godot Editor/device when an execution environment is available; then design a broader, optional interactive guide for multi-squad and capacity mechanics based on actual usability findings. Do not merge to main without explicit owner approval.
