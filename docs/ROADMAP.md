@@ -757,6 +757,7 @@
 - The guide is shown in the existing colony-log panel, so it does not block the board or intercept ordinary gameplay. A visible Skip control lets experienced players dismiss it.
 - Tutorial completion is stored by ProgressStore in the existing schema-v1 save as an optional boolean. Older schema-v1 saves without this field remain compatible; no save migration or level-ID change was needed.
 - Added persistence tests for initial tutorial state, completion across reload, and compatibility with older saves. CI #718/#719 passed ProgressStore tests; CI #720/#721 passed full import, all deterministic/core/campaign/catalog/progress/audit suites, and headless main-scene launch on 8bdce10ae0e591413a35e6a16af25c3929ae8d4a.
+- Added `tests/test_onboarding_contract.gd` and a CI step that locks the tutorial's dependency on level 001: nest `(0,2)`, one deployment slot, amber one-capacity squad, and amber seed `(4,2)`. An initial coordinate assertion was corrected to compare integer components explicitly; CI #728 passed and logged `First-session onboarding contract tests passed.`
 - Tutorial is currently limited to level 001, whose authored objective is a single amber expedition. It does not yet teach multi-squad coordination, capacity-two/three planning, or route choice.
 - No Godot Editor visual QA, APK export, physical-device touch QA, or public web build is claimed. PR #9 remains Draft and unmerged.
 
