@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 75 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–075. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
+The current campaign contains 80 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–080. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
 
 ### Adding a future chapter
 
@@ -155,3 +155,11 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - level_073.json — The Amber Spiral: a capacity-three amber expedition follows a curled route around heartwood, with a separate teal pickup.
 - level_074.json — The Crosswind Grove: staggered roots divide the board into offset pockets for a paired amber load and two single-color trips.
 - level_075.json — The Golden Canopy Trial: two paired harvests and two lone seeds are coordinated across three deployment slots.
+
+
+### Amber Orchard — batch 076–080
+- level_076.json — The Bramble Window: a low opening and a second offset root wall turn a paired amber harvest into a long return loop.
+- level_077.json — The Falling Leaves: a descending line of roots divides two paired harvests for capacity-two carriers.
+- level_078.json — The Four Hidden Boughs: four colors sit behind an L-shaped root screen; two field slots require careful squad rotation.
+- level_079.json — The Golden Switchback: a capacity-three amber squad follows a staggered route around a root shelf, with a separate teal pickup.
+- level_080.json — The Orchard Crossroads: two paired loads and two single seeds converge around a central crossing with three deployment slots.
