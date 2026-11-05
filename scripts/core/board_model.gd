@@ -42,13 +42,13 @@ func load_level(data: Dictionary) -> Dictionary:
 
 	# Apply only after validation succeeds, so a malformed level cannot
 	# partially overwrite the currently loaded board.
-	configure(data["width"], data["height"])
+	configure(int(data["width"]), int(data["height"]))
 	level_id = data["id"]
-	start = Vector2i(data["start"][0], data["start"][1])
-	goal = Vector2i(data["goal"][0], data["goal"][1])
+	start = Vector2i(int(data["start"][0]), int(data["start"][1]))
+	goal = Vector2i(int(data["goal"][0]), int(data["goal"][1]))
 
 	for tile in data["tiles"]:
-		var cell := Vector2i(tile["x"], tile["y"])
+		var cell := Vector2i(int(tile["x"]), int(tile["y"]))
 		match tile["type"]:
 			"obstacle":
 				_blocked[cell] = true
