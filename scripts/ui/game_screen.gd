@@ -400,8 +400,7 @@ func _draw_board(font: Font) -> void:
 			if int(squad.get("carried", 0)) > 0:
 				var seed_tint := _color_for(String(squad.get("color", "amber")))
 				draw_circle(ant_position + Vector2(18, -14), 6.0, seed_tint)
-	if false:
-		var previous := _last_path_start if _board.is_inside(_last_path_start) else _board.start
+	# Squad markers and all active routes are rendered from the strategic model.
 		for step in _last_path:
 			draw_line(_cell_rect(previous).get_center(), _cell_rect(step).get_center(), COLOR_GOLD, 4.0)
 			previous = step
@@ -450,13 +449,12 @@ func _draw_status(font: Font) -> void:
 	else:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _restart_rect.position + Vector2(0, 56), "ЗАНОВО", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
+		var action_label := "СЛЕД. ХОД" if _has_active_orders() else "ЗАНОВО"
+		draw_string(font, _restart_rect.position + Vector2(0, 56), action_label, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d     ДЕНЬ  %d / %d" % [delivered, _board.total_resources, _strategic_engine.day_remaining, _strategic_engine.day_limit], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
-	var action_label := "СЛЕДУЮЩИЙ ХОД" if _has_active_orders() else "ЗАНОВО"
-	draw_string(font, _restart_rect.position + Vector2(0, 56), action_label, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
-
+ 
 
 func _draw_level_picker(font: Font) -> void:
 	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(_levels_per_page())))
@@ -550,7 +548,7 @@ func _handle_tap(point: Vector2) -> void:
 		_complete_tutorial()
 		return
 	# Terminal fields accept only an explicit level change or retry.
-	if TurnResolverScript.is_level_complete(_board, _colony) or TurnResolverScript.is_level_blocked(_board, _colony):
+	if _strategic_engine.get_outcome() != "playing":
 		return
 
 	for squad_id in _squad_rects:
@@ -620,6 +618,8 @@ func _select_or_deploy(squad_id: String) -> void:
 			queue_redraw()
 			return
 		_status = "%s отряд готов. Выберите подходящее семя." % _color_name_ru(String(squad.get("color", "")))
+		if _tutorial_active and _tutorial_step == 0 and squad_id == "amber_workers":
+			_tutorial_step = 1
 	else:
 		var order: Dictionary = _strategic_engine.get_order(squad_id)
 		if not order.is_empty():
@@ -649,6 +649,8 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 		_last_target = cell
 		_last_path = result.get("path", [])
 		_status = "Маршрут назначен: %d ход(а/ов). Нажмите «Следующий ход»." % int(result.get("turn_cost", 0))
+		if _tutorial_active and _tutorial_step == 1:
+			_tutorial_step = 2
 	queue_redraw()
 
 
@@ -725,6 +727,8 @@ func _advance_strategic_turn() -> void:
 		_status = "Семя собрано. Отряд ждёт следующего приказа."
 	elif not result.get("delivered", []).is_empty():
 		_status = "Груз доставлен. Можно назначать новые приказы."
+		if _tutorial_active and _tutorial_step == 2:
+			_complete_tutorial()
 	else:
 		_status = "Ход %d. Осталось ходов дня: %d." % [int(result.get("turn", 0)), int(result.get("day_remaining", 0))]
 	queue_redraw()
@@ -805,11 +809,11 @@ func _check_terminal_state() -> void:
 func _tutorial_instruction() -> String:
 	match _tutorial_step:
 		0:
-			return "1 / 3  Нажмите на карточку янтарного отряда, чтобы отправить его в поле."
+			return "1 / 3  Выберите карточку янтарного отряда."
 		1:
-			return "2 / 3  Муравьи сами найдут семя и принесут его домой."
+			return "2 / 3  Выберите янтарное семя, чтобы назначить маршрут."
 		2:
-			return "3 / 3  Дождитесь возвращения отряда в муравейник."
+			return "3 / 3  Назначьте возвращение у муравейника и завершите ход."
 	return "Выполните шаги, чтобы завершить первую экспедицию."
 
 
@@ -818,11 +822,11 @@ func _tutorial_instruction_for_display() -> String:
 		return _tutorial_instruction()
 	match _tutorial_step:
 		0:
-			return "1 / 3  Отправьте ЯНТАРНЫЙ отряд."
+			return "1 / 3  Выберите ЯНТАРНЫЙ отряд."
 		1:
-			return "2 / 3  Муравьи сами найдут семя."
+			return "2 / 3  Коснитесь янтарного семени."
 		2:
-			return "3 / 3  Дождитесь возвращения домой."
+			return "3 / 3  Назначьте возврат и завершите ход."
 	return "Выполните все шаги."
 
 
