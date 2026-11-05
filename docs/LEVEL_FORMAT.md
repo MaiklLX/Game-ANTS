@@ -117,3 +117,9 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_048.json](../levels/level_048.json) — The Hidden Pocket: one seed sits in a side pocket with a single entrance.
 - [level_049.json](../levels/level_049.json) — The Deep Turn: a central detour divides upper and lower chambers.
 - [level_050.json](../levels/level_050.json) — The Labyrinth Heart: four-color checkpoint around two winding passages.
+
+- [level_051.json](../levels/level_051.json) — The Bent Gate: offset root walls force a low crossing before the upper harvest.
+- [level_052.json](../levels/level_052.json) — Twin Root Mouths: upper and lower chambers have separate entrances.
+- [level_053.json](../levels/level_053.json) — The Turning Fork: staggered barriers make the route change sides between chambers.
+- [level_054.json](../levels/level_054.json) — The Middle Passage: three harvest points share one crossing and two deployment slots.
+- [level_055.json](../levels/level_055.json) — The Root Labyrinth Trial: four colors and alternating openings form the chapter's 25-level checkpoint.
