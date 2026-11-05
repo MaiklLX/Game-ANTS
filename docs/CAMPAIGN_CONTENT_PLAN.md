@@ -26,7 +26,7 @@ Themes and mechanics below are design directions. Any mechanic not supported by 
 | Range | Chapter | Main design focus |
 |---|---|---|
 | 001–030 | The Living Meadow | Learn squad colors, deployment slots, carrying capacity, nest returns, and obstacle routing. |
-| 031–060 | The Root Labyrinth | Narrow corridors, alternate routes, route order, and spatial planning. |
+| 031–060 | The Root Labyrinth | Narrow corridors, alternate openings, forced detours, and spatial planning. |
 | 061–090 | The Amber Orchard | Efficient multi-resource trips, load planning, and squad specialization. |
 | 091–120 | The Riverbank | Candidate water/bridge terrain mechanic; only after a dedicated prototype. |
 | 121–150 | The Night Garden | Candidate visibility or light-based puzzle mechanic; only if readable on small screens. |
@@ -64,3 +64,12 @@ Automated solvability is necessary but not sufficient. A level that is technical
 ## Production batches
 
 Build the first complete 30-level Meadow chapter in reviewed batches, not one huge unreviewed dump. The first Meadow chapter now covers levels 001–030. Review its complete difficulty curve before starting chapter 2. Each batch should add a small group of levels, solution tests, and a short difficulty review. Only after the full chapter has a coherent curve should production move to chapter 2.
+
+
+## KT-007 — Root Labyrinth opening batch (031–035)
+
+- Chapter 2 has its own pack manifest at `campaign/packs/root_labyrinth/pack.json`, appended after Meadow in the root campaign manifest.
+- The opening five levels introduce narrow passages, separated upper/lower openings, staggered S-bends, split branches, and a multi-entrance junction.
+- This batch deliberately uses only existing schema-v1 rules: static obstacles, colored resources, squads, carrying capacity, and deployment slots. No new movement rule or manual path-drawing control is implied.
+- Automated route-shape tests assert genuine detours in selected levels and reachability of both branches in Root Weave.
+- The chapter is 5/30 authored; its remaining 25 levels will deepen corridor reading and expedition ordering without relying on unimplemented mechanics.
