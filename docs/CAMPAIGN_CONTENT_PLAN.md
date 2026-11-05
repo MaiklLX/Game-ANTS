@@ -5,7 +5,7 @@
 - **Version 1.0 launch campaign:** 100 hand-authored, quality-checked levels.
 - **Version 1.0 structure:** three full chapters of 30 levels (001–090), followed by a 10-level concluding chapter (091–100).
 - **Long-term campaign vision:** 300+ levels, expanded gradually through later updates. The original ten-chapter/300-level ambition remains the long-term roadmap, not a blocker for version 1.0.
-- **Current reality:** 70 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–070 (10/30). **30 levels remain** to reach the version 1.0 content target.
+- **Current reality:** 75 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–075 (15/30). **25 levels remain** to reach the version 1.0 content target.
 - **Release principle:** reaching 100 is a content milestone, not automatic release approval. The launch gate also includes level variety and balance review, onboarding, readable portrait UI, save/progress reliability, performance, and mobile playtesting.
 
 ## Chapter rhythm
@@ -163,3 +163,13 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 - 070 The Orchard Weave: a capacity-three amber cluster and paired teal harvest share the field with two single-seed scouts.
 - All five levels use schema-v1 mechanics only. Each resource is reachable under the current board rules; campaign integration tests cover deterministic collection and return.
 - Amber Orchard progress: 10/30. Total catalogue: 70/100 for version 1.0; 30 levels remain.
+
+
+### Amber Orchard production batch 071–075
+- 071 The Split Crown: a single opening through a vertical trunk separates four colored harvest points; two slots force squad rotation.
+- 072 The Sunken Branch: a horizontal cross-trunk and upper offset roots create a winding upper approach and a lower resource pocket.
+- 073 The Amber Spiral: a capacity-three amber expedition follows a curled route around heartwood, with a separate teal pickup.
+- 074 The Crosswind Grove: staggered roots divide the board into offset pockets for a paired amber load and two single-color trips.
+- 075 The Golden Canopy Trial: two paired harvests and two lone seeds are coordinated across three deployment slots.
+- All five use schema-v1 rules only. Campaign integration tests validate each resource pickup and delivery with the authored roster.
+- Amber Orchard progress: 15/30. Total catalogue: 75/100 for version 1.0; 25 levels remain.
