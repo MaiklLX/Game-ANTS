@@ -10,6 +10,7 @@ const LEVEL_PATHS := [
 	"res://levels/level_001.json",
 	"res://levels/level_002.json",
 	"res://levels/level_003.json",
+	"res://levels/level_004.json",
 ]
 
 
@@ -19,6 +20,7 @@ var _failures: Array[String] = []
 func _initialize() -> void:
 	for level_path in LEVEL_PATHS:
 		_test_level(level_path)
+	_test_two_squad_deployment()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -85,6 +87,31 @@ func _test_level(level_path: String) -> void:
 
 	_check(TurnResolverScript.is_level_complete(board, colony), "%s should be completable with its authored roster" % level_path)
 	_check(not TurnResolverScript.is_level_blocked(board, colony), "%s should not end in a blocked state" % level_path)
+
+
+func _test_two_squad_deployment() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_004.json"))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_check(false, "meadow_004 should parse for simultaneous deployment test")
+		return
+	var board = BoardModelScript.new()
+	var colony = ColonyModelScript.new()
+	var loaded: Dictionary = LevelLoaderScript.load_into(parsed, board, colony)
+	_check(loaded["valid"], "meadow_004 should load for simultaneous deployment test")
+	if not loaded["valid"]:
+		return
+	var amber_deploy: Dictionary = colony.deploy_squad("amber_scouts")
+	var teal_deploy: Dictionary = colony.deploy_squad("teal_gatherers")
+	_check(amber_deploy["valid"] and teal_deploy["valid"], "both squads should occupy the two deployment slots at once")
+	_check(colony.get_active_slot_count() == 2, "meadow_004 should keep both deployment slots occupied")
+	var amber_pickup: Dictionary = TurnResolverScript.apply_collection(colony, board, "amber_scouts", board.start, Vector2i(5, 0))
+	var teal_pickup: Dictionary = TurnResolverScript.apply_collection(colony, board, "teal_gatherers", board.start, Vector2i(5, 4))
+	_check(amber_pickup["valid"], "amber squad should reach the upper seed while teal squad is deployed")
+	_check(teal_pickup["valid"], "teal squad should reach the lower seed while amber squad is deployed")
+	var amber_return: Dictionary = colony.return_squad("amber_scouts")
+	var teal_return: Dictionary = colony.return_squad("teal_gatherers")
+	_check(amber_return["valid"] and teal_return["valid"], "both squads should return independently")
+	_check(TurnResolverScript.is_level_complete(board, colony), "meadow_004 should complete after both squads deliver")
 
 
 func _check(condition: bool, message: String) -> void:
