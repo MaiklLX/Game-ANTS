@@ -14,10 +14,12 @@ func _initialize() -> void:
 	_check(initial["valid"] and initial["is_new"], "missing progress file should start a new record")
 	_check(store.get_last_selected_level_id() == "meadow_001", "new progress should select the first stable level ID")
 	_check(store.get_completed_count() == 0, "new progress should have no completed levels")
+	_check(not store.is_tutorial_completed(), "new progress should show the first-session tutorial")
 
 	_check(store.set_last_selected_level("meadow_002")["valid"], "last selected level should be saved")
 	_check(store.mark_level_completed("meadow_001")["valid"], "completed level should be saved")
 	_check(store.mark_level_completed("meadow_001")["valid"], "re-completing a level should remain valid")
+	_check(store.mark_tutorial_completed()["valid"], "tutorial completion should be saved")
 	_check(store.get_completed_count() == 1, "completed level IDs should be unique")
 	_check(FileAccess.file_exists(TEST_PATH + ".bak"), "atomic replacement should preserve the previous progress file")
 	var backup_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(TEST_PATH + ".bak"))
@@ -29,6 +31,7 @@ func _initialize() -> void:
 	_check(reopened_result["valid"], "saved progress should reload")
 	_check(reopened.get_last_selected_level_id() == "meadow_002", "last selected level should survive reload")
 	_check(reopened.is_level_completed("meadow_001"), "completed level should survive reload")
+	_check(reopened.is_tutorial_completed(), "tutorial completion should survive reload")
 	_check(reopened.get_completed_level_ids() == ["meadow_001"], "completed IDs should be returned in stable sorted order")
 
 	_write_text(TEST_PATH, JSON.stringify({
@@ -41,6 +44,7 @@ func _initialize() -> void:
 	_check(filtered_result["valid"], "progress with removed content IDs should still load")
 	_check(filtered.get_completed_count() == 1, "removed level IDs should be ignored safely")
 	_check(filtered.get_last_selected_level_id() == "meadow_001", "unknown last level should fall back to the first current level")
+	_check(not filtered.is_tutorial_completed(), "older schema-v1 saves without tutorial state should remain compatible")
 
 	_write_text(TEST_PATH, "{ not valid json")
 	var recovered = ProgressStoreScript.new(TEST_PATH)
