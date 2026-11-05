@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "root_labyrinth",
+  "title": "The Root Labyrinth",
+  "description": "Navigate narrow root corridors, discover alternate openings, and plan the order of each expedition.",
+  "levels": [
+    {
+      "id": "root_031",
+      "file": "res://levels/level_031.json"
+    },
+    {
+      "id": "root_032",
+      "file": "res://levels/level_032.json"
+    },
+    {
+      "id": "root_033",
+      "file": "res://levels/level_033.json"
+    },
+    {
+      "id": "root_034",
+      "file": "res://levels/level_034.json"
+    },
+    {
+      "id": "root_035",
+      "file": "res://levels/level_035.json"
+    }
+  ]
+}
