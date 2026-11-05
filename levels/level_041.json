@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "root_041",
   "title": "The Split Crossing",
-  "objective": "Three harvest points lie beyond two narrow openings; keep both field slots useful.",
+  "objective": "A near-side harvest sits before a raised passage; the far pair can be reached only by threading both openings in sequence.",
   "width": 6,
   "height": 5,
   "start": [
@@ -33,6 +33,12 @@
   ],
   "tiles": [
     {
+      "x": 2,
+      "y": 1,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
       "x": 5,
       "y": 0,
       "type": "resource",
@@ -45,24 +51,23 @@
       "color": "teal"
     },
     {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
       "x": 3,
       "y": 2,
-      "type": "resource",
-      "color": "coral"
-    },
-    {
-      "x": 2,
-      "y": 0,
       "type": "obstacle"
     },
     {
       "x": 2,
-      "y": 2,
+      "y": 3,
       "type": "obstacle"
     },
     {
-      "x": 2,
-      "y": 4,
+      "x": 3,
+      "y": 3,
       "type": "obstacle"
     }
   ]
