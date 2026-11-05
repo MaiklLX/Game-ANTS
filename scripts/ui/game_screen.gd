@@ -132,7 +132,7 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(560, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 
 	var title := String(_level_data.get("title", "New field"))
-	var objective := String(_level_data.get("objective", ""))
+	var objective := _objective_for_display(String(_level_data.get("objective", "")))
 	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_TEXT)
 	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_MUTED)
 	var field_hint := _contextual_hint()
@@ -141,6 +141,14 @@ func _draw_header(font: Font) -> void:
 		draw_line(Vector2(42, 236), Vector2(678, 236), COLOR_GRID, 2.0)
 	else:
 		draw_line(Vector2(42, 216), Vector2(678, 216), COLOR_GRID, 2.0)
+
+
+func _objective_for_display(objective: String) -> String:
+	if _ui_scale >= 0.52 or objective.length() <= 56:
+		return objective
+	if objective.begins_with("Eight seeds lie in paired pockets"):
+		return "Eight seeds. Four colors. Near and far pockets."
+	return objective.left(53).strip_edges() + "…"
 
 
 func _contextual_hint() -> String:
@@ -160,10 +168,12 @@ func _draw_slots(font: Font) -> void:
 	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_slot_rects.clear()
 	var slot_count: int = _colony.slot_capacity
-	var slot_width := 290.0 if slot_count == 1 else 290.0
-	var start_x := (720.0 - slot_count * slot_width - (slot_count - 1) * 14.0) * 0.5
+	var slot_gap := 8.0 if slot_count >= 3 else 14.0
+	var slot_width := minf(290.0, (636.0 - (slot_count - 1) * slot_gap) / float(slot_count))
+	var total_width := slot_count * slot_width + (slot_count - 1) * slot_gap
+	var start_x := (720.0 - total_width) * 0.5
 	for index in range(slot_count):
-		var rect := Rect2(start_x + index * (slot_width + 14.0), 276 + _layout_extra * 0.08, slot_width, 80)
+		var rect := Rect2(start_x + index * (slot_width + slot_gap), 276 + _layout_extra * 0.08, slot_width, 80)
 		_slot_rects.append(rect)
 		draw_rect(rect, COLOR_PANEL_LIGHT if _slot_is_occupied(index) else COLOR_PANEL)
 		draw_rect(Rect2(rect.position, Vector2(4, rect.size.y)), COLOR_GOLD if _slot_is_occupied(index) else COLOR_GRID)
