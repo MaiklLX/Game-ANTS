@@ -107,3 +107,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_038.json](../levels/level_038.json) — Parallel Tunnels: two teams can use separated openings while a third waits.
 - [level_039.json](../levels/level_039.json) — The Narrow Seam: one crossing through a horizontal root wall.
 - [level_040.json](../levels/level_040.json) — The Root Crown: four harvest points around a central heartwood mass.
+- [level_041.json](../levels/level_041.json) — The Split Crossing: three harvest points beyond two narrow openings.
+- [level_042.json](../levels/level_042.json) — The Long Burrow: capacity-two amber harvest beyond two turns.
+- [level_043.json](../levels/level_043.json) — The Upper and Lower Roots: two horizontal channels around a root barrier.
+- [level_044.json](../levels/level_044.json) — The Root Divide: upper and lower entries through a central wall.
+- [level_045.json](../levels/level_045.json) — The Hollow Crown: four colors around a heartwood mass with upper and lower lanes.
