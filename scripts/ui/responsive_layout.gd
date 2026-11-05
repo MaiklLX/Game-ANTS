@@ -46,3 +46,19 @@ static func squad_row_width(squad_count: int) -> float:
 	if squad_count <= 0:
 		return 0.0
 	return squad_count * squad_card_width(squad_count) + (squad_count - 1) * squad_card_gap(squad_count)
+
+
+static func levels_per_page(scale: float) -> int:
+	return 4 if scale < 0.48 else 5
+
+
+static func level_button_size(scale: float) -> float:
+	return 100.0 if scale < 0.48 else 88.0
+
+
+static func squad_card_height() -> float:
+	return 100.0
+
+
+static func status_action_height() -> float:
+	return 100.0

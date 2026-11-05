@@ -779,3 +779,9 @@
 - Added a compact four-squad row (156 px cards, 8 px gaps, 648 px total) and shorter status/load labels for this case. Slots, squad cards, board, status panel, and level picker now all consume vertical expansion at their intended staggered positions.
 - CI #753/#754 passed Godot 4.7.2 import, all core and campaign suites, the responsive layout contract, campaign audit, and headless main-scene launch on `d06fd323a543150ae4254497b2b596a6141fa666`.
 - Remaining: rendered Godot Editor review, safe-area inspection, Android export, and real-device touch/performance QA. PR #9 remains Draft and unmerged.
+
+
+### KT-011.2 follow-up — extra-narrow phone hit targets (2026-11-05)
+- Added a 320×568 test profile. At this scale, the level picker switches to four 100×100 controls per page; standard compact devices retain five 88×88 controls.
+- Squad cards and Retry/Skip action areas now use 100 logical-pixel height, maintaining the 44 physical-pixel minimum at the 320 px reference scale.
+- Contract tests assert the 320×568 transform, page density, and touch-target dimensions. This is not a substitute for rendered or physical-device QA.

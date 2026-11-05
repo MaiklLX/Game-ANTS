@@ -11,7 +11,6 @@ const ResponsiveLayoutScript = preload("res://scripts/ui/responsive_layout.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
-const LEVELS_PER_PAGE := 5
 const VIRTUAL_SIZE := Vector2(720.0, 1280.0)
 const CELL_SIZE := 68.0
 const CELL_GAP := 8.0
@@ -38,7 +37,7 @@ var _progress_store
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
 var _tutorial_step: int = -1
-var _tutorial_skip_rect := Rect2(548, 1000 + _layout_extra * 0.68 + 8, 106, 44)
+var _tutorial_skip_rect := Rect2()
 var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
@@ -176,7 +175,7 @@ func _draw_squads(font: Font) -> void:
 	for index in range(ids.size()):
 		var squad_id: String = ids[index]
 		var squad: Dictionary = _colony.get_squad(squad_id)
-		var rect := Rect2(start_x + index * (card_width + gap), 410 + _layout_extra * 0.18, card_width, 96)
+		var rect := Rect2(start_x + index * (card_width + gap), 410 + _layout_extra * 0.18, card_width, 100)
 		_squad_rects[squad_id] = rect
 		var selected := squad_id == _selected_squad_id
 		draw_rect(rect, COLOR_PANEL_LIGHT if selected else COLOR_PANEL)
@@ -272,12 +271,12 @@ func _draw_status(font: Font) -> void:
 	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
 	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
 	if _tutorial_active:
-		_tutorial_skip_rect = Rect2(548, panel.position.y + 20, 106, 88)
+		_tutorial_skip_rect = Rect2(548, panel.position.y + 12, 106, 100)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 21), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
+		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, 16, COLOR_TEXT)
 	else:
-		_restart_rect = Rect2(548, panel.position.y + 20, 106, 88)
+		_restart_rect = Rect2(548, panel.position.y + 12, 106, 100)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, 17, COLOR_TEXT)
@@ -286,30 +285,30 @@ func _draw_status(font: Font) -> void:
 
 
 func _draw_level_picker(font: Font) -> void:
-	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(LEVELS_PER_PAGE)))
-	var page_number := int(_level_page_start / LEVELS_PER_PAGE) + 1
+	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(_levels_per_page())))
+	var page_number := int(_level_page_start / _levels_per_page()) + 1
 	var completed_count: int = 0
 	if _progress_store != null:
 		completed_count = int(_progress_store.get_completed_count())
 	draw_string(font, Vector2(44, 1148 + _layout_extra * 0.86), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
 	_level_rects.clear()
 
-	var button_width := 88.0
+	var button_width := _level_button_size()
 	var button_gap := 4.0
-	var page_width := LEVELS_PER_PAGE * button_width + (LEVELS_PER_PAGE - 1) * button_gap
-	var arrow_width := 88.0
+	var page_width := _levels_per_page() * button_width + (_levels_per_page() - 1) * button_gap
+	var arrow_width := _level_button_size()
 	var controls_width := arrow_width + 8.0 + page_width + 8.0 + arrow_width
 	var controls_start_x := (720.0 - controls_width) * 0.5
 
-	_previous_page_rect = Rect2(controls_start_x, 1160 + _layout_extra * 0.86, arrow_width, 88)
+	_previous_page_rect = Rect2(controls_start_x, 1160 + _layout_extra * 0.86, arrow_width, _level_button_size())
 	draw_rect(_previous_page_rect, COLOR_PANEL if _level_page_start > 0 else COLOR_BG)
 	draw_string(font, _previous_page_rect.position + Vector2(0, 56), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
 
 	var buttons_start_x := controls_start_x + arrow_width + 8.0
-	var visible_count := mini(LEVELS_PER_PAGE, maxi(0, _campaign_levels.size() - _level_page_start))
+	var visible_count := mini(_levels_per_page(), maxi(0, _campaign_levels.size() - _level_page_start))
 	for local_index in range(visible_count):
 		var global_index := _level_page_start + local_index
-		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1160 + _layout_extra * 0.86, button_width, 88)
+		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1160 + _layout_extra * 0.86, button_width, _level_button_size())
 		_level_rects.append(rect)
 		var is_selected := global_index == _level_index
 		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
@@ -320,11 +319,19 @@ func _draw_level_picker(font: Font) -> void:
 
 	var next_x := buttons_start_x + page_width + 8.0
 	_next_page_rect = Rect2(next_x, 1160 + _layout_extra * 0.86, arrow_width, 88)
-	var has_next_page := _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size()
+	var has_next_page := _level_page_start + _levels_per_page() < _campaign_levels.size()
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
 	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
 
 	draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
+
+
+func _levels_per_page() -> int:
+	return ResponsiveLayoutScript.levels_per_page(_ui_scale)
+
+
+func _level_button_size() -> float:
+	return ResponsiveLayoutScript.level_button_size(_ui_scale)
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -347,11 +354,11 @@ func _handle_tap(point: Vector2) -> void:
 	if _is_animating:
 		return
 	if _previous_page_rect.has_point(point) and _level_page_start > 0:
-		_level_page_start = maxi(0, _level_page_start - LEVELS_PER_PAGE)
+		_level_page_start = maxi(0, _level_page_start - _levels_per_page())
 		queue_redraw()
 		return
-	if _next_page_rect.has_point(point) and _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size():
-		_level_page_start += LEVELS_PER_PAGE
+	if _next_page_rect.has_point(point) and _level_page_start + _levels_per_page() < _campaign_levels.size():
+		_level_page_start += _levels_per_page()
 		queue_redraw()
 		return
 	for index in range(_level_rects.size()):
@@ -398,7 +405,7 @@ func _load_level(index: int) -> void:
 		queue_redraw()
 		return
 	_level_index = clampi(index, 0, _campaign_levels.size() - 1)
-	_level_page_start = int(_level_index / LEVELS_PER_PAGE) * LEVELS_PER_PAGE
+	_level_page_start = int(_level_index / _levels_per_page()) * _levels_per_page()
 	_tutorial_active = _level_index == 0 and _progress_store != null and not _progress_store.is_tutorial_completed()
 	_tutorial_step = 0 if _tutorial_active else -1
 	_level_data = _campaign_levels[_level_index]["data"].duplicate(true)
