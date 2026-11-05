@@ -11,6 +11,7 @@ const LEVEL_PATHS := [
 	"res://levels/level_002.json",
 	"res://levels/level_003.json",
 	"res://levels/level_004.json",
+	"res://levels/level_005.json",
 ]
 
 
@@ -21,6 +22,7 @@ func _initialize() -> void:
 	for level_path in LEVEL_PATHS:
 		_test_level(level_path)
 	_test_two_squad_deployment()
+	_test_three_squad_slot_pressure()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -118,3 +120,39 @@ func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
 	_failures.append(message)
+
+
+func _test_three_squad_slot_pressure() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_005.json"))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_check(false, "meadow_005 should parse for three-squad slot-pressure test")
+		return
+	var board = BoardModelScript.new()
+	var colony = ColonyModelScript.new()
+	var loaded: Dictionary = LevelLoaderScript.load_into(parsed, board, colony)
+	_check(loaded["valid"], "meadow_005 should load for three-squad slot-pressure test")
+	if not loaded["valid"]:
+		return
+
+	var amber_deploy: Dictionary = colony.deploy_squad("amber_carriers")
+	var teal_deploy: Dictionary = colony.deploy_squad("teal_gatherers")
+	var coral_blocked: Dictionary = colony.deploy_squad("coral_scouts")
+	_check(amber_deploy["valid"] and teal_deploy["valid"], "amber and teal squads should fill both slots")
+	_check(not coral_blocked["valid"], "third squad must wait while both deployment slots are occupied")
+
+	var amber_first: Dictionary = TurnResolverScript.apply_collection(colony, board, "amber_carriers", board.start, Vector2i(5, 0))
+	var amber_second: Dictionary = TurnResolverScript.apply_collection(colony, board, "amber_carriers", Vector2i(5, 0), Vector2i(5, 1))
+	var teal_pickup: Dictionary = TurnResolverScript.apply_collection(colony, board, "teal_gatherers", board.start, Vector2i(5, 4))
+	_check(amber_first["valid"] and amber_second["valid"], "amber carrier should collect its two-seed load")
+	_check(teal_pickup["valid"], "teal squad should collect while amber remains deployed")
+
+	var amber_return: Dictionary = colony.return_squad("amber_carriers")
+	var coral_deploy: Dictionary = colony.deploy_squad("coral_scouts")
+	_check(amber_return["valid"], "full amber squad should return and free one slot")
+	_check(coral_deploy["valid"], "coral squad should deploy as soon as a slot is freed")
+	var coral_pickup: Dictionary = TurnResolverScript.apply_collection(colony, board, "coral_scouts", board.start, Vector2i(0, 0))
+	_check(coral_pickup["valid"], "coral squad should collect its nearby seed")
+	var teal_return: Dictionary = colony.return_squad("teal_gatherers")
+	var coral_return: Dictionary = colony.return_squad("coral_scouts")
+	_check(teal_return["valid"] and coral_return["valid"], "remaining squads should return independently")
+	_check(TurnResolverScript.is_level_complete(board, colony), "meadow_005 should complete after respecting slot pressure")
