@@ -281,6 +281,22 @@ func _error_ru(value: String) -> String:
 			return "Не удалось создать временный файл прогресса."
 		"Could not commit the new progress file.":
 			return "Не удалось сохранить новый файл прогресса."
+		"The level has already ended.":
+			return "Экспедиция уже завершена."
+		"Deploy the squad before assigning a target.":
+			return "Сначала отправьте отряд в поле."
+		"The squad's carrying capacity is full.":
+			return "Отряд уже несёт полный груз."
+		"Target must be reachable and different from the squad's current cell.":
+			return "Выберите доступное семя на другой клетке."
+		"Another squad already has an order for this resource.":
+			return "Это семя уже назначено другому отряду."
+		"Only a deployed squad can return.":
+			return "Вернуть можно только отряд в поле."
+		"The squad is already at the nest or the nest is unreachable.":
+			return "Отряд уже у муравейника или путь домой закрыт."
+		"Assign at least one squad order before ending the turn.":
+			return "Сначала назначьте приказ хотя бы одному отряду."
 	return value
 
 func _draw_slots(font: Font) -> void:
@@ -442,9 +458,11 @@ func _draw_status(font: Font) -> void:
 	var action_height := ResponsiveLayoutScript.status_action_height(_ui_scale)
 	var action_x := panel.position.x + panel.size.x - action_width - 24.0
 	if _tutorial_active:
-		_tutorial_skip_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
-		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "ПРОПУСТИТЬ", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
+		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
+		_tutorial_skip_rect = _restart_rect
+		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
+		var tutorial_action := "СЛЕД. ХОД" if _has_active_orders() else "ПРОПУСТИТЬ"
+		draw_string(font, _restart_rect.position + Vector2(0, 58), tutorial_action, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
@@ -541,6 +559,8 @@ func _handle_tap(point: Vector2) -> void:
 	if _restart_rect.has_point(point):
 		if _has_active_orders():
 			_advance_strategic_turn()
+		elif _tutorial_active:
+			_complete_tutorial()
 		else:
 			_load_level(_level_index)
 		return
@@ -622,8 +642,11 @@ func _select_or_deploy(squad_id: String) -> void:
 			_tutorial_step = 1
 	else:
 		var order: Dictionary = _strategic_engine.get_order(squad_id)
-		if not order.is_empty():
-			_status = "Приказ активен: %d ход(а/ов) до цели." % order.get("path", []).size()
+		if not order.is_empty() and _selected_squad_id == squad_id:
+			_strategic_engine.cancel_order(squad_id)
+			_status = "Приказ отменён. Выберите новую цель или назначьте возвращение."
+		elif not order.is_empty():
+			_status = "Приказ активен: %d ход(а/ов). Повторное касание отменит приказ." % order.get("path", []).size()
 		elif int(squad.get("carried", 0)) > 0:
 			_status = "Отряд несёт груз. Коснитесь муравейника, чтобы назначить возвращение."
 		else:
