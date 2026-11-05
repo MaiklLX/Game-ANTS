@@ -505,3 +505,10 @@
 - Meadow chapter now contains 15/30 levels; all 15 are included in deterministic campaign integration tests.
 - CI run #220 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025359991.
 - Godot 4.7.2 import, all six test suites (including campaign catalog and all 15 campaign levels), and headless main-scene launch passed.
+
+
+### Meadow content batch 016–020 — CI PASS
+- Added levels 016–020: Bramble Fork, Long Way Home, Four Colors, Two Slots, Twin Loads, and Meadow Assembly.
+- Meadow chapter now contains 20/30 authored levels; all 20 pass the production campaign integration solver.
+- GitHub Actions run #240 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025594751.
+- Godot 4.7.2 import, all six test suites, and headless main-scene launch passed.
