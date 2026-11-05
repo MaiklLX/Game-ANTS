@@ -97,12 +97,13 @@ Related motifs across levels 047, 057, and 059 and the repeated crown/finale fam
 - `root_041` — replaced the duplicate of `root_038` with a single-cell bottleneck that feeds a three-way harvest junction; all far branches must pass through the same gate.
 - `root_053` — moved the violet cache to the lower intermediate segment between two staggered gates, creating a distinct route-order decision from `root_056`.
 - `root_045` — moved the coral cache into a central hollow accessible only through the upper notch and reduced deployment slots from three to two; regression coverage locks the single-entry route.
+- `root_056` / `root_057` — added paired route assertions for the intentional gate-order reversal: level 056 crosses low then high with one slot; level 057 crosses high then low with two slots.
 - `orchard_083` — moved the coral resource into the sheltered central lane to break the repeated four-corner resource pattern.
 - `orchard_084` — reduced deployment slots to one, turning the same four-pocket layout into a deliberate squad-rotation puzzle.
 - `colony_100` — rebuilt the finale around eight seeds in four paired colors, with each pair split across a single central root gate. Every far-side resource route must pass through that gate; each carrier uses its capacity-two load.
 - Stable level IDs and campaign order are preserved. No new mechanics or schema changes were introduced.
 
-The revised Root Labyrinth maps and final-level redesign have targeted route regression coverage. CI #629 passed all tests, the campaign audit, and the headless main-scene launch on the current map/test checkpoint.
+The revised Root Labyrinth maps, mirrored 056/057 gate sequence, and final-level redesign have targeted route regression coverage. CI #695 passed all tests, the campaign audit, and the headless main-scene launch on the current checkpoint.
 
 ## Next review sequence
 
