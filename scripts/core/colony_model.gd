@@ -85,7 +85,7 @@ func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector
 		return _failure("Resource color does not match the squad.")
 	var squad_position: Vector2i = squad["position"]
 	var route_start := squad_position if board.is_inside(squad_position) else from_cell
-	if board.find_path(route_start, target_cell).is_empty():
+	if route_start != target_cell and board.find_path(route_start, target_cell).is_empty():
 		return _failure("Target resource is not reachable.")
 
 	if not board.collect_resource(target_cell, squad["color"]):
@@ -100,6 +100,22 @@ func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector
 		"carried": squad["carried"],
 		"remaining_capacity": squad["capacity"] - squad["carried"],
 	}
+
+
+func move_squad(squad_id: String, target_cell: Vector2i, board: BoardModel) -> Dictionary:
+	if not _squads.has(squad_id):
+		return _failure("Unknown squad: %s." % squad_id)
+	var squad: Dictionary = _squads[squad_id]
+	if not squad.get("deployed", false):
+		return _failure("Squad must be deployed before moving.")
+	var current: Vector2i = squad.get("position", nest_position)
+	if not board.is_walkable(target_cell):
+		return _failure("Target cell is not walkable.")
+	if absi(target_cell.x - current.x) + absi(target_cell.y - current.y) != 1:
+		return _failure("Squad movement must advance exactly one adjacent cell.")
+	squad["position"] = target_cell
+	_squads[squad_id] = squad
+	return _success()
 
 
 func return_squad(squad_id: String) -> Dictionary:
