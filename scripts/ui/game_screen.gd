@@ -5,6 +5,7 @@ const BoardModelScript = preload("res://scripts/core/board_model.gd")
 const ColonyModelScript = preload("res://scripts/core/colony_model.gd")
 const LevelLoaderScript = preload("res://scripts/core/level_loader.gd")
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
+const ProgressStoreScript = preload("res://scripts/core/progress_store.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
@@ -31,6 +32,8 @@ var _level_data: Dictionary = {}
 var _level_index: int = 0
 var _level_page_start: int = 0
 var _campaign_levels: Array[Dictionary] = []
+var _progress_store
+var _progress_warning: String = ""
 var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
@@ -66,7 +69,22 @@ func _ready() -> void:
 		queue_redraw()
 		return
 	_campaign_levels = catalog_result["levels"]
-	_load_level(0)
+	var level_ids: Array[String] = []
+	for level_record in _campaign_levels:
+		level_ids.append(String(level_record["id"]))
+	_progress_store = ProgressStoreScript.new()
+	var progress_result: Dictionary = _progress_store.load_progress(level_ids)
+	if not progress_result.get("valid", false):
+		_progress_warning = String(progress_result.get("warning", "Progress data could not be loaded."))
+	else:
+		_progress_warning = String(progress_result.get("warning", ""))
+	var initial_index := 0
+	var saved_level_id := _progress_store.get_last_selected_level_id()
+	for index in range(_campaign_levels.size()):
+		if String(_campaign_levels[index]["id"]) == saved_level_id:
+			initial_index = index
+			break
+	_load_level(initial_index)
 	queue_redraw()
 
 
@@ -234,7 +252,8 @@ func _draw_status(font: Font) -> void:
 func _draw_level_picker(font: Font) -> void:
 	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(LEVELS_PER_PAGE)))
 	var page_number := int(_level_page_start / LEVELS_PER_PAGE) + 1
-	draw_string(font, Vector2(44, 1150), "LEVELS  ·  PAGE %02d / %02d" % [page_number, page_count], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
+	var completed_count := _progress_store.get_completed_count() if _progress_store != null else 0
+	draw_string(font, Vector2(44, 1150), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
 	_level_rects.clear()
 
 	var button_width := 54.0
@@ -259,6 +278,8 @@ func _draw_level_picker(font: Font) -> void:
 		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
 		var label_color := COLOR_BG if is_selected else COLOR_TEXT
 		draw_string(font, rect.position + Vector2(0, 36), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 15, label_color)
+		if _progress_store != null and _progress_store.is_level_completed(String(_campaign_levels[global_index]["id"])):
+			draw_circle(rect.position + Vector2(rect.size.x - 7.0, 7.0), 3.0, COLOR_GOLD)
 
 	var next_x := buttons_start_x + page_width + 8.0
 	_next_page_rect = Rect2(next_x, 1140, arrow_width, 58)
@@ -348,6 +369,12 @@ func _load_level(index: int) -> void:
 	_last_target = Vector2i(-1, -1)
 	_last_path_start = _board.start
 	_status = "Choose a squad to begin." if result["valid"] else str(result["errors"])
+	if result["valid"] and _progress_store != null:
+		var save_result: Dictionary = _progress_store.set_last_selected_level(String(_campaign_levels[_level_index]["id"]))
+		if not save_result.get("valid", false):
+			_progress_warning = String(save_result.get("warning", "Progress could not be saved."))
+	if result["valid"] and not _progress_warning.is_empty():
+		_status = "Progress note: " + _progress_warning
 	queue_redraw()
 
 
@@ -517,7 +544,14 @@ func _selected_squad_color() -> Color:
 
 func _check_terminal_state() -> void:
 	if TurnResolverScript.is_level_complete(_board, _colony):
+		var level_id := String(_campaign_levels[_level_index]["id"])
+		if _progress_store != null and not _progress_store.is_level_completed(level_id):
+			var save_result: Dictionary = _progress_store.mark_level_completed(level_id)
+			if not save_result.get("valid", false):
+				_progress_warning = String(save_result.get("warning", "Progress could not be saved."))
 		_status = "Field cleared! Every seed is safely home."
+		if not _progress_warning.is_empty():
+			_status += "  " + _progress_warning
 	elif TurnResolverScript.is_level_blocked(_board, _colony):
 		_status = "No available squad can reach the remaining seeds. Retry this field."
 
