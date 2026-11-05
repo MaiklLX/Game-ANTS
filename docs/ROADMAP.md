@@ -114,7 +114,7 @@
 
 
 ### KT-002 — First green Godot CI run (2026-11-05)
-<badge>Godot CI passed</badge>
+**Status: PASS — Godot CI**
 
 - Workflow run **#20** completed successfully: [open GitHub Actions run](https://github.com/MaiklLX/Game-ANTS/actions/runs/41997296164).
 - Godot 4.7.2 Linux binary downloaded and version check passed.
