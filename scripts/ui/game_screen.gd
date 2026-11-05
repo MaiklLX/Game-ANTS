@@ -222,7 +222,7 @@ func _color_name_ru(value: String) -> String:
 
 
 func _objective_for_display(objective: String) -> String:
-	if _ui_scale >= 0.52 or objective.length() <= 56:
+	if _ui_scale >= 0.72 or objective.length() <= 56:
 		return objective
 	return objective.left(53).strip_edges() + "…"
 
@@ -313,7 +313,7 @@ func _draw_squads(font: Font) -> void:
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
-		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d собрано" % [carried, capacity]
+		var load_text := "%d/%d" % [carried, capacity]
 		var state_label := state
 		if ids.size() >= 4:
 			state_label = "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
@@ -333,7 +333,7 @@ func _draw_board(font: Font) -> void:
 
 	var board_label_y := _board_origin.y - 22.0
 	draw_string(font, Vector2(44, board_label_y), "ПОЛЕ СБОРА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	var resource_label := "ОСТАЛОСЬ СЕМЯН: %d" % _board.remaining_resources
+	var resource_label := "СЕМЯН: %d" % _board.remaining_resources
 	draw_string(font, Vector2(498, board_label_y), resource_label, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
