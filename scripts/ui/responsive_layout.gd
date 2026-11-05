@@ -74,3 +74,7 @@ static func font_size(base_size: int, scale: float, minimum_physical: float = 8.
 	if scale <= 0.0:
 		return base_size
 	return maxi(base_size, ceili(minimum_physical / scale))
+
+
+static func show_footer(scale: float) -> bool:
+	return scale >= 0.48
