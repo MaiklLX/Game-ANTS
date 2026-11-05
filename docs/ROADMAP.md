@@ -448,3 +448,17 @@
 - Updated the level format guide with the new field.
 - GitHub Actions run **#157** passed on gameplay/UI commit `afd74716a8b3e830f4d1e977a9921284300940b4`; run **#159** also passed on the latest roadmap checkpoint. Both completed Godot 4.7.2 import, all five test suites (including the concurrent-squad integration case), and headless main-scene launch. Editor/device visual QA remains outstanding.
 - PR #8 remains Draft and stacked on `feat/kt-004-squad-rules`; no merge to `main`.
+
+
+### KT-005.5 — three-color slot-pressure puzzle (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Status:** Implementation committed; CI verification pending.
+
+- Added `meadow_005`, "The Busy Nest": three squad colors (amber, teal, coral), two deployment slots, and four seeds.
+- Amber has capacity two and can bring home both upper seeds in one trip; teal and coral each have a single matching seed.
+- The level teaches slot scheduling: the third squad cannot deploy until one of the first two returns.
+- Added a deterministic integration test that verifies the slot limit, blocked third deployment, slot release after return, and eventual victory.
+- Added level 005 to the picker and made the displayed level count derive from the campaign list rather than a hard-coded value.
+- No merge to main. Visual editor/device QA remains outstanding.
+
+**Next:** verify the new campaign test and Godot import in CI, then move into KT-006 interaction clarity and a stronger first-session tutorial.
