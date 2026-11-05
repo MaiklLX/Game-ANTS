@@ -368,7 +368,8 @@
 ### KT-005.2 — Squad presentation and interaction feedback (2026-11-05)
 **Branch:** `feat/kt-005-first-playable-levels`  
 **Draft PR:** [#8](https://github.com/MaiklLX/Game-ANTS/pull/8)  
-**Implementation commit:** `9ea2648f59e857524247f9390d9d8f294ded58fc`
+**Implementation commit:** `9ea2648f59e857524247f9390d9d8f294ded58fc`  
+**Checkpoint commit:** `cffbb1d728fa04942a466c529260d1d444501550`
 
 **Implemented**
 - Replaced the single moving cursor-like marker with a compact three-ant formation that follows the same validated route.
@@ -377,8 +378,12 @@
 - Terminal fields now ignore gameplay taps; only retry or selecting another level remains available.
 - Added continuous redraw requests while route and feedback tweens are active, so tweened drawing properties are actually presented frame by frame.
 
-**Verification status**
-- GitHub Actions validation is pending for this commit.
+**Verification: PASS**
+- GitHub Actions run **#125** passed on the UI implementation commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016724874
+- GitHub Actions run **#127** passed on the checkpoint commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016772487
+- Godot 4.7.2 version check and project import passed.
+- BoardModel, LevelDefinition, ColonyModel, TurnResolver, and Campaign level tests all passed.
+- Main scene launched successfully in headless mode.
 - This is still a graybox silhouette, not final pixel art.
 - No Godot editor visual inspection, Android APK export, or physical-device touch QA is claimed.
 
@@ -390,4 +395,4 @@
 
 **Checkpoint phrase:**
 
-`GAME-ANTS — KT-005.2 SQUAD FEEDBACK IMPLEMENTED, CI PENDING. Continue from feat/kt-005-first-playable-levels and draft PR #8. Commit 9ea2648f59e857524247f9390d9d8f294ded58fc changes the graybox UI: three ants travel as a small formation along the validated route; collection and nest delivery trigger expanding feedback rings; completed and blocked fields have distinct status panels; terminal input is limited to retry/level selection. A process redraw loop now keeps tween-driven movement and pulses visible. This remains graybox presentation, not final pixel art. CI has not yet been confirmed for this commit. No editor visual QA, Android APK, or physical-device testing has been performed. Next: verify CI, then inspect phone scaling/touch coordinates and refine nest/resource/carrying visuals. Keep PR #8 draft and stacked; never merge to main without owner approval. Godot 4.7.2-stable remains pinned; GitHub Issues only; no external agents.`
+`GAME-ANTS — KT-005.2 SQUAD FEEDBACK IMPLEMENTED, CI PENDING. Continue from feat/kt-005-first-playable-levels and draft PR #8. Commit 9ea2648f59e857524247f9390d9d8f294ded58fc changes the graybox UI: three ants travel as a small formation along the validated route; collection and nest delivery trigger expanding feedback rings; completed and blocked fields have distinct status panels; terminal input is limited to retry/level selection. A process redraw loop now keeps tween-driven movement and pulses visible. This remains graybox presentation, not final pixel art. GitHub Actions runs #125 and #127 passed for the UI and checkpoint commits. No editor visual QA, Android APK, or physical-device testing has been performed. Next: verify CI, then inspect phone scaling/touch coordinates and refine nest/resource/carrying visuals. Keep PR #8 draft and stacked; never merge to main without owner approval. Godot 4.7.2-stable remains pinned; GitHub Issues only; no external agents.`
