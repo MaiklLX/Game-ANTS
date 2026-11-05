@@ -29,6 +29,11 @@ Use stable IDs; never recycle a released level ID. Add new chapters as separate 
 - [level_003.json](../levels/level_003.json) — two amber seeds, one teal seed, and capacity planning.
 - [level_004.json](../levels/level_004.json) — two simultaneous squads, two deployment slots, and a narrow shared passage.
 - [level_005.json](../levels/level_005.json) — three squad colors competing for two deployment slots, with a capacity-two amber haul.
+- [level_006.json](../levels/level_006.json) — capacity-one repeat trips around a pebble bend.
+- [level_007.json](../levels/level_007.json) — three colors sharing one deployment slot.
+- [level_008.json](../levels/level_008.json) — two active slots, a waiting squad, and a crosswind obstacle layout.
+- [level_009.json](../levels/level_009.json) — a three-seed harvest split across capacity-limited trips.
+- [level_010.json](../levels/level_010.json) — violet multi-pickup routing alongside an amber delivery.
 
 ## Fields
 
