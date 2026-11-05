@@ -334,3 +334,32 @@
 **Updated checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-005 FIRST PLAYABLE GRAYBOX GREEN. Continue from feat/kt-005-first-playable-levels and draft PR #8, based on feat/kt-004-squad-rules (PR #7 dependency). Godot 4.7.2-stable remains pinned. Level schema v1 now validates deployment_slots and squad rosters; LevelLoader loads board + colony from authored data. Three meadow levels exist: meadow_001 (basic collect/return), meadow_002 (two colors, one slot), meadow_003 (amber capacity-two trip plus teal trip). Main scene now uses scripts/ui/game_screen.gd for a portrait touch/mouse graybox with squad cards, slots, board, collection, nest return, delivery feedback, retry, and level picker. Campaign tests solve all three levels through production core models. GitHub Actions run #107 passed: BoardModel, LevelDefinition, ColonyModel, TurnResolver, Campaign level tests, Godot 4.7.2 project import, and headless main-scene launch. Initial run #102 caught a goal-field regression; goal coordinates were restored to authored target resources before the green run. No visual editor/device inspection, APK, or web deployment has been performed. Next: actual visual/device QA, then ant movement/collection/return feedback and improved game feel. Keep PRs stacked and draft; no merge to main without owner approval. GitHub Issues only; no external agents.`
+
+
+### KT-005.1 — Continuous squad routes and visible ant movement (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`  
+**Draft PR:** [#8](https://github.com/MaiklLX/Game-ANTS/pull/8)  
+**Verified implementation commit:** `bf411206372e771855c160ceeacddb5237d8c129`
+
+**Completed**
+- ColonyModel now stores each squad's current grid position, initializes it at the nest, advances it to each collected resource, and restores it to the nest on return.
+- TurnResolver previews routes from the squad's actual current position, not always from the nest.
+- The campaign solution test verifies that the second amber pickup in meadow_003 is reached by a one-cell continuation from the first pickup, and that each squad returns to the nest position.
+- The graybox now animates a small ant marker along the validated outbound route; collection is applied only after the ant reaches the resource.
+- Tapping the nest calculates and animates the return route from the squad's current position; delivery and slot release happen when the return animation completes.
+- Input is locked during route animation to prevent overlapping actions.
+
+**Verification: PASS**
+- GitHub Actions run **#121** passed: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42013999272).
+- Logs explicitly confirm BoardModel, LevelDefinition, ColonyModel, TurnResolver, and Campaign level tests passed; Godot 4.7.2 import and headless main-scene launch passed.
+- Visual frame-by-frame inspection and physical-device touch testing remain outstanding.
+
+**Next**
+1. Validate the graybox visually in a real Godot editor/device run, especially the 720×1280 layout scaling and touch coordinates.
+2. Improve ant animation with a small group of ants, pickup/drop feedback, and a short nest delivery effect.
+3. Add a player-visible retry/blocked modal and clear feedback when a different squad must be chosen.
+4. Add undo only after action history and animation interruption are deterministic.
+
+**Updated checkpoint phrase:**
+
+`GAME-ANTS — KT-005.1 SQUAD MOVEMENT GREEN. Continue from feat/kt-005-first-playable-levels, draft PR #8. Level schema and LevelLoader provide authored squads/slots; three meadow levels are playable in the portrait graybox. ColonyModel now tracks each squad's current cell, so consecutive pickups route from the previous resource instead of teleporting back to the nest. The UI previews the route, animates the ant marker outbound, applies collection at arrival, then animates the return route when the nest is tapped; delivery/slot release occurs after arrival. Input is locked during animation. Campaign tests verify the one-cell second amber pickup in meadow_003 and nest-position restoration. GitHub Actions run #121 passed all five test suites plus Godot 4.7.2 import and headless main-scene launch. Visual editor/device QA remains outstanding; no APK or public web build. Next: improve ant group/collection/return effects and blocked/retry feedback, then perform real phone visual/touch QA. Keep PRs stacked and draft; never merge to main without owner approval. GitHub Issues only; no external agents.`
