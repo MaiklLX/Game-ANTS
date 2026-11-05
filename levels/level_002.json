@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "meadow_002",
+  "title": "Two Colors, One Slot",
+  "objective": "Choose the matching workers for each seed.",
+  "width": 5,
+  "height": 5,
+  "start": [0, 2],
+  "goal": [0, 2],
+  "deployment_slots": 1,
+  "squads": [
+    { "id": "amber_workers", "color": "amber", "capacity": 1 },
+    { "id": "teal_workers", "color": "teal", "capacity": 1 }
+  ],
+  "tiles": [
+    { "x": 0, "y": 2, "type": "nest" },
+    { "x": 4, "y": 1, "type": "resource", "color": "amber" },
+    { "x": 4, "y": 3, "type": "resource", "color": "teal" },
+    { "x": 2, "y": 2, "type": "obstacle" },
+    { "x": 2, "y": 3, "type": "obstacle" }
+  ]
+}
