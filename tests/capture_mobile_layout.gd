@@ -26,15 +26,18 @@ func _capture_viewports() -> void:
 
 	for viewport_case in VIEWPORT_CASES:
 		var viewport_size: Vector2i = viewport_case["size"]
-		DisplayServer.window_set_size(viewport_size)
-		await process_frame
+		var render_viewport := SubViewport.new()
+		render_viewport.size = viewport_size
+		render_viewport.disable_3d = true
+		render_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		root.add_child(render_viewport)
 
 		var scene := MAIN_SCENE.instantiate()
-		root.add_child(scene)
+		render_viewport.add_child(scene)
 		await process_frame
 		await RenderingServer.frame_post_draw
 
-		var screenshot: Image = root.get_texture().get_image()
+		var screenshot: Image = render_viewport.get_texture().get_image()
 		if screenshot == null or screenshot.is_empty():
 			push_error("Rendered screenshot is empty for %s" % viewport_case["name"])
 			quit(1)
@@ -52,7 +55,7 @@ func _capture_viewports() -> void:
 			return
 		print("Captured rendered viewport: %s" % output_path)
 
-		scene.queue_free()
+		render_viewport.queue_free()
 		await process_frame
 
 	quit(0)
