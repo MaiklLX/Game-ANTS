@@ -54,5 +54,8 @@ jobs:
       - name: Run campaign level tests
         run: timeout 60s godot --headless --path . --script res://tests/test_campaign_levels.gd
 
+      - name: Run campaign catalog tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_campaign_catalog.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
