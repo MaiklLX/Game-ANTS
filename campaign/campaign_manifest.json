@@ -11,6 +11,9 @@
     },
     {
       "file": "res://campaign/packs/amber_orchard/pack.json"
+    },
+    {
+      "file": "res://campaign/packs/colony_heart/pack.json"
     }
   ]
 }
