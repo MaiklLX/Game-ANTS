@@ -215,7 +215,8 @@ func _draw_board(font: Font) -> void:
 
 	var board_label_y := _board_origin.y - 22.0
 	draw_string(font, Vector2(44, board_label_y), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(498, board_label_y), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
+	var resource_label := "%d SEED%s LEFT" % [_board.remaining_resources, "" if _board.remaining_resources == 1 else "S"]
+	draw_string(font, Vector2(498, board_label_y), resource_label, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
 	draw_rect(board_frame, Color("#182820"))
