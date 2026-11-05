@@ -1,9 +1,10 @@
 extends SceneTree
-## Non-blocking campaign design audit. Reports repeated board geometry and
-## exact gameplay signatures without treating every shared motif as a defect.
+## Non-blocking campaign design audit. Reports repeated board geometry,
+## chapter route/workload averages, and the heaviest deterministic test routes.
 
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
 const BoardModelScript = preload("res://scripts/core/board_model.gd")
+
 
 func _initialize() -> void:
 	var result: Dictionary = CampaignCatalogScript.load_catalog("res://campaign/campaign_manifest.json")
@@ -14,26 +15,27 @@ func _initialize() -> void:
 
 	var geometry_groups: Dictionary = {}
 	var gameplay_groups: Dictionary = {}
-	var route_profile_groups: Dictionary = {}
 	var chapter_stats: Dictionary = {}
+	var level_workloads: Array[Dictionary] = []
 	var levels: Array = result["levels"]
 
 	for level_record in levels:
 		var data: Dictionary = level_record["data"]
 		var level_id := String(level_record["id"])
 		var chapter_id := String(level_record["chapter_id"])
-		var geometry_key := _geometry_signature(data)
-		var gameplay_key := _gameplay_signature(data)
-		_add_group(geometry_groups, geometry_key, level_id)
-		_add_group(gameplay_groups, gameplay_key, level_id)
-		_add_group(route_profile_groups, _route_profile_signature(data), level_id)
-		_accumulate_chapter_stats(chapter_stats, chapter_id, data)
+		_add_group(geometry_groups, _geometry_signature(data), level_id)
+		_add_group(gameplay_groups, _gameplay_signature(data), level_id)
+		var workload: Dictionary = _accumulate_chapter_stats(chapter_stats, chapter_id, data)
+		workload["id"] = level_id
+		workload["chapter_id"] = chapter_id
+		level_workloads.append(workload)
 
 	print("CAMPAIGN DESIGN AUDIT — %d levels across %d chapters" % [levels.size(), chapter_stats.size()])
 	_print_chapter_stats(chapter_stats)
+	_print_top_workloads(level_workloads, 10)
+	_print_chapter_workloads(level_workloads, "colony_heart")
 	_print_duplicate_groups("Repeated board geometry (review candidates)", geometry_groups)
 	_print_duplicate_groups("Exact gameplay signatures (high-priority review)", gameplay_groups)
-	_print_duplicate_groups("Resource route profiles (review candidates)", route_profile_groups)
 	print("Audit is informational: shared geometry can be intentional; human design review remains required.")
 	quit(0)
 
@@ -86,33 +88,13 @@ func _gameplay_signature(data: Dictionary) -> String:
 	]
 
 
-func _route_profile_signature(data: Dictionary) -> String:
-	var board = BoardModelScript.new()
-	var loaded: Dictionary = board.load_level(data)
-	if not loaded.get("valid", false):
-		return "invalid"
-	var resource_routes: Array[String] = []
-	for tile in data.get("tiles", []):
-		if String(tile["type"]) != "resource":
-			continue
-		var target := Vector2i(int(tile["x"]), int(tile["y"]))
-		var route: Array[Vector2i] = board.find_path(board.start, target)
-		resource_routes.append("%s:%d" % [String(tile["color"]), route.size()])
-	resource_routes.sort()
-	var squad_profile: Array[String] = []
-	for squad in data.get("squads", []):
-		squad_profile.append("%s:%d" % [String(squad["color"]), int(squad["capacity"])])
-	squad_profile.sort()
-	return "%d|%s|%s" % [int(data["deployment_slots"]), JSON.stringify(resource_routes), JSON.stringify(squad_profile)]
-
-
 func _add_group(groups: Dictionary, signature: String, level_id: String) -> void:
 	if not groups.has(signature):
 		groups[signature] = []
 	groups[signature].append(level_id)
 
 
-func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dictionary) -> void:
+func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dictionary) -> Dictionary:
 	if not stats.has(chapter_id):
 		stats[chapter_id] = {
 			"levels": 0,
@@ -120,7 +102,6 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			"obstacles": 0,
 			"squads": 0,
 			"slots": 0,
-			"capacity_total": 0,
 			"capacity_max": 0,
 			"route_samples": 0,
 			"route_steps_total": 0,
@@ -138,6 +119,12 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			entry["resources"] += 1
 		elif String(tile["type"]) == "obstacle":
 			entry["obstacles"] += 1
+	for squad in data.get("squads", []):
+		entry["squads"] += 1
+		entry["capacity_max"] = maxi(int(entry["capacity_max"]), int(squad["capacity"]))
+
+	var level_expedition_steps := 0
+	var level_trip_count := 0
 	var board = BoardModelScript.new()
 	var board_result: Dictionary = board.load_level(data)
 	if board_result.get("valid", false):
@@ -153,8 +140,7 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			entry["route_steps_total"] += route.size()
 			entry["extra_steps_total"] += route.size() - direct_steps
 			entry["route_steps_max"] = maxi(int(entry["route_steps_max"]), route.size())
-		var level_expedition_steps := 0
-		var level_trip_count := 0
+
 		for squad in data.get("squads", []):
 			var matching_cells: Array[Vector2i] = []
 			for cell in board.get_resource_cells():
@@ -174,17 +160,16 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 					current_position = target_cell
 					cell_index += 1
 					carried += 1
+				if carried == 0:
+					break
 				var return_path: Array[Vector2i] = board.find_path(current_position, board.start)
 				level_expedition_steps += return_path.size()
 				level_trip_count += 1
-		entry["expedition_steps_total"] += level_expedition_steps
-		entry["trip_count_total"] += level_trip_count
-		entry["expedition_steps_max_level"] = maxi(int(entry["expedition_steps_max_level"]), level_expedition_steps)
-	for squad in data.get("squads", []):
-		var capacity := int(squad["capacity"])
-		entry["squads"] += 1
-		entry["capacity_total"] += capacity
-		entry["capacity_max"] = maxi(int(entry["capacity_max"]), capacity)
+
+	entry["expedition_steps_total"] += level_expedition_steps
+	entry["trip_count_total"] += level_trip_count
+	entry["expedition_steps_max_level"] = maxi(int(entry["expedition_steps_max_level"]), level_expedition_steps)
+	return {"steps": level_expedition_steps, "trips": level_trip_count}
 
 
 func _print_chapter_stats(stats: Dictionary) -> void:
@@ -210,6 +195,34 @@ func _print_chapter_stats(stats: Dictionary) -> void:
 				int(entry["expedition_steps_max_level"]),
 			]
 		)
+
+
+func _print_top_workloads(records: Array[Dictionary], limit: int) -> void:
+	var sorted_records: Array[Dictionary] = records.duplicate()
+	sorted_records.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a["steps"]) > int(b["steps"])
+	)
+	print("TOP %d deterministic test-solver workloads:" % limit)
+	for index in range(mini(limit, sorted_records.size())):
+		var record: Dictionary = sorted_records[index]
+		print("  - %s (%s): steps=%d trips=%d" % [
+			String(record["id"]),
+			String(record["chapter_id"]),
+			int(record["steps"]),
+			int(record["trips"]),
+		])
+
+
+func _print_chapter_workloads(records: Array[Dictionary], chapter_id: String) -> void:
+	print("LEVEL WORKLOADS — %s:" % chapter_id)
+	for record in records:
+		if String(record["chapter_id"]) != chapter_id:
+			continue
+		print("  - %s: steps=%d trips=%d" % [
+			String(record["id"]),
+			int(record["steps"]),
+			int(record["trips"]),
+		])
 
 
 func _print_duplicate_groups(label: String, groups: Dictionary) -> void:
