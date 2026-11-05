@@ -27,7 +27,7 @@ The first audit on the pre-revision 100-level branch found:
 
 - `root_037`, `root_038`, and `root_041` shared the same board geometry.
 - `root_038` and `root_041` also had identical resource colors, squad capacities, deployment slots, start, and goal. Their titles/objectives differed, but the underlying puzzle configuration did not. This was a genuine content duplicate.
-- `root_053` and `root_056` remain the only shared-geometry pair after revision. They differ in deployment-slot pressure and squad roster/color assignment; keep this pair under review rather than treating it as an exact gameplay duplicate.
+- `root_053` and `root_056` initially shared geometry. The violet resource in `root_053` was moved to the lower intermediate segment before the second gate, giving it a distinct route-order decision while preserving the staggered corridor theme.
 
 Related motifs across levels 047, 057, and 059 and the repeated crown/finale family (035, 040, 045, 050, 055, 060) remain candidates for human review. Their geometry is not automatically equivalent.
 
@@ -52,6 +52,6 @@ The first redesign pass removed the exact duplicate, and CI #584 passed that int
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
 - Audit script: added to CI; run #579 passed on the baseline and run #584 passed after the map revisions.
-- Latest map revisions: `root_037` and `root_041`; Godot CI #591 passed on `f9a5f5c` including new route-identity regression checks.
-- Latest audit: zero exact gameplay-signature duplicate groups and one shared geometry pair (`root_053` / `root_056`). Root Labyrinth averages 6.40 obstacles per level after the final map revision.
+- Latest map revisions: `root_037`, `root_041`, and `root_053`; Godot CI #597 passed on the map-content commit, with zero repeated geometry groups and zero exact gameplay-signature groups.
+- Added route-identity checks for all three revisions. The newest combined run #599 is validating those tests; Root Labyrinth averages 6.40 obstacles per level.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
