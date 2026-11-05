@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current meadow pack contains the five prototype levels. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+The current meadow pack contains 25 authored levels. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
 
 ### Adding a future chapter
 
@@ -87,3 +87,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - Never encode presentation-only state in level data.
 - Every authored level must have a documented, verified solution before release.
 - Do not silently reinterpret invalid or unknown tile types.
+- [level_021.json](../levels/level_021.json) — Narrow Gate: single open passage and route commitment.
+- [level_022.json](../levels/level_022.json) — Side Pocket: harvest pockets on opposite sides of a clearing.
+- [level_023.json](../levels/level_023.json) — Three Stops: one capacity-three route through a scattered harvest.
+- [level_024.json](../levels/level_024.json) — The Waiting Line: four squads competing for one deployment slot.
+- [level_025.json](../levels/level_025.json) — Forked Harvest: two active slots and a split multi-color harvest.
