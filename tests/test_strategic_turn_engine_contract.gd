@@ -79,6 +79,32 @@ func _initialize() -> void:
 	_check(parallel_turn["valid"] and parallel_turn["moved"].size() == 2, "both squads should advance during the same global turn")
 	_check(parallel_turn["day_remaining"] == 19, "parallel movement spends only one shared day point")
 
+	# Complete a full two-squad expedition: both harvest, wait without auto-dispatch,
+	# then receive explicit return orders and deliver independently.
+	var parallel_collected: Dictionary = {}
+	var parallel_guard := 0
+	while (parallel_engine.has_order("amber_scouts") or parallel_engine.has_order("teal_gatherers")) and parallel_guard < 20:
+		var parallel_step: Dictionary = parallel_engine.advance_turn(parallel_colony, parallel_board)
+		_check(parallel_step["valid"], "parallel collection route step should resolve")
+		for collected_id in parallel_step.get("collected", []):
+			parallel_collected[String(collected_id)] = true
+		parallel_guard += 1
+	_check(parallel_collected.has("amber_scouts") and parallel_collected.has("teal_gatherers"), "both squads should collect their own resources")
+	_check(not parallel_engine.has_order("amber_scouts") and not parallel_engine.has_order("teal_gatherers"), "collected squads should wait for explicit return orders")
+	_check(parallel_engine.set_return_order(parallel_colony, parallel_board, "amber_scouts")["valid"], "amber return order should be accepted")
+	_check(parallel_engine.set_return_order(parallel_colony, parallel_board, "teal_gatherers")["valid"], "teal return order should be accepted")
+	var parallel_delivered: Dictionary = {}
+	parallel_guard = 0
+	while (parallel_engine.has_order("amber_scouts") or parallel_engine.has_order("teal_gatherers")) and parallel_guard < 20:
+		var return_step: Dictionary = parallel_engine.advance_turn(parallel_colony, parallel_board)
+		_check(return_step["valid"], "parallel return route step should resolve")
+		for delivered_id in return_step.get("delivered", []):
+			parallel_delivered[String(delivered_id)] = true
+		parallel_guard += 1
+	_check(parallel_delivered.has("amber_scouts") and parallel_delivered.has("teal_gatherers"), "both squads should deliver their cargo at the nest")
+	_check(parallel_colony.delivered_resources == 2, "parallel delivery should count both resources exactly once")
+	_check(parallel_engine.get_outcome() == "won", "parallel expedition should finish only after both deliveries")
+
 	if failures.is_empty():
 		print("StrategicTurnEngine tests passed.")
 		quit(0)
