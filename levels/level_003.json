@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "meadow_003",
   "title": "The Long Harvest",
-  "objective": "Plan three trips with one deployment slot.",
+  "objective": "Plan two trips with one deployment slot.",
   "width": 6,
   "height": 5,
   "start": [0, 2],
