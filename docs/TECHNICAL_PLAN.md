@@ -80,3 +80,6 @@ DeepSeek Harness is **not installed yet**. This repository is being prepared for
 When installed, configure a dedicated Game-ANTS workspace and a separate GitHub identity with write access limited to this repository. The agent should read GitHub Issues, create an isolated branch/worktree, implement and test, then open a PR. It must not merge to `main`.
 
 Never place access tokens or secrets in repository files or prompts.
+
+## 9. DeepSeek Harness security
+DeepSeek Harness is a developer-preview agent runtime, not a trusted sandbox. Its official safety notice warns that model-generated commands and plugins can access files, processes, credentials, and network resources made available to the runtime, and that sandboxing/approval controls do not guarantee isolation. Use a dedicated disposable or isolated Game-ANTS workspace, least privilege, a separate repository-scoped GitHub identity, and localhost-only Web UI access. Review current release advisories before installation; never expose broad personal credentials or install unreviewed plugins. Human approval remains mandatory for destructive actions, external writes, permission changes, and merges.
