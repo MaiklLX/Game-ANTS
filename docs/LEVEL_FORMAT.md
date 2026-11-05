@@ -1,6 +1,26 @@
 # Level data format — schema v1
 
-Campaign levels are stored as UTF-8 JSON files under `levels/`. The file is data only; rendering and animation must not be embedded in it.
+Campaign levels are stored as UTF-8 JSON files and discovered through a manifest chain. The file is data only; rendering and animation must not be embedded in it.
+
+## Scalable campaign layout
+
+- `campaign/campaign_manifest.json` is the root index. It lists chapter-pack manifest files in campaign order.
+- Each `campaign/packs/<chapter>/pack.json` defines one chapter and lists its level IDs and JSON file paths in play order.
+- Each level JSON remains an independent file under `levels/` (or a future content directory).
+- `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
+- The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
+
+The current meadow pack contains the five prototype levels. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+
+### Adding a future chapter
+
+1. Create a new chapter directory and its `pack.json`.
+2. Add the new level JSON files and list them in the pack manifest in intended play order.
+3. Add one pack reference to `campaign/campaign_manifest.json`.
+4. Run the campaign catalog and campaign solution tests.
+5. Review the chapter's learning curve and verify every level has a deterministic solution before release.
+
+Use stable IDs; never recycle a released level ID. Add new chapters as separate packs so updates can append content without rewriting existing level data.
 
 ## Examples
 
