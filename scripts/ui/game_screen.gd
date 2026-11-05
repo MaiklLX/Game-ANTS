@@ -449,7 +449,7 @@ func _draw_status(font: Font) -> void:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		_tutorial_skip_rect = _restart_rect
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		var tutorial_action := "СЛЕД. ХОД" if _has_active_orders() else "ПРОПУСТИТЬ"
+		var tutorial_action := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else "ПРОПУСТИТЬ"
 		draw_string(font, _restart_rect.position + Vector2(0, 58), tutorial_action, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
@@ -529,8 +529,11 @@ func _gui_input(event: InputEvent) -> void:
 	accept_event()
 
 
+
 func _handle_tap(point: Vector2) -> void:
 	if _is_animating:
+		return
+	if _auto_run_active and not _restart_rect.has_point(point):
 		return
 	if _previous_page_rect.has_point(point) and _level_page_start > 0:
 		_level_page_start = maxi(0, _level_page_start - _levels_per_page())
@@ -580,8 +583,8 @@ func _handle_tap(point: Vector2) -> void:
 		_collect_selected_squad(cell)
 
 
-	_stop_auto_run()
 func _load_level(index: int) -> void:
+	_stop_auto_run()
 	if _animation_tween != null and _animation_tween.is_running():
 		_animation_tween.kill()
 	if _feedback_tween != null and _feedback_tween.is_running():
