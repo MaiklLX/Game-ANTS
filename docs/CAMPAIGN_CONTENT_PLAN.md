@@ -63,4 +63,4 @@ Automated solvability is necessary but not sufficient. A level that is technical
 
 ## Production batches
 
-Build the first complete 30-level Meadow chapter in reviewed batches, not one huge unreviewed dump. The first batch now covers levels 001–015; continue with levels 016–020, 021–025, and 026–030. Each batch should add a small group of levels, solution tests, and a short difficulty review. Only after the full chapter has a coherent curve should production move to chapter 2.
+Build the first complete 30-level Meadow chapter in reviewed batches, not one huge unreviewed dump. The first production batch now covers levels 001–015; continue with levels 016–020, 021–025, and 026–030. Each batch should add a small group of levels, solution tests, and a short difficulty review. Only after the full chapter has a coherent curve should production move to chapter 2.
