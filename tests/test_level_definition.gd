@@ -3,6 +3,9 @@ extends SceneTree
 const LevelDefinitionScript = preload("res://scripts/core/level_definition.gd")
 
 
+var _failures: Array[String] = []
+
+
 func _initialize() -> void:
 	var sample_text := FileAccess.get_file_as_string("res://levels/level_001.json")
 	var sample_data: Variant = JSON.parse_string(sample_text)
@@ -38,12 +41,24 @@ func _initialize() -> void:
 	bad_tile["tiles"].append({"x": 3, "y": 2, "type": "lava"})
 	_check(not LevelDefinitionScript.validate(bad_tile)["valid"], "unsupported tile type should fail")
 
-	print("LevelDefinition tests completed.")
-	quit(0)
+	var missing_color: Dictionary = sample_data.duplicate(true)
+	missing_color["tiles"][1].erase("color")
+	_check(not LevelDefinitionScript.validate(missing_color)["valid"], "resource without a color should fail")
+
+	var bad_color: Dictionary = sample_data.duplicate(true)
+	bad_color["tiles"][1]["color"] = "ultraviolet"
+	_check(not LevelDefinitionScript.validate(bad_color)["valid"], "unsupported resource color should fail")
+
+	if _failures.is_empty():
+		print("LevelDefinition tests passed.")
+		quit(0)
+	else:
+		for failure in _failures:
+			push_error("LevelDefinition test failed: " + failure)
+		quit(1)
 
 
 func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
-	push_error("LevelDefinition test failed: " + message)
-	quit(1)
+	_failures.append(message)
