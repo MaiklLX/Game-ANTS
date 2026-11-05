@@ -73,13 +73,7 @@ Names may change as the implementation takes shape; boundaries should remain cle
 - GitHub Actions should run project validation and tests on pull requests.
 - Keep CI deterministic and avoid requiring signing secrets for ordinary validation.
 
-## 8. Harness / coding agent
+## 8. Development workflow without external agents
+The project will be developed directly with ChatGPT and the connected GitHub tools. DeepSeek Harness and other external autonomous coding agents are not part of the current plan. No local agent installation or complex agent infrastructure is required.
 
-DeepSeek Harness is **not installed yet**. This repository is being prepared for it, but repository setup is not the same as installing or running the harness.
-
-When installed, configure a dedicated Game-ANTS workspace and a separate GitHub identity with write access limited to this repository. The agent should read GitHub Issues, create an isolated branch/worktree, implement and test, then open a PR. It must not merge to `main`.
-
-Never place access tokens or secrets in repository files or prompts.
-
-## 9. DeepSeek Harness security
-DeepSeek Harness is a developer-preview agent runtime, not a trusted sandbox. Its official safety notice warns that model-generated commands and plugins can access files, processes, credentials, and network resources made available to the runtime, and that sandboxing/approval controls do not guarantee isolation. Use a dedicated disposable or isolated Game-ANTS workspace, least privilege, a separate repository-scoped GitHub identity, and localhost-only Web UI access. Review current release advisories before installation; never expose broad personal credentials or install unreviewed plugins. Human approval remains mandatory for destructive actions, external writes, permission changes, and merges.
+ChatGPT can inspect and edit repository text files, create branches, Issues, and pull requests, and review CI results through connected tools. Actual Godot editor execution, Android/iOS exports, and physical-device testing require a suitable local or hosted development environment; these must not be claimed until actually run and verified.
