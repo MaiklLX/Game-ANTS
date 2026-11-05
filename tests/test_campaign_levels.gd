@@ -47,6 +47,11 @@ const LEVEL_PATHS := [
 	"res://levels/level_038.json",
 	"res://levels/level_039.json",
 	"res://levels/level_040.json",
+	"res://levels/level_041.json",
+	"res://levels/level_042.json",
+	"res://levels/level_043.json",
+	"res://levels/level_044.json",
+	"res://levels/level_045.json",
 ]
 
 
@@ -199,6 +204,7 @@ func _test_root_labyrinth_route_shapes() -> void:
 		{"path": "res://levels/level_031.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_033.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_035.json", "target": Vector2i(3, 0), "minimum_extra_steps": 3},
+		{"path": "res://levels/level_042.json", "target": Vector2i(4, 0), "minimum_extra_steps": 3},
 	]
 	for route_case in route_cases:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(route_case["path"]))
@@ -215,6 +221,15 @@ func _test_root_labyrinth_route_shapes() -> void:
 		var direct_distance := absi(board.start.x - target.x) + absi(board.start.y - target.y)
 		_check(not path.is_empty(), "%s should keep its featured harvest reachable" % route_case["path"])
 		_check(path.size() >= direct_distance + int(route_case["minimum_extra_steps"]), "%s should require a genuine corridor detour" % route_case["path"])
+
+	var crown_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_045.json"))
+	if typeof(crown_data) == TYPE_DICTIONARY:
+		var crown_board = BoardModelScript.new()
+		var crown_loaded: Dictionary = crown_board.load_level(crown_data)
+		_check(crown_loaded["valid"], "The Hollow Crown should load for branch test")
+		if crown_loaded["valid"]:
+			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 0)).is_empty(), "Hollow Crown upper corridor should be reachable")
+			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 4)).is_empty(), "Hollow Crown lower corridor should be reachable")
 
 	var weave_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_034.json"))
 	if typeof(weave_data) == TYPE_DICTIONARY:
