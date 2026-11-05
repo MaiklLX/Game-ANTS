@@ -171,7 +171,7 @@ func _print_chapter_stats(stats: Dictionary) -> void:
 		var entry: Dictionary = stats[chapter_id]
 		var count := int(entry["levels"])
 		print(
-			"CHAPTER %s: levels=%d avg_resources=%.2f avg_obstacles=%.2f avg_squads=%.2f avg_slots=%.2f max_capacity=%d avg_resource_route_steps=%.2f avg_extra_steps=%.2f max_resource_route=%d" % [
+			"CHAPTER %s: levels=%d avg_resources=%.2f avg_obstacles=%.2f avg_squads=%.2f avg_slots=%.2f max_capacity=%d avg_resource_route_steps=%.2f avg_extra_steps=%.2f max_resource_route=%d avg_test_solver_steps_per_level=%.2f avg_trips_per_level=%.2f max_test_solver_steps=%d" % [
 				String(chapter_id),
 				count,
 				float(entry["resources"]) / count,
