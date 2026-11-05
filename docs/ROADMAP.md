@@ -536,3 +536,17 @@
 - The chapter exam uses only existing schema-v1 mechanics. No unimplemented mechanic is assumed.
 - Next: run the full Godot 4.7.2 CI suite, review the chapter's difficulty progression, then begin chapter 2 (The Root Labyrinth) with a clear mechanic/level design gate.
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 — Root Labyrinth opening batch 031–035 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five schema-v1 level files and chapter pack added; CI verification pending.
+
+- Added independent chapter pack `campaign/packs/root_labyrinth/pack.json` and appended it after Meadow in the root campaign manifest.
+- Added 031 Root Gate, 032 Twin Rootways, 033 The S-Bend, 034 The Root Weave, and 035 The Buried Junction.
+- Levels focus on narrow passages, separated openings, forced detours, branching corridors, and multi-entrance routing.
+- Extended campaign integration tests and catalogue assertions to 35 ordered levels across two chapters.
+- Added route-shape regression tests for non-Manhattan detours and both Root Weave branches.
+- Only existing schema-v1 mechanics are used; no new movement controls or unimplemented terrain rules are claimed.
+- Next: run CI, inspect any failures, then continue Root Labyrinth 036–040 after reviewing the first batch's path geometry.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
