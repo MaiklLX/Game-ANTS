@@ -369,7 +369,8 @@
 **Branch:** `feat/kt-005-first-playable-levels`  
 **Draft PR:** [#8](https://github.com/MaiklLX/Game-ANTS/pull/8)  
 **Implementation commit:** `9ea2648f59e857524247f9390d9d8f294ded58fc`  
-**Checkpoint commit:** `cffbb1d728fa04942a466c529260d1d444501550`
+**Checkpoint commit:** `cffbb1d728fa04942a466c529260d1d444501550`  
+**Follow-up cleanup commit:** `efd6739ae21b2fc5a86e729c12ab7a99c378a3be`
 
 **Implemented**
 - Replaced the single moving cursor-like marker with a compact three-ant formation that follows the same validated route.
@@ -381,6 +382,7 @@
 **Verification: PASS**
 - GitHub Actions run **#125** passed on the UI implementation commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016724874
 - GitHub Actions run **#127** passed on the checkpoint commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016772487
+- Follow-up cleanup resets an in-flight feedback pulse when retrying or switching levels; GitHub Actions run **#131** passed on that latest code commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42017082813
 - Godot 4.7.2 version check and project import passed.
 - BoardModel, LevelDefinition, ColonyModel, TurnResolver, and Campaign level tests all passed.
 - Main scene launched successfully in headless mode.
