@@ -613,3 +613,15 @@
 - Godot 4.7.2 import, core/schema/colony/turn suites, all 50 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
 - Root Labyrinth progress: 20/30; total authored catalogue: 50 levels across two chapters.
 - Next batch: levels 051–055.
+
+
+### KT-007 — Root Labyrinth batch 051–055 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five authored schema-v1 levels added; integration/catalog tests and chapter documentation extended. CI verification pending.
+
+- Added 051 The Bent Gate, 052 Twin Root Mouths, 053 The Turning Fork, 054 The Middle Passage, and 055 The Root Labyrinth Trial.
+- Root Labyrinth now contains 25/30 authored levels; total campaign catalogue contains 55 levels across two packs.
+- Added a route-shape regression for the forced low crossing in level 051.
+- Every level is included in the production-rule campaign solver; no unprototyped mechanic was added.
+- Next: run full CI, review difficulty/readability, then continue levels 056–060 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
