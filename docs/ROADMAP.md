@@ -411,7 +411,7 @@
 - Replaced plain blocked tiles with clustered stone silhouettes.
 - Core rules, level data, movement paths, and touch coordinate conversion were not changed.
 
-**Verification:** CI is not yet visible for this commit through the available status endpoints. No passing test result is claimed for KT-005.3 yet. Recheck GitHub Actions before treating this checkpoint as green. Visual editor/device inspection remains pending.
+**Verification:** GitHub Actions run **#141** passed on checkpoint commit `3f819a8fa000e8e1bf784fa949b826fbab34c0c6`: Godot 4.7.2 project import, all five test suites, and headless main-scene launch succeeded. This run predates the subsequent carried-seed/ground-texture edits, so those latest edits still require their own CI confirmation. Visual editor/device inspection remains pending.
 
 **Next**
 1. Verify the new drawing helpers compile and all five test suites pass.
@@ -426,4 +426,12 @@
 - Added a small carried-seed visual beside the lead ant when the selected squad has collected resources.
 - Added a capacity meter to squad cards, showing carried resources relative to carrying capacity.
 - No core rules, level definitions, pathfinding, or input mapping changed.
-- CI status endpoints currently return no checks for this commit; verification remains pending. Do not mark this checkpoint green until a matching Actions run is confirmed.
+- GitHub Actions run #141 passed on the subsequent roadmap checkpoint `3f819a8fa000e8e1bf784fa949b826fbab34c0c6`, confirming the carried-seed and capacity-meter changes plus all five test suites and headless launch.
+
+
+### KT-005.3 — meadow texture refinement (2026-11-05)
+**Implementation commit:** `a9873b15f9cf76c4801382609b9ae963491cd7c5`
+
+- Added restrained, deterministic grass/ground details to meadow tiles, behind gameplay objects. The details vary by cell and stay low-contrast so seeds, nest, rocks, and route markers remain dominant.
+- No gameplay rules, level data, pathfinding, animation timing, or touch mapping changed.
+- CI for this latest commit is pending confirmation. Visual editor/device inspection remains outstanding.
