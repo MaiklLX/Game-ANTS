@@ -5,7 +5,7 @@
 - **Launch campaign:** 300 hand-authored, quality-checked levels.
 - **Structure:** 10 chapters × 30 levels.
 - **Expansion:** additional chapter packs can be appended through the root campaign manifest in later updates.
-- **Current reality:** 30 authored levels in the Meadow pack; the remaining nine chapters are still planned content.
+- **Current reality:** 55 authored levels: Meadow 001–030 (30/30) and Root Labyrinth 031–055 (25/30). Chapters 3–10 remain planned content.
 
 ## Chapter rhythm
 
