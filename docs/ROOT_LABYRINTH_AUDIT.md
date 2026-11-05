@@ -6,20 +6,20 @@
 
 ## Executive finding
 
-The chapter is structurally valid and all 30 levels are included in the deterministic production-rule campaign solver. The content review nevertheless finds a noticeable repetition cluster in the map layouts. Automated solvability must not be treated as proof of puzzle variety or a balanced difficulty curve.
+The chapter is structurally valid and all 30 levels are included in the deterministic production-rule campaign solver. The first review found a genuine repetition cluster; targeted revisions have since removed the exact map duplicates. Similar route motifs remain under review. Automated solvability must not be treated as proof of puzzle variety or a balanced difficulty curve.
 
 ## Confirmed strengths
 
 - The chapter uses only schema-v1 mechanics already implemented: static obstacles, colored resources, squad capacity, deployment slots, and deterministic shortest paths.
 - The authored progression introduces single gates, separated openings, staggered bends, side pockets, capacity-two collection, and multi-color finales.
-- Special route checks cover representative long detours (031, 033, 035, 042, 048, 051, 056), both branches in 034 and 045, and all four targets in 060.
+- Special route checks cover representative long detours (031, 033, 035, 042, 048, 051, 056), both branches in 034, the single upper-notch cache in 045, and all four targets in 060.
 - The campaign integration test loads each level and completes every resource collection/return with the production models. No level in the current set is missing from the test path list.
 
 ## Design risks found
 
 ### 1. Repeated three-lane topology
 
-Levels 037, 038, and 041 share the same obstacle coordinates and the same three resource coordinates. Their squad roster and resource colors differ, but the player's spatial problem is effectively the same. This is the clearest case of map-level duplication and should be corrected before the chapter is treated as final release-quality content.
+**Resolved in KT-009:** levels 037 and 041 were redesigned. `root_037` now routes around a central heartwood island using upper/lower branches; `root_041` now sends every far-side route through one shared gate. The latest campaign audit reports zero repeated board-geometry groups and zero exact gameplay-signature groups across all 100 levels.
 
 ### 2. Related central-wall / alternating-opening motifs
 
@@ -29,11 +29,11 @@ Several levels reuse close variations of the same vertical barrier pattern:
 - 047 adds a second barrier to a similar three-resource layout.
 - 057 and 059 both emphasize alternating openings across two walls.
 
-These are legitimate variations only when the route decision, resource order, or slot/capacity pressure changes meaningfully. Some currently differ more in roster or colors than in spatial reasoning.
+These are legitimate variations only when the route decision, resource order, or slot/capacity pressure changes meaningfully. The campaign-wide route-profile screen now groups similar shortest-path workloads for human review; it does not classify them as duplicates.
 
 ### 3. Related four-resource crown/finale patterns
 
-Levels 035, 040, 045, 050, 055, and 060 all use four-color or multi-lane combinations around central obstacle structures. The sequence does add pressure and complexity, but the chapter needs stronger visual/topological contrast between its mid-chapter checkpoints and finales.
+Levels 035, 040, 045, 050, 055, and 060 share a broad four-color/corridor theme. `root_045` has since been redesigned as a central coral cache behind one upper notch, with four squads limited to two slots. `root_040` and `root_050` remain a route-profile pair for review; their obstacle layouts differ, and `root_050` has a stricter single-path approach to both far resources.
 
 ### 4. Test coverage gap: solvability vs. strategic variety
 
@@ -47,16 +47,16 @@ The route-shape suite checks selected representative targets, not the full route
 
 ## Required follow-up before release sign-off
 
-1. Redesign at least one of levels 037/038/041 so the three maps no longer share an identical obstacle/resource footprint.
-2. Revisit the 047/057/059 family and ensure each teaches a distinct route decision, not just a denser version of the same barrier.
-3. Add explicit tests for unique authored map signatures in the Root Labyrinth pack, while allowing intentional thematic motifs when their puzzle purpose is documented.
-4. Perform a manual chapter playthrough in Godot Editor on a portrait-sized viewport. CI headless launch is not visual QA.
-5. Reassess the final difficulty curve after map revisions and rerun the full CI suite.
+1. **Completed:** redesign `root_037` and `root_041`; the campaign-wide geometry audit now reports zero repeated geometry groups.
+2. **Completed:** refine `root_053` with an intermediate pickup and add route-identity regressions; CI validates the lower-first / upper-second route sequence.
+3. **Completed:** add campaign-wide geometry, gameplay-signature, route-profile, and deterministic expedition-workload audits. Route-profile matches remain review candidates, not automatic defects.
+4. **In progress:** review the 047/057/059 barrier family and the 040/050 crown pair for distinct player decisions.
+5. **Outstanding release gate:** perform a manual chapter playthrough in Godot Editor on a portrait-sized viewport and on real devices. CI headless launch is not visual QA.
 
 ## Decision
 
-**Chapter content: 30/30 authored; automated validation passed; design audit requires targeted revision before release-quality sign-off.** Do not expand these findings into a claim that all levels have been manually playtested. Do not introduce water, gates, switches, pheromones, or other unprototyped mechanics to solve a variety problem.
+**Chapter content: 30/30 authored; automated validation passed; exact map duplicates removed; human design and visual sign-off remain open.** Do not expand these findings into a claim that all levels have been manually playtested. Do not introduce water, gates, switches, pheromones, or other unprototyped mechanics to solve a variety problem.
 
 ## Next production step
 
-Begin The Amber Orchard (061–090) in reviewed batches of five, but preserve a separate revision task for the Root Labyrinth duplication cluster. New levels must add a genuinely new decision pattern, not just new coordinates or colors.
+Continue the campaign-wide route-profile review, especially the 047/057/059 barrier family and 040/050 crown pair. New revisions must create a distinct decision pattern, not just new coordinates or colors.
