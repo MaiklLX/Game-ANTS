@@ -416,26 +416,7 @@ func _draw_board(font: Font) -> void:
 			if int(squad.get("carried", 0)) > 0:
 				var seed_tint := _color_for(String(squad.get("color", "amber")))
 				draw_circle(ant_position + Vector2(18, -14), 6.0, seed_tint)
-	# Squad markers and all active routes are rendered from the strategic model.
-		for step in _last_path:
-			draw_line(_cell_rect(previous).get_center(), _cell_rect(step).get_center(), COLOR_GOLD, 4.0)
-			previous = step
-		if _last_target != Vector2i(-1, -1):
-			draw_circle(_cell_rect(_last_target).get_center(), 6.0, COLOR_TEXT)
-		# A compact three-ant team reads as a living squad rather than a cursor.
-		for ant_index in range(3):
-			var ant_progress := clampf(_ant_progress - float(ant_index) * 0.045, 0.0, 1.0)
-			var ant_position := _position_along_last_path(ant_progress)
-			ant_position.y += float(ant_index - 1) * 8.0
-			_draw_ant(ant_position, _selected_squad_color(), 1.0 - float(ant_index) * 0.06)
-		# Show a carried seed beside the lead worker after pickup and on the return trip.
-		var selected_squad := _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
-		if not selected_squad.is_empty() and int(selected_squad.get("carried", 0)) > 0:
-			var lead_position := _position_along_last_path(clampf(_ant_progress, 0.0, 1.0))
-			var seed_tint := _color_for(String(selected_squad.get("color", "amber")))
-			draw_circle(lead_position + Vector2(19, -15), 7.0, Color("#18231c"))
-			draw_circle(lead_position + Vector2(19, -17), 5.0, seed_tint)
-			draw_line(lead_position + Vector2(21, -21), lead_position + Vector2(25, -26), Color("#9bc88e"), 1.5)
+	# Strategic squads and routes are rendered from active turn orders above.
 
 	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
 		var pulse_color := COLOR_GOLD
