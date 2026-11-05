@@ -57,11 +57,6 @@
       "color": "coral"
     },
     {
-      "x": 0,
-      "y": 2,
-      "type": "obstacle"
-    },
-    {
       "x": 1,
       "y": 2,
       "type": "obstacle"
