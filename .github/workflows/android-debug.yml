@@ -52,9 +52,6 @@ jobs:
           cp templates-unpacked/version.txt "$HOME/.local/share/godot/export_templates/4.7.2.stable/version.txt"
 
       - name: Import project
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
         run: godot --headless --editor --path . --quit
 
       - name: Export debug APK
