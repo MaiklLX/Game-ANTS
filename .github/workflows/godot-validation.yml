@@ -2,7 +2,9 @@ name: Godot project validation
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - "foundation/**"
   push:
     branches:
       - "feat/**"
@@ -28,7 +30,7 @@ jobs:
             --output godot.zip
           unzip -q godot.zip -d godot-bin
           chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
-          echo "$PWD/godot-bin" >> "$GITHUB_PATH"
+          sudo ln -sf "$PWD/godot-bin/Godot_v4.7.2-stable_linux.x86_64" /usr/local/bin/godot
 
       - name: Verify engine version
         run: godot --version
