@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 65 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and the opening Amber Orchard batch 061–065. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+The current campaign contains 70 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–070. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
 
 ### Adding a future chapter
 
@@ -138,3 +138,12 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_063.json](../levels/level_063.json) — The Long Golden Cluster: Three amber seeds share one connected branch; use the carrier's full capacity in a single expedition.
 - [level_064.json](../levels/level_064.json) — The Middle Crossing: Upper and lower loads meet at one narrow crossing; decide which carrier should occupy the open slot first.
 - [level_065.json](../levels/level_065.json) — The Balanced Harvest: Four colors and two full loads compete for two field slots; plan the order that keeps every carrier useful.
+
+
+## Amber Orchard — batch 066–070
+
+- level_066.json — The Fork of Gold: a central crossing connects a two-seed amber bough and a separate teal harvest.
+- level_067.json — The Hollow Canopy: a central heartwood island creates upper and lower loops for two full-load carriers.
+- level_068.json — Three Golden Steps: a capacity-three amber squad clears a staggered three-seed branch in one expedition.
+- level_069.json — The Four Boughs: four colors sit on opposite sides of a divided trunk, with only two deployment slots.
+- level_070.json — The Orchard Weave: a capacity-three amber cluster and paired teal harvest share the field with two single-seed scouts.
