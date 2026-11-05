@@ -698,5 +698,7 @@
 - Added The Split Crown (071), The Sunken Branch (072), The Amber Spiral (073), The Crosswind Grove (074), and The Golden Canopy Trial (075).
 - All five levels use existing schema-v1 mechanics. Added to the Amber Orchard pack; deterministic campaign test list now covers 75 level files; catalogue assertions verify 75 entries and stable final index 74.
 - Campaign progress: **75/100 authored; 25 remain**. Amber Orchard: 15/30.
-- CI for the 75-level branch head is pending. No editor/device visual QA or APK is claimed.
+- CI #474 passed on corrected 75-level code head `614804d513df89dee6b18620e6f4efe08653ad22`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042309984. Godot 4.7.2 import, all campaign-level integration tests (75 levels), catalogue tests, and headless main-scene launch passed. No editor/device visual QA or APK is claimed.
 - Next batch: Amber Orchard 076–080. Root Labyrinth design revisions remain separate.
+
+- CI #474 also confirms the level 074 route correction; all test suites passed. Documentation-only CI #475 is still running on the same 75-level state.
