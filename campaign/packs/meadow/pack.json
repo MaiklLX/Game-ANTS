@@ -4,10 +4,45 @@
   "title": "The Living Meadow",
   "description": "Learn to guide the colony, manage carrying capacity, and coordinate field teams.",
   "levels": [
-    { "id": "meadow_001", "file": "res://levels/level_001.json" },
-    { "id": "meadow_002", "file": "res://levels/level_002.json" },
-    { "id": "meadow_003", "file": "res://levels/level_003.json" },
-    { "id": "meadow_004", "file": "res://levels/level_004.json" },
-    { "id": "meadow_005", "file": "res://levels/level_005.json" }
+    {
+      "id": "meadow_001",
+      "file": "res://levels/level_001.json"
+    },
+    {
+      "id": "meadow_002",
+      "file": "res://levels/level_002.json"
+    },
+    {
+      "id": "meadow_003",
+      "file": "res://levels/level_003.json"
+    },
+    {
+      "id": "meadow_004",
+      "file": "res://levels/level_004.json"
+    },
+    {
+      "id": "meadow_005",
+      "file": "res://levels/level_005.json"
+    },
+    {
+      "id": "meadow_006",
+      "file": "res://levels/level_006.json"
+    },
+    {
+      "id": "meadow_007",
+      "file": "res://levels/level_007.json"
+    },
+    {
+      "id": "meadow_008",
+      "file": "res://levels/level_008.json"
+    },
+    {
+      "id": "meadow_009",
+      "file": "res://levels/level_009.json"
+    },
+    {
+      "id": "meadow_010",
+      "file": "res://levels/level_010.json"
+    }
   ]
 }
