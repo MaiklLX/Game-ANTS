@@ -667,3 +667,15 @@
 - Root Labyrinth design audit remains open as a separate revision task; no claim of chapter 2 design sign-off or manual visual QA.
 - CI run #415 passed on corrected code head `2d6e25c2e0320346397da087082007c50bbad920`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42038997667. Godot 4.7.2 import, all deterministic/core/schema/colony/turn tests, all 65 campaign level solutions, catalogue validation, and headless main-scene launch passed.
 - PR #9 remains Draft, stacked on PR #8; no merge to main.
+
+
+### KT-008.2 — Version 1.0 campaign scope approved (2026-11-05)
+**Decision:** Version 1.0 targets 100 quality-checked levels. The 300+ level ambition remains the long-term campaign vision for post-launch updates.
+
+- Approved launch structure: The Living Meadow 001–030, The Root Labyrinth 031–060, The Amber Orchard 061–090, and a compact 10-level conclusion 091–100.
+- Current content: 65/100 authored; 35 levels remain.
+- The short finale is a release-structure decision; its detailed theme and levels remain subject to design review. No unproven mechanics are required for v1.
+- Release readiness is broader than level count: variety, difficulty balance, onboarding, save/progress reliability, portrait mobile readability, performance, and device QA remain required.
+- CI run #417 passed on the prior code/documentation head `1e726ab87bb514f8c22891e87e96e1ea2030722c`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42039105315. This verifies the existing 65-level state, not the new documentation-only scope decision.
+- Next: continue Amber Orchard in five-level batches, starting at 066–070, while retaining Root Labyrinth's separate design-revision task.
+- PR #9 remains Draft, open, stacked on PR #8, and unmerged. No editor/device visual QA, APK, or public web build is claimed.
