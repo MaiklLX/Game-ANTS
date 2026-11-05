@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - "foundation/**"
+      - "feat/**"
   push:
     branches:
       - "feat/**"
@@ -39,7 +40,10 @@ jobs:
         run: godot --headless --editor --path . --quit
 
       - name: Run deterministic core tests
-        run: godot --headless --path . --script res://tests/test_board_model.gd
+        run: timeout 60s godot --headless --path . --script res://tests/test_board_model.gd
+
+      - name: Run level data validation tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_level_definition.gd
 
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit

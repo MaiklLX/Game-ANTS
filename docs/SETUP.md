@@ -28,7 +28,7 @@ Official guide: https://docs.godotengine.org/en/4.7/tutorials/export/exporting_f
 
 ## Automated validation
 
-GitHub Actions downloads the pinned official Godot 4.7.2 Linux headless binary, imports the project, and runs deterministic core tests, and launches the main scene in headless mode. This checks project parsing and scene startup; it does not replace visual testing on a phone.
+GitHub Actions downloads the pinned official Godot 4.7.2 Linux headless binary, imports the project, and runs deterministic board and level-data tests, and launches the main scene in headless mode. This checks project parsing and scene startup; it does not replace visual testing on a phone.
 
 ## Known limitations
 
