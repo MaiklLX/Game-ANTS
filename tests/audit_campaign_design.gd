@@ -145,6 +145,7 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 					var target_cell: Vector2i = matching_cells[cell_index]
 					var outbound: Array[Vector2i] = board.find_path(current_position, target_cell)
 					if outbound.is_empty():
+						cell_index = matching_cells.size()
 						break
 					level_expedition_steps += outbound.size()
 					current_position = target_cell
