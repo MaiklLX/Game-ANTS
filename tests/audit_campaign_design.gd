@@ -103,6 +103,9 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			"route_steps_total": 0,
 			"extra_steps_total": 0,
 			"route_steps_max": 0,
+			"expedition_steps_total": 0,
+			"trip_count_total": 0,
+			"expedition_steps_max_level": 0,
 		}
 	var entry: Dictionary = stats[chapter_id]
 	entry["levels"] += 1
@@ -127,6 +130,32 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			entry["route_steps_total"] += route.size()
 			entry["extra_steps_total"] += route.size() - direct_steps
 			entry["route_steps_max"] = maxi(int(entry["route_steps_max"]), route.size())
+		var level_expedition_steps := 0
+		var level_trip_count := 0
+		for squad in data.get("squads", []):
+			var matching_cells: Array[Vector2i] = []
+			for cell in board.get_resource_cells():
+				if board.resource_color_at(cell) == String(squad["color"]):
+					matching_cells.append(cell)
+			var cell_index := 0
+			while cell_index < matching_cells.size():
+				var current_position: Vector2i = board.start
+				var carried := 0
+				while cell_index < matching_cells.size() and carried < int(squad["capacity"]):
+					var target_cell: Vector2i = matching_cells[cell_index]
+					var outbound: Array[Vector2i] = board.find_path(current_position, target_cell)
+					if outbound.is_empty():
+						break
+					level_expedition_steps += outbound.size()
+					current_position = target_cell
+					cell_index += 1
+					carried += 1
+				var return_path: Array[Vector2i] = board.find_path(current_position, board.start)
+				level_expedition_steps += return_path.size()
+				level_trip_count += 1
+		entry["expedition_steps_total"] += level_expedition_steps
+		entry["trip_count_total"] += level_trip_count
+		entry["expedition_steps_max_level"] = maxi(int(entry["expedition_steps_max_level"]), level_expedition_steps)
 	for squad in data.get("squads", []):
 		var capacity := int(squad["capacity"])
 		entry["squads"] += 1
@@ -152,6 +181,9 @@ func _print_chapter_stats(stats: Dictionary) -> void:
 				float(entry["route_steps_total"]) / maxf(1.0, float(entry["route_samples"])),
 				float(entry["extra_steps_total"]) / maxf(1.0, float(entry["route_samples"])),
 				int(entry["route_steps_max"]),
+				float(entry["expedition_steps_total"]) / count,
+				float(entry["trip_count_total"]) / count,
+				int(entry["expedition_steps_max_level"]),
 			]
 		)
 
