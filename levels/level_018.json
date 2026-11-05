@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "meadow_018",
   "title": "Four Colors, Two Slots",
-  "objective": "Deliver four colors without overfilling the field.",
+  "objective": "The upper far seed can only be reached through the lower gate; keep both field slots useful while the teams take the long way around.",
   "width": 6,
   "height": 5,
   "start": [
@@ -79,6 +79,11 @@
     {
       "x": 3,
       "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 1,
+      "y": 0,
       "type": "obstacle"
     }
   ]
