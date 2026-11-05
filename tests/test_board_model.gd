@@ -42,6 +42,8 @@ func _initialize() -> void:
 	_check(board.find_path(board.start, board.goal).size() == 4, "loaded board should produce a deterministic route around obstacles")
 	_check(board.remaining_resources == 1, "loaded resource count should be one")
 	_check(board.has_resource(Vector2i(4, 2)), "resource cell should be available")
+	_check(board.resource_color_at(Vector2i(4, 2)) == "amber", "resource color should be loaded")
+	_check(not board.collect_resource(Vector2i(4, 2), "teal"), "wrong-color squad should not collect resource")
 	_check(board.collect_resource(Vector2i(4, 2)), "resource should be collected once")
 	_check(not board.collect_resource(Vector2i(4, 2)), "collected resource should not be collected twice")
 	_check(board.remaining_resources == 0, "remaining resource count should reach zero")
