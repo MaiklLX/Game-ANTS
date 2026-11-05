@@ -222,7 +222,7 @@ func _color_name_ru(value: String) -> String:
 
 
 func _objective_for_display(objective: String) -> String:
-	if _ui_scale >= 0.72 or objective.length() <= 56:
+	if objective.length() <= 56:
 		return objective
 	return objective.left(53).strip_edges() + "…"
 
