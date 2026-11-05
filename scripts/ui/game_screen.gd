@@ -149,23 +149,27 @@ func _draw_board(font: Font) -> void:
 	draw_string(font, Vector2(44, 548), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
 	draw_string(font, Vector2(676, 548), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, COLOR_GOLD)
 
+	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
+	draw_rect(board_frame, Color("#182820"))
+	draw_rect(board_frame, Color("#405744"), false, 2.0)
 	for y in range(_board.height):
 		for x in range(_board.width):
 			var cell := Vector2i(x, y)
 			var rect := _cell_rect(cell)
-			var fill := COLOR_PANEL
+			var inset := rect.grow(-3.0)
+			var fill := Color("#22352b") if (x + y) % 2 == 0 else Color("#263a2f")
 			if not _board.is_walkable(cell):
-				fill = Color("#29342d")
-			draw_rect(rect, fill)
-			draw_rect(rect, COLOR_GRID, false, 1.5)
+				fill = Color("#303b32")
+			draw_rect(rect, Color("#17251e"))
+			draw_rect(inset, fill)
+			draw_rect(inset, Color("#3b5141"), false, 1.0)
 			if cell == _board.start:
-				draw_circle(rect.get_center(), 19.0, Color("#d7b76e"))
-				draw_circle(rect.get_center(), 11.0, Color("#654d2c"))
-				draw_string(font, rect.position + Vector2(0, 5), "N", HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 16, COLOR_TEXT)
+				_draw_nest(rect.get_center())
 			elif _board.has_resource(cell):
 				var resource_color := _board.resource_color_at(cell)
-				_draw_color_mark(rect.get_center(), resource_color, 18.0)
-				draw_string(font, rect.position + Vector2(0, rect.size.y - 7), _symbol_for(resource_color), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 13, COLOR_BG)
+				_draw_resource(rect.get_center(), resource_color)
+			elif not _board.is_walkable(cell):
+				_draw_rock(rect.get_center())
 
 	if not _last_path.is_empty():
 		var previous := _last_path_start if _board.is_inside(_last_path_start) else _board.start
@@ -506,6 +510,35 @@ func _symbol_for(color_name: String) -> String:
 		"violet":
 			return "V"
 	return "?"
+
+
+func _draw_nest(center: Vector2) -> void:
+	# Layered earthen nest entrance with a warm rim and a readable dark opening.
+	draw_circle(center, 25.0, Color("#6c5738"))
+	draw_circle(center, 20.0, Color("#b28a4d"))
+	draw_circle(center, 14.0, Color("#493b2b"))
+	draw_arc(center, 23.0, PI * 0.12, PI * 0.88, 24, Color("#e2c27c"), 2.5)
+	draw_circle(center + Vector2(0, 1), 7.0, Color("#211f18"))
+	draw_circle(center + Vector2(-2, -3), 2.0, Color("#d9b76e"))
+
+
+func _draw_resource(center: Vector2, color_name: String) -> void:
+	# Distinct seed body plus a small leaf; color is reinforced by shape labels.
+	var tint := _color_for(color_name)
+	draw_circle(center + Vector2(0, 2), 20.0, Color("#17231c"))
+	draw_circle(center, 17.0, tint)
+	draw_circle(center + Vector2(-5, -5), 5.0, Color(1.0, 1.0, 1.0, 0.28))
+	draw_line(center + Vector2(5, -12), center + Vector2(12, -20), Color("#8fc28a"), 3.0)
+	draw_string(ThemeDB.fallback_font, center + Vector2(-17, 26), _symbol_for(color_name), HORIZONTAL_ALIGNMENT_CENTER, 34, 11, COLOR_BG)
+
+
+func _draw_rock(center: Vector2) -> void:
+	# A small clustered stone silhouette reads more naturally than a flat blocked square.
+	draw_circle(center + Vector2(1, 4), 22.0, Color("#1a241e"))
+	draw_circle(center + Vector2(-7, 2), 12.0, Color("#657064"))
+	draw_circle(center + Vector2(7, -4), 14.0, Color("#788474"))
+	draw_circle(center + Vector2(0, -12), 9.0, Color("#8b9684"))
+	draw_line(center + Vector2(-8, -4), center + Vector2(-2, -10), Color("#aab39f"), 2.0)
 
 
 func _draw_color_mark(center: Vector2, color_name: String, radius: float) -> void:
