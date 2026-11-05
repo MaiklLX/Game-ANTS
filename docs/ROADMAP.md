@@ -498,3 +498,10 @@
 - Godot 4.7.2 import, BoardModel, LevelDefinition, ColonyModel, TurnResolver, Campaign level integration (levels 001–010), CampaignCatalog tests, and headless main-scene launch all passed.
 - The first Meadow chapter now has 10/30 authored levels. Continue with batches of five and preserve a reviewed difficulty curve.
 - PR #9 remains Draft and stacked on PR #8. No merge to main.
+
+
+### Meadow content batch 011–015 — CI PASS
+- Added levels 011–015: Split the Shift, Stone Arch, Four Corners, Capacity Choice, and The Last Slot.
+- Meadow chapter now contains 15/30 levels; all 15 are included in deterministic campaign integration tests.
+- CI run #220 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025359991.
+- Godot 4.7.2 import, all six test suites (including campaign catalog and all 15 campaign levels), and headless main-scene launch passed.
