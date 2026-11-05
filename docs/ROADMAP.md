@@ -656,3 +656,14 @@
 - Chapter 2 is **30/30 authored and automated-validation passed**, but **not yet design-signed-off**. Targeted geometry revision, map-signature regression tests, and manual portrait Editor QA remain open.
 - Full audit: `docs/ROOT_LABYRINTH_AUDIT.md`. Chapter 3 may proceed in reviewed five-level batches; retain a separate revision task for the Root Labyrinth duplication cluster.
 - PR #9 remains Draft and stacked on PR #8. No merge to main. No editor/device QA, APK, or public web build is claimed.
+
+
+
+### KT-008.1 — Amber Orchard opening batch 061–065 (2026-11-05)
+- Added the third chapter pack `amber_orchard` and appended it after Root Labyrinth in the root campaign manifest.
+- Added 061 First Golden Bough, 062 Twin Canopies, 063 The Long Golden Cluster, 064 The Middle Crossing, and 065 The Balanced Harvest.
+- The batch focuses on load planning and squad specialization using existing schema-v1 capacity, color, slot, obstacle, and deterministic path rules only.
+- Campaign integration tests now include levels 061–065; catalogue assertions expect 65 ordered levels and verify chapter 3 identity and global indices.
+- Root Labyrinth design audit remains open as a separate revision task; no claim of chapter 2 design sign-off or manual visual QA.
+- CI verification for this 65-level checkpoint is pending.
+- PR #9 remains Draft, stacked on PR #8; no merge to main.

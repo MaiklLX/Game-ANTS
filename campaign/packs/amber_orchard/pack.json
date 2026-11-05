@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "amber_orchard",
+  "title": "The Amber Orchard",
+  "description": "Plan efficient multi-seed expeditions, match carrier capacity to clustered harvests, and coordinate specialized squads.",
+  "levels": [
+    {
+      "id": "orchard_061",
+      "file": "res://levels/level_061.json"
+    },
+    {
+      "id": "orchard_062",
+      "file": "res://levels/level_062.json"
+    },
+    {
+      "id": "orchard_063",
+      "file": "res://levels/level_063.json"
+    },
+    {
+      "id": "orchard_064",
+      "file": "res://levels/level_064.json"
+    },
+    {
+      "id": "orchard_065",
+      "file": "res://levels/level_065.json"
+    }
+  ]
+}

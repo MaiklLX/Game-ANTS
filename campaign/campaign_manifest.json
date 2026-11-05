@@ -8,6 +8,9 @@
     },
     {
       "file": "res://campaign/packs/root_labyrinth/pack.json"
+    },
+    {
+      "file": "res://campaign/packs/amber_orchard/pack.json"
     }
   ]
 }

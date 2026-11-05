@@ -5,7 +5,7 @@
 - **Launch campaign:** 300 hand-authored, quality-checked levels.
 - **Structure:** 10 chapters × 30 levels.
 - **Expansion:** additional chapter packs can be appended through the root campaign manifest in later updates.
-- **Current reality:** 60 authored levels: Meadow 001–030 (30/30) and Root Labyrinth 031–060 (30/30). Chapters 3–10 remain planned content.
+- **Current reality:** 65 authored levels: Meadow 001–030 (30/30), Root Labyrinth 031–060 (30/30; design revisions remain open), and Amber Orchard 061–065 (5/30). Chapters 4–10 remain planned content.
 
 ## Chapter rhythm
 
@@ -130,3 +130,12 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - Required before release sign-off: redesign at least one of 037/038/041; review the 047/057/059 family; add map-signature regression coverage; perform manual Godot Editor portrait playthrough; rerun CI.
 - Full findings: `docs/ROOT_LABYRINTH_AUDIT.md`.
 - Chapter 3 production may begin in five-level batches, but chapter 2's targeted revision remains an explicit open task.
+
+
+### Amber Orchard production batch 061–065
+- 61 First Golden Bough: A two-seed amber load waits beyond the low crossing; bring it home before the teal scout.
+- 62 Twin Canopies: Two carriers can each fill a matching load, but the upper and lower boughs must be planned separately.
+- 63 The Long Golden Cluster: Three amber seeds share one connected branch; use the carrier's full capacity in a single expedition.
+- 64 The Middle Crossing: Upper and lower loads meet at one narrow crossing; decide which carrier should occupy the open slot first.
+- 65 The Balanced Harvest: Four colors and two full loads compete for two field slots; plan the order that keeps every carrier useful.
+- All five use schema-v1 mechanics only; the deterministic production-rule solver covers collection and return.
