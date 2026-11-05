@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 85 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–085. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
+The current campaign contains 90 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–090. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
 
 ### Adding a future chapter
 
@@ -171,3 +171,11 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - level_083.json — The Hidden Sun: four colors are placed beyond a sheltered central lane between two root shelves.
 - level_084.json — The Compass Branches: two separated openings in a central trunk connect four outer pockets.
 - level_085.json — The Orchard Keeper's Trial: a capacity-three amber branch, paired teal load, and two lone seeds test all four squad roles across three slots.
+
+
+### Amber Orchard — batch 086–090 (chapter finale)
+- level_086.json — The Amber Gatehouse: a narrow upper gate separates the amber pair from two near-side single seeds.
+- level_087.json — The Orchard's Last Shade: a capacity-three violet expedition follows an outer branch, with a separate teal pickup.
+- level_088.json — The Three Canopies: three paired harvests must be completed with two deployment slots.
+- level_089.json — The Orchard's Long Walk: four colors sit behind a staggered root maze and require slot rotation.
+- level_090.json — The Heart of Amber: chapter finale combining two full loads, three single seeds, and three deployment slots.
