@@ -3,9 +3,12 @@ extends SceneTree
 ## Run with a desktop display server (CI uses Xvfb + software OpenGL), not --headless.
 
 const MAIN_SCENE := preload("res://scenes/main.tscn")
+const ResponsiveLayoutScript := preload("res://scripts/ui/responsive_layout.gd")
 const VIEWPORT_CASES := [
 	{"name": "320x568", "size": Vector2i(320, 568)},
+	{"name": "320x568-level100", "size": Vector2i(320, 568), "level_index": 99},
 	{"name": "360x800", "size": Vector2i(360, 800)},
+	{"name": "360x800-level100", "size": Vector2i(360, 800), "level_index": 99},
 	{"name": "390x844", "size": Vector2i(390, 844)},
 	{"name": "412x915", "size": Vector2i(412, 915)},
 	{"name": "720x1280", "size": Vector2i(720, 1280)},
@@ -35,8 +38,17 @@ func _capture_viewports() -> void:
 		var scene := MAIN_SCENE.instantiate()
 		render_viewport.add_child(scene)
 		await process_frame
-		await RenderingServer.frame_post_draw
 
+		var level_index := int(viewport_case.get("level_index", -1))
+		if level_index >= 0:
+			scene.call("_load_level", level_index)
+			var scale := float(ResponsiveLayoutScript.calculate(Vector2(viewport_size))["scale"])
+			var levels_per_page := ResponsiveLayoutScript.levels_per_page(scale)
+			scene.set("_level_page_start", int(level_index / levels_per_page) * levels_per_page)
+			scene.queue_redraw()
+			await process_frame
+
+		await RenderingServer.frame_post_draw
 		var screenshot: Image = render_viewport.get_texture().get_image()
 		if screenshot == null or screenshot.is_empty():
 			push_error("Rendered screenshot is empty for %s" % viewport_case["name"])
