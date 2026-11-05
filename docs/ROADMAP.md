@@ -8,7 +8,7 @@
 - [x] Write initial game direction and technical recommendation
 - [x] Define agent branch/PR rules
 - [ ] Validate engine choice in a local development environment
-- [ ] Create first GitHub milestone and implementation issues
+- [x] Create initial implementation Issues #1–#3
 
 ### KT-002 — Graybox gameplay prototype
 - [ ] Initialize Godot project and mobile portrait settings
@@ -47,12 +47,13 @@
 ### KT-001 — 2026-11-05
 **Branch:** `foundation/kt-001-game-direction`  
 **Base commit:** `095c05feefbd6902b1462e513fd53f402f90f45e`  
-**Status:** Initial concept and repository rules documented. No engine project or playable build exists yet.
+**Status:** Initial concept, repository rules, and Issues #1–#3 documented. No engine project or playable build exists yet.
 
 **Completed**
 - Created project README on `main`.
 - Created foundation branch.
 - Added game design, technical plan, roadmap, and agent operating rules.
+- Created GitHub Issues #1–#3 for the first implementation sequence.
 
 **Known limitations**
 - DeepSeek Harness is not installed.
@@ -60,9 +61,9 @@
 - Game mechanics are proposals until a playable graybox is tested.
 
 **Next**
-1. Review and create GitHub Issues for KT-002.
-2. Confirm local Godot setup and version.
-3. Build the smallest playable loop before adding meta systems or content volume.
+1. Execute Issue #1: validate the Godot toolchain and bootstrap the project.
+2. Execute Issue #2: implement the deterministic board model.
+3. Execute Issue #3: prototype squad selection, slots, and collection.
 
 **Checkpoint phrase for a new chat:**
 
