@@ -792,3 +792,11 @@
 - 320×568 phones use four 100×100 level/page controls; standard compact phones keep five 88×88 controls. Both layouts fit the 720 px design width.
 - Squad cards and Retry/Skip hit areas are 100 logical pixels high. This proves geometry constraints only, not rendered visual quality or device input behavior.
 - Next: Godot Editor rendered review, then Android export and physical-device touch/safe-area QA. PR #9 remains Draft; main remains untouched.
+
+
+### KT-011.4 — compact-phone typography follow-up (2026-11-05)
+- Static UI audit found that the uniform canvas transform reduced 12 px labels to about 5.3 physical px at 320×568, despite the hit-area geometry passing.
+- Added a shared typography helper that preserves an 8.5 physical-pixel minimum for HUD labels while retaining authored sizes on the 720×1280 reference viewport.
+- Applied the helper consistently to all 26 `draw_string` calls in the gameplay screen, including board resource marks.
+- Added responsive contract assertions for 320×568, 360×800, and the reference viewport.
+- This is a code-level typography correction, not a rendered visual sign-off. CI validation is pending; Godot Editor screenshots, safe-area review, Android export, and physical-device QA remain outstanding.
