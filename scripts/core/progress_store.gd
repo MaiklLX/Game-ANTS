@@ -36,9 +36,11 @@ func load_progress(level_ids: Array[String]) -> Dictionary:
 		_write_enabled = false
 		return _failure("Progress file could not be opened for reading.")
 
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parser := JSON.new()
+	var parse_error := parser.parse(file.get_as_text())
 	file.close()
-	if typeof(parsed) != TYPE_DICTIONARY:
+	var parsed: Variant = parser.data
+	if parse_error != OK or typeof(parsed) != TYPE_DICTIONARY:
 		if _preserve_corrupt_save():
 			_warning = "Previous progress was damaged; a backup was preserved and a fresh record will be started."
 		else:
