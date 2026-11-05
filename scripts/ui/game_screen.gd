@@ -9,6 +9,7 @@ const ProgressStoreScript = preload("res://scripts/core/progress_store.gd")
 const LevelGuidanceScript = preload("res://scripts/ui/level_guidance.gd")
 const ResponsiveLayoutScript = preload("res://scripts/ui/responsive_layout.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
+const StrategicTurnEngineScript = preload("res://scripts/core/strategic_turn_engine.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
 const VIRTUAL_SIZE := Vector2(720.0, 1280.0)
@@ -72,6 +73,10 @@ func _hint_ru(value: String) -> String:
 
 var _board: BoardModel
 var _colony: ColonyModel
+var _strategic_engine: StrategicTurnEngine
+var _turn_animation_progress: float = 1.0
+var _turn_animation_moves: Dictionary = {}
+var _turn_animation_tween: Tween
 var _level_data: Dictionary = {}
 var _level_index: int = 0
 var _level_page_start: int = 0
@@ -116,6 +121,7 @@ func _ready() -> void:
 	_load_ru_localization()
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
+	_strategic_engine = StrategicTurnEngineScript.new()
 	var catalog_result: Dictionary = CampaignCatalogScript.load_catalog(CAMPAIGN_MANIFEST_PATH)
 	if not catalog_result["valid"]:
 		_status = "Ошибка данных кампании: " + "; ".join(catalog_result["errors"])
@@ -143,9 +149,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if _is_animating:
+	if _is_animating or _turn_animation_progress < 1.0:
 		_ant_wiggle += delta * 13.0
-	if _is_animating or _feedback_progress < 1.0:
+	if _is_animating or _turn_animation_progress < 1.0 or _feedback_progress < 1.0:
 		queue_redraw()
 
 
@@ -296,7 +302,7 @@ func _draw_slots(font: Font) -> void:
 
 
 func _draw_squads(font: Font) -> void:
-	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "КОСНИТЕСЬ ОТРЯДА — ОН САМ НАЙДЁТ СЕМЕНА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "ВЫБЕРИТЕ ОТРЯД, ЗАТЕМ НАЗНАЧЬТЕ ЕМУ ЦЕЛЬ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
 	var card_width := ResponsiveLayoutScript.squad_card_width(ids.size())
@@ -316,6 +322,9 @@ func _draw_squads(font: Font) -> void:
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
 		draw_string(font, rect.position + Vector2(54, 34), _color_name_short_ru(String(squad["color"])), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
+		if _strategic_engine != null and _strategic_engine.has_order(squad_id):
+			var active_order: Dictionary = _strategic_engine.get_order(squad_id)
+			state = "ВОЗВРАЩАЕТСЯ" if active_order.get("kind", "") == "return" else "ИДЁТ К ЦЕЛИ"
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
 		var load_text := "%d/%d" % [carried, capacity]
@@ -364,7 +373,34 @@ func _draw_board(font: Font) -> void:
 			elif not _board.is_walkable(cell):
 				_draw_rock(rect.get_center())
 
-	if not _last_path.is_empty():
+	if _strategic_engine != null:
+		for squad_id in _colony.get_squad_ids():
+			var order: Dictionary = _strategic_engine.get_order(squad_id)
+			var squad: Dictionary = _colony.get_squad(squad_id)
+			if order.is_empty() or squad.is_empty():
+				continue
+			var route: Array = order.get("path", [])
+			var previous: Vector2i = squad.get("position", _board.start)
+			for route_cell in route:
+				draw_line(_cell_rect(previous).get_center(), _cell_rect(route_cell).get_center(), _color_for(String(squad.get("color", "amber"))).lightened(0.25), 3.0)
+				previous = route_cell
+			if not route.is_empty():
+				draw_circle(_cell_rect(route.back()).get_center(), 5.0, _color_for(String(squad.get("color", "amber"))))
+		for squad_id in _colony.get_squad_ids():
+			var squad: Dictionary = _colony.get_squad(squad_id)
+			if not squad.get("deployed", false):
+				continue
+			var ant_position: Vector2 = _cell_rect(squad.get("position", _board.start)).get_center()
+			if _turn_animation_progress < 1.0 and _turn_animation_moves.has(squad_id):
+				var move: Dictionary = _turn_animation_moves[squad_id]
+				var from_pos: Vector2 = _cell_rect(move["from"]).get_center()
+				var to_pos: Vector2 = _cell_rect(move["to"]).get_center()
+				ant_position = from_pos.lerp(to_pos, _turn_animation_progress)
+			_draw_ant(ant_position, _color_for(String(squad.get("color", "amber"))), 0.95)
+			if int(squad.get("carried", 0)) > 0:
+				var seed_tint := _color_for(String(squad.get("color", "amber")))
+				draw_circle(ant_position + Vector2(18, -14), 6.0, seed_tint)
+	if false:
 		var previous := _last_path_start if _board.is_inside(_last_path_start) else _board.start
 		for step in _last_path:
 			draw_line(_cell_rect(previous).get_center(), _cell_rect(step).get_center(), COLOR_GOLD, 4.0)
@@ -394,14 +430,14 @@ func _draw_board(font: Font) -> void:
 
 func _draw_status(font: Font) -> void:
 	var panel := Rect2(42, 1000 + _layout_extra * 0.68, 636, 124)
-	var completed := TurnResolverScript.is_level_complete(_board, _colony)
-	var blocked := TurnResolverScript.is_level_blocked(_board, _colony)
+	var completed := _strategic_engine.get_outcome() == "won"
+	var blocked := _strategic_engine.get_outcome() == "lost"
 	var panel_color := Color("#20382d") if completed else Color("#392a26") if blocked else COLOR_PANEL
 	var accent_color := Color("#91c99a") if completed else Color("#e58b70") if blocked else COLOR_GOLD
 	draw_rect(panel, panel_color)
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
 
-	var heading := "ПОЛЕ ЗАЧИЩЕНО" if completed else "ПУТЬ ЗАБЛОКИРОВАН" if blocked else "ПЕРВАЯ ЭКСПЕДИЦИЯ" if _tutorial_active else "ЖУРНАЛ КОЛОНИИ"
+	var heading := "ЭКСПЕДИЦИЯ ЗАВЕРШЕНА" if completed else "ДЕНЬ ЗАКОНЧИЛСЯ" if blocked else "ПЕРВАЯ ЭКСПЕДИЦИЯ" if _tutorial_active else "ЖУРНАЛ КОЛОНИИ"
 	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), accent_color if not _tutorial_active else COLOR_GOLD)
 	var action_width := ResponsiveLayoutScript.status_action_width(_ui_scale)
 	var action_height := ResponsiveLayoutScript.status_action_height(_ui_scale)
@@ -417,7 +453,9 @@ func _draw_status(font: Font) -> void:
 		draw_string(font, _restart_rect.position + Vector2(0, 56), "ЗАНОВО", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
-	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d     ДЕНЬ  %d / %d" % [delivered, _board.total_resources, _strategic_engine.day_remaining, _strategic_engine.day_limit], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+	var action_label := "СЛЕДУЮЩИЙ ХОД" if _has_active_orders() else "ЗАНОВО"
+	draw_string(font, _restart_rect.position + Vector2(0, 56), action_label, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 
 
 func _draw_level_picker(font: Font) -> void:
@@ -503,7 +541,10 @@ func _handle_tap(point: Vector2) -> void:
 			_load_level(_level_page_start + index)
 			return
 	if _restart_rect.has_point(point):
-		_load_level(_level_index)
+		if _has_active_orders():
+			_advance_strategic_turn()
+		else:
+			_load_level(_level_index)
 		return
 	if _tutorial_active and _tutorial_skip_rect.has_point(point):
 		_complete_tutorial()
@@ -537,6 +578,10 @@ func _load_level(index: int) -> void:
 	_is_animating = false
 	_returning_to_nest = false
 	_ant_progress = 0.0
+	_turn_animation_progress = 1.0
+	_turn_animation_moves.clear()
+	if _turn_animation_tween != null and _turn_animation_tween.is_running():
+		_turn_animation_tween.kill()
 	if _campaign_levels.is_empty():
 		_status = "Нет доступных уровней."
 		queue_redraw()
@@ -547,11 +592,13 @@ func _load_level(index: int) -> void:
 	_tutorial_step = 0 if _tutorial_active else -1
 	_level_data = _campaign_levels[_level_index]["data"].duplicate(true)
 	var result: Dictionary = LevelLoaderScript.load_into(_level_data, _board, _colony)
+	var day_budget := int(_level_data.get("day_budget", maxi(24, _board.width * _board.height)))
+	_strategic_engine.configure(day_budget)
 	_selected_squad_id = ""
 	_last_path.clear()
 	_last_target = Vector2i(-1, -1)
 	_last_path_start = _board.start
-	_status = "Выберите отряд, чтобы начать." if result["valid"] else _error_ru(str(result["errors"]))
+	_status = "Выберите отряд, затем семя или муравейник. Нажмите «Следующий ход»." if result["valid"] else _error_ru(str(result["errors"]))
 	if result["valid"] and _progress_store != null:
 		var save_result: Dictionary = _progress_store.set_last_selected_level(String(_campaign_levels[_level_index]["id"]))
 		if not save_result.get("valid", false):
@@ -566,175 +613,135 @@ func _select_or_deploy(squad_id: String) -> void:
 	if squad.is_empty():
 		return
 	_selected_squad_id = squad_id
-	_last_path.clear()
-	if not squad["deployed"]:
+	if not squad.get("deployed", false):
 		var result: Dictionary = _colony.deploy_squad(squad_id)
-		if not result["valid"]:
-			_status = _error_ru(String(result["errors"][0]))
+		if not result.get("valid", false):
+			_status = _error_ru(String(result.get("errors", ["Не удалось отправить отряд."])[0]))
 			queue_redraw()
 			return
-		if _tutorial_active and squad_id == "amber_workers":
-			_tutorial_step = 1
-	_auto_dispatch = true
-	_status = "%s отряд отправился на поиск семян." % _color_name_ru(String(squad.get("color", "")))
-	_dispatch_next_seed()
-
-
-func _dispatch_next_seed() -> void:
-	if _selected_squad_id.is_empty():
-		return
-	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-	if squad.is_empty() or not squad.get("deployed", false):
-		_auto_dispatch = false
-		return
-	if int(squad.get("carried", 0)) >= int(squad.get("capacity", 1)):
-		_status = "Отряд набрал полный груз и возвращается домой."
-		_return_selected_squad()
-		return
-	var from_cell: Vector2i = squad.get("position", _board.start)
-	if not _board.is_inside(from_cell):
-		from_cell = _board.start
-	var best_cell := Vector2i(-1, -1)
-	var best_path: Array[Vector2i] = []
-	for cell in _board.get_resource_cells():
-		if _board.resource_color_at(cell) != String(squad.get("color", "")):
-			continue
-		var path: Array[Vector2i] = _board.find_path(from_cell, cell)
-		if path.is_empty():
-			continue
-		if best_cell == Vector2i(-1, -1) or path.size() < best_path.size():
-			best_cell = cell
-			best_path = path
-	if best_cell == Vector2i(-1, -1):
-		if int(squad.get("carried", 0)) > 0:
-			_status = "Все доступные семена собраны. Отряд возвращается домой."
-			_return_selected_squad()
+		_status = "%s отряд готов. Выберите подходящее семя." % _color_name_ru(String(squad.get("color", "")))
+	else:
+		var order: Dictionary = _strategic_engine.get_order(squad_id)
+		if not order.is_empty():
+			_status = "Приказ активен: %d ход(а/ов) до цели." % order.get("path", []).size()
+		elif int(squad.get("carried", 0)) > 0:
+			_status = "Отряд несёт груз. Коснитесь муравейника, чтобы назначить возвращение."
 		else:
-			_auto_dispatch = false
-			_status = "Рядом нет доступных семян этого цвета."
-			queue_redraw()
-		return
-	_begin_collection(best_cell, best_path)
+			_status = "Отряд выбран. Коснитесь доступного семени своего цвета."
+	queue_redraw()
 
 
 func _collect_selected_squad(cell: Vector2i) -> void:
-	_auto_dispatch = false
 	if _selected_squad_id.is_empty():
 		_status = "Сначала выберите отряд рабочих."
 		queue_redraw()
 		return
 	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-	if squad.is_empty() or not squad["deployed"]:
-		_status = "Сначала отправьте выбранный отряд в поле."
+	if squad.is_empty() or not squad.get("deployed", false):
+		_status = "Сначала выберите и отправьте отряд в поле."
 		queue_redraw()
 		return
-	var from_cell: Vector2i = squad.get("position", _board.start)
-	if not _board.is_inside(from_cell):
-		from_cell = _board.start
-	var preview: Dictionary = TurnResolverScript.preview_collection(
-		_colony, _board, _selected_squad_id, from_cell, cell
-	)
-	if not preview["valid"]:
-		_status = _error_ru(String(preview["errors"][0]))
-		queue_redraw()
-		return
-	_begin_collection(cell, preview["path"])
-
-
-func _begin_collection(cell: Vector2i, path: Array[Vector2i]) -> void:
-	if path.is_empty():
-		return
-	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-	_last_path_start = squad.get("position", _board.start)
-	_last_target = cell
-	_last_path = path
-	_ant_progress = 0.0
-	_returning_to_nest = false
-	_is_animating = true
-	_status = "Муравьи бегут за семенем…"
-	_start_path_animation(1.0, false)
+	var result: Dictionary = _strategic_engine.set_collect_order(_colony, _board, _selected_squad_id, cell)
+	if not result.get("valid", false):
+		_status = _error_ru(String(result.get("errors", ["Нельзя назначить эту цель."])[0]))
+	else:
+		_last_path_start = squad.get("position", _board.start)
+		_last_target = cell
+		_last_path = result.get("path", [])
+		_status = "Маршрут назначен: %d ход(а/ов). Нажмите «Следующий ход»." % int(result.get("turn_cost", 0))
 	queue_redraw()
 
 
 func _return_selected_squad() -> void:
 	if _selected_squad_id.is_empty():
-		_status = "Выберите отряд в поле, чтобы вернуть его домой."
+		_status = "Выберите отряд в поле, затем коснитесь муравейника."
 		queue_redraw()
 		return
 	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-	if squad.is_empty() or not squad["deployed"]:
-		_status = "Выбранный отряд сейчас не в поле."
+	if squad.is_empty() or not squad.get("deployed", false):
+		_status = "Выбранный отряд ещё не находится в поле."
 		queue_redraw()
 		return
-	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
-	_last_path_start = squad_position if _board.is_inside(squad_position) else _board.start
-	_last_path = _board.find_path(_last_path_start, _board.start)
-	_last_target = _board.start
-	_ant_progress = 0.0
-	if _last_path.is_empty():
-		_finish_squad_return()
-		return
-	_returning_to_nest = true
-	_is_animating = true
-	_status = "Рабочие возвращаются домой…"
-	_start_path_animation(1.0, true)
-	queue_redraw()
-
-
-func _start_path_animation(target_progress: float, returning: bool) -> void:
-	if _animation_tween != null and _animation_tween.is_running():
-		_animation_tween.kill()
-	var duration := maxf(0.20, float(_last_path.size()) * 0.12)
-	_animation_tween = create_tween()
-	_animation_tween.set_trans(Tween.TRANS_CUBIC)
-	_animation_tween.set_ease(Tween.EASE_IN_OUT)
-	_animation_tween.tween_property(self, "_ant_progress", target_progress, duration)
-	_animation_tween.finished.connect(_on_path_animation_finished.bind(returning))
-
-
-func _on_path_animation_finished(returning: bool) -> void:
-	_is_animating = false
-	if returning:
-		_finish_squad_return()
+	var result: Dictionary = _strategic_engine.set_return_order(_colony, _board, _selected_squad_id)
+	if not result.get("valid", false):
+		_status = _error_ru(String(result.get("errors", ["Не удалось назначить возвращение."])[0]))
 	else:
-		var result: Dictionary = TurnResolverScript.apply_collection(
-			_colony, _board, _selected_squad_id, _last_path_start, _last_target
-		)
-		if not result["valid"]:
-			_status = String(result["errors"][0])
-			_last_path.clear()
-		else:
-			_trigger_feedback(_last_target)
-			if _tutorial_active and _tutorial_step == 1:
-				_tutorial_step = 2
-			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-			if _auto_dispatch:
-				_status = "Семя найдено! Муравьи ищут следующее…"
-				_dispatch_next_seed()
-			elif squad.get("carried", 0) >= squad.get("capacity", 1):
-				_status = "Отряд загружен. Нажмите на муравейник, чтобы доставить груз."
-			else:
-				_status = "Семя собрано. Можно продолжить сбор или вернуться домой."
-		_check_terminal_state()
+		_last_target = _board.start
+		_status = "Возвращение назначено: %d ход(а/ов). Нажмите «Следующий ход»." % int(result.get("turn_cost", 0))
 	queue_redraw()
 
 
-func _finish_squad_return() -> void:
-	var result: Dictionary = _colony.return_squad(_selected_squad_id)
-	if result["valid"]:
-		_status = "Доставлено семян: %d. Место для отряда свободно." % result["delivered"]
-		if _tutorial_active and _tutorial_step == 2 and result["delivered"] > 0:
-			_complete_tutorial()
-		_trigger_feedback(_board.start)
-		_selected_squad_id = ""
-		_auto_dispatch = false
-		_last_path.clear()
-		_last_target = Vector2i(-1, -1)
-		_ant_progress = 0.0
-	_returning_to_nest = false
+func _has_active_orders() -> bool:
+	if _strategic_engine == null or _colony == null:
+		return false
+	for squad_id in _colony.get_squad_ids():
+		if _strategic_engine.has_order(squad_id):
+			return true
+	return false
+
+
+func _advance_strategic_turn() -> void:
+	if not _has_active_orders():
+		_status = "Сначала назначьте приказ хотя бы одному отряду."
+		queue_redraw()
+		return
+	var previous_positions: Dictionary = {}
+	for squad_id in _colony.get_squad_ids():
+		var squad: Dictionary = _colony.get_squad(squad_id)
+		if squad.get("deployed", false):
+			previous_positions[squad_id] = squad.get("position", _board.start)
+	var result: Dictionary = _strategic_engine.advance_turn(_colony, _board)
+	if not result.get("valid", false):
+		_status = _error_ru(String(result.get("errors", ["Не удалось завершить ход."])[0]))
+		queue_redraw()
+		return
+	_turn_animation_moves.clear()
+	for squad_id in result.get("moved", []):
+		var squad_after: Dictionary = _colony.get_squad(String(squad_id))
+		if squad_after.is_empty() or not squad_after.get("deployed", false):
+			continue
+		var old_cell: Vector2i = previous_positions.get(String(squad_id), squad_after.get("position", _board.start))
+		var new_cell: Vector2i = squad_after.get("position", old_cell)
+		_turn_animation_moves[String(squad_id)] = {"from": old_cell, "to": new_cell}
+	_turn_animation_progress = 0.0 if not _turn_animation_moves.is_empty() else 1.0
+	if _turn_animation_tween != null and _turn_animation_tween.is_running():
+		_turn_animation_tween.kill()
+	if _turn_animation_progress < 1.0:
+		_is_animating = true
+		_turn_animation_tween = create_tween()
+		_turn_animation_tween.set_trans(Tween.TRANS_CUBIC)
+		_turn_animation_tween.set_ease(Tween.EASE_IN_OUT)
+		_turn_animation_tween.tween_property(self, "_turn_animation_progress", 1.0, 0.24)
+		_turn_animation_tween.finished.connect(_on_turn_animation_finished)
+	else:
+		_is_animating = false
+		_turn_animation_moves.clear()
+	if result.get("outcome", "playing") == "won":
+		_status = "Победа! Все семена доставлены домой."
+		_mark_level_completed()
+	elif result.get("outcome", "playing") == "lost":
+		_status = "День закончился. Не хватило ходов — попробуйте другой план."
+	elif not result.get("collected", []).is_empty():
+		_status = "Семя собрано. Отряд ждёт следующего приказа."
+	elif not result.get("delivered", []).is_empty():
+		_status = "Груз доставлен. Можно назначать новые приказы."
+	else:
+		_status = "Ход %d. Осталось ходов дня: %d." % [int(result.get("turn", 0)), int(result.get("day_remaining", 0))]
+	queue_redraw()
+
+
+func _on_turn_animation_finished() -> void:
 	_is_animating = false
-	_check_terminal_state()
+	_turn_animation_moves.clear()
 	queue_redraw()
+
+
+func _mark_level_completed() -> void:
+	var level_id := String(_campaign_levels[_level_index]["id"])
+	if _progress_store != null and not _progress_store.is_level_completed(level_id):
+		var save_result: Dictionary = _progress_store.mark_level_completed(level_id)
+		if not save_result.get("valid", false):
+			_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
 
 
 func _position_along_last_path(progress: float) -> Vector2:
@@ -789,17 +796,10 @@ func _selected_squad_color() -> Color:
 
 
 func _check_terminal_state() -> void:
-	if TurnResolverScript.is_level_complete(_board, _colony):
-		var level_id := String(_campaign_levels[_level_index]["id"])
-		if _progress_store != null and not _progress_store.is_level_completed(level_id):
-			var save_result: Dictionary = _progress_store.mark_level_completed(level_id)
-			if not save_result.get("valid", false):
-				_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
+	if _strategic_engine.get_outcome() == "won":
 		_status = "Победа! Все семена доставлены домой."
-		if not _progress_warning.is_empty():
-			_status += "  " + _progress_warning
-	elif TurnResolverScript.is_level_blocked(_board, _colony):
-		_status = "Ни один отряд не может добраться до оставшихся семян. Попробуйте снова."
+	elif _strategic_engine.get_outcome() == "lost":
+		_status = "День закончился. Попробуйте другой план."
 
 
 func _tutorial_instruction() -> String:
