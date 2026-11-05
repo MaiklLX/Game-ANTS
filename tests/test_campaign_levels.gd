@@ -283,6 +283,24 @@ func _test_root_labyrinth_route_shapes() -> void:
 		_check(not path.is_empty(), "%s should keep its featured harvest reachable" % route_case["path"])
 		_check(path.size() >= direct_distance + int(route_case["minimum_extra_steps"]), "%s should require a genuine corridor detour" % route_case["path"])
 
+	var switchback_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_056.json"))
+	if typeof(switchback_data) == TYPE_DICTIONARY:
+		var switchback_board = BoardModelScript.new()
+		var switchback_loaded: Dictionary = switchback_board.load_level(switchback_data)
+		_check(switchback_loaded["valid"], "The Switchback Gate should load for alternating-gate test")
+		if switchback_loaded["valid"]:
+			var low_to_high: Array[Vector2i] = switchback_board.find_path(switchback_board.start, Vector2i(5, 0))
+			_check(low_to_high.has(Vector2i(2, 4)) and low_to_high.has(Vector2i(4, 0)), "The Switchback Gate should cross low first and high second")
+
+	var three_mouths_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_057.json"))
+	if typeof(three_mouths_data) == TYPE_DICTIONARY:
+		var three_mouths_board = BoardModelScript.new()
+		var three_mouths_loaded: Dictionary = three_mouths_board.load_level(three_mouths_data)
+		_check(three_mouths_loaded["valid"], "Three Root Mouths should load for alternating-gate test")
+		if three_mouths_loaded["valid"]:
+			var high_to_low: Array[Vector2i] = three_mouths_board.find_path(three_mouths_board.start, Vector2i(5, 4))
+			_check(high_to_low.has(Vector2i(2, 0)) and high_to_low.has(Vector2i(4, 4)), "Three Root Mouths should cross high first and low second")
+
 	var crown_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_045.json"))
 	if typeof(crown_data) == TYPE_DICTIONARY:
 		var crown_board = BoardModelScript.new()
