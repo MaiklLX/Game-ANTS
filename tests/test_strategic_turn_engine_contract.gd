@@ -1,0 +1,75 @@
+extends SceneTree
+
+const BoardModelScript = preload("res://scripts/core/board_model.gd")
+const ColonyModelScript = preload("res://scripts/core/colony_model.gd")
+const StrategicTurnEngineScript = preload("res://scripts/core/strategic_turn_engine.gd")
+
+var failures: Array[String] = []
+
+
+func _initialize() -> void:
+	var sample: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_001.json"))
+	_check(typeof(sample) == TYPE_DICTIONARY, "tutorial level JSON should parse")
+
+	var board = BoardModelScript.new()
+	_check(board.load_level(sample)["valid"], "tutorial board should load")
+	var colony = ColonyModelScript.new()
+	colony.configure(1, board.start)
+	_check(colony.register_squad("amber_worker", "amber", 1)["valid"], "worker should register")
+	var engine = StrategicTurnEngineScript.new()
+	engine.configure(10)
+	_check(colony.deploy_squad("amber_worker")["valid"], "worker should deploy")
+
+	var order: Dictionary = engine.set_collect_order(colony, board, "amber_worker", Vector2i(4, 2))
+	_check(order["valid"] and order["turn_cost"] == 4, "explicit target should return a four-step preview")
+	_check(board.has_resource(Vector2i(4, 2)), "assigning an order must not collect")
+	var first: Dictionary = engine.advance_turn(colony, board)
+	_check(first["valid"] and first["day_remaining"] == 9, "one committed turn spends one shared day point")
+	_check(colony.get_squad("amber_worker")["position"] == Vector2i(1, 2), "a squad moves exactly one cell per turn")
+
+	_check(engine.cancel_order("amber_worker")["valid"], "player can cancel a route between turns")
+	_check(engine.set_collect_order(colony, board, "amber_worker", Vector2i(4, 2))["valid"], "player can issue a revised route")
+	for _step in range(3):
+		_check(engine.advance_turn(colony, board)["valid"], "collection route step should resolve")
+	_check(not board.has_resource(Vector2i(4, 2)), "resource is collected only on arrival")
+	_check(colony.get_squad("amber_worker")["carried"] == 1, "cargo is updated on collection")
+	_check(not engine.has_order("amber_worker"), "squad waits after collection; no auto-dispatch")
+
+	var return_order: Dictionary = engine.set_return_order(colony, board, "amber_worker")
+	_check(return_order["valid"] and return_order["turn_cost"] == 4, "return order should preview the route")
+	for _step in range(4):
+		_check(engine.advance_turn(colony, board)["valid"], "return route step should resolve")
+	_check(colony.delivered_resources == 1, "cargo is delivered at the nest")
+	_check(engine.get_outcome() == "won", "delivering the objective wins")
+	_check(engine.day_remaining == 2, "unused day points remain after victory")
+	_check(not engine.advance_turn(colony, board)["valid"], "finished level rejects more turns")
+
+	var empty_engine = StrategicTurnEngineScript.new()
+	empty_engine.configure(2)
+	_check(not empty_engine.advance_turn(colony, board)["valid"], "no order means no turn can be spent")
+	_check(empty_engine.day_remaining == 2, "invalid empty turn preserves the day")
+
+	var short_board = BoardModelScript.new()
+	_check(short_board.load_level(sample)["valid"], "independent day-expiry board should load")
+	var short_colony = ColonyModelScript.new()
+	short_colony.configure(1, short_board.start)
+	_check(short_colony.register_squad("amber_short", "amber", 1)["valid"], "short-test squad registers")
+	_check(short_colony.deploy_squad("amber_short")["valid"], "short-test squad deploys")
+	var short_engine = StrategicTurnEngineScript.new()
+	short_engine.configure(1)
+	_check(short_engine.set_collect_order(short_colony, short_board, "amber_short", Vector2i(4, 2))["valid"], "short-test route is assigned")
+	var loss: Dictionary = short_engine.advance_turn(short_colony, short_board)
+	_check(loss["outcome"] == "lost" and short_engine.day_remaining == 0, "day expiry before delivery loses")
+
+	if failures.is_empty():
+		print("StrategicTurnEngine tests passed.")
+		quit(0)
+	else:
+		for failure in failures:
+			push_error("StrategicTurnEngine test failed: " + failure)
+		quit(1)
+
+
+func _check(condition: bool, message: String) -> void:
+	if not condition:
+		failures.append(message)
