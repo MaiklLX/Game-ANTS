@@ -3,6 +3,9 @@ extends SceneTree
 const BoardModelScript = preload("res://scripts/core/board_model.gd")
 
 
+var _failures: Array[String] = []
+
+
 func _initialize() -> void:
 	var board = BoardModelScript.new()
 	board.configure(5, 5)
@@ -56,12 +59,16 @@ func _initialize() -> void:
 	_check(board.level_id == "meadow_001", "failed load must preserve the previously loaded level")
 	_check(board.width == 5 and board.remaining_resources == 0, "failed load must preserve board state")
 
-	print("BoardModel tests passed.")
-	quit(0)
+	if _failures.is_empty():
+		print("BoardModel tests passed.")
+		quit(0)
+	else:
+		for failure in _failures:
+			push_error("BoardModel test failed: " + failure)
+		quit(1)
 
 
 func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
-	push_error("BoardModel test failed: " + message)
-	quit(1)
+	_failures.append(message)
