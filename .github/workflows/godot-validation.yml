@@ -45,5 +45,8 @@ jobs:
       - name: Run level data validation tests
         run: timeout 60s godot --headless --path . --script res://tests/test_level_definition.gd
 
+      - name: Run colony and squad rules tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_colony_model.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
