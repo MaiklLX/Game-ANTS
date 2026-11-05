@@ -79,7 +79,7 @@ func _ready() -> void:
 	else:
 		_progress_warning = String(progress_result.get("warning", ""))
 	var initial_index := 0
-	var saved_level_id := _progress_store.get_last_selected_level_id()
+	var saved_level_id: String = _progress_store.get_last_selected_level_id()
 	for index in range(_campaign_levels.size()):
 		if String(_campaign_levels[index]["id"]) == saved_level_id:
 			initial_index = index
@@ -252,7 +252,9 @@ func _draw_status(font: Font) -> void:
 func _draw_level_picker(font: Font) -> void:
 	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(LEVELS_PER_PAGE)))
 	var page_number := int(_level_page_start / LEVELS_PER_PAGE) + 1
-	var completed_count := _progress_store.get_completed_count() if _progress_store != null else 0
+	var completed_count: int = 0
+	if _progress_store != null:
+		completed_count = int(_progress_store.get_completed_count())
 	draw_string(font, Vector2(44, 1150), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
 	_level_rects.clear()
 
