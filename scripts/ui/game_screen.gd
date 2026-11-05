@@ -77,6 +77,8 @@ var _strategic_engine: StrategicTurnEngine
 var _turn_animation_progress: float = 1.0
 var _turn_animation_moves: Dictionary = {}
 var _turn_animation_tween: Tween
+var _auto_run_timer: Timer
+var _auto_run_active: bool = false
 var _level_data: Dictionary = {}
 var _level_index: int = 0
 var _level_page_start: int = 0
@@ -118,6 +120,11 @@ var _restart_rect := Rect2(548, 1152, 100, 58)
 func _ready() -> void:
 	if OS.get_name() == "Android":
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	_auto_run_timer = Timer.new()
+	_auto_run_timer.wait_time = 0.38
+	_auto_run_timer.one_shot = false
+	_auto_run_timer.timeout.connect(_on_auto_run_tick)
+	add_child(_auto_run_timer)
 	_load_ru_localization()
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
@@ -449,7 +456,7 @@ func _draw_status(font: Font) -> void:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
-		var action_label := "СЛЕД. ХОД" if _has_active_orders() else "ПОВТОРИТЬ" if blocked else "ПРОЙДЕНО" if completed else "ВЫБЕРИТЕ ОТРЯД"
+		var action_label := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else "ПОВТОРИТЬ" if blocked else "ПРОЙДЕНО" if completed else "ВЫБЕРИТЕ ОТРЯД"
 		draw_string(font, _restart_rect.position + Vector2(0, 56), action_label, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d     ДЕНЬ  %d / %d" % [delivered, _board.total_resources, _strategic_engine.day_remaining, _strategic_engine.day_limit], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
@@ -539,7 +546,10 @@ func _handle_tap(point: Vector2) -> void:
 			return
 	if _restart_rect.has_point(point):
 		if _has_active_orders():
-			_advance_strategic_turn()
+			if _auto_run_active:
+				_stop_auto_run()
+			else:
+				_start_auto_run()
 		elif _tutorial_active:
 			_complete_tutorial()
 		elif _strategic_engine.get_outcome() == "lost":
@@ -570,6 +580,7 @@ func _handle_tap(point: Vector2) -> void:
 		_collect_selected_squad(cell)
 
 
+	_stop_auto_run()
 func _load_level(index: int) -> void:
 	if _animation_tween != null and _animation_tween.is_running():
 		_animation_tween.kill()
@@ -690,6 +701,35 @@ func _has_active_orders() -> bool:
 	return false
 
 
+
+func _start_auto_run() -> void:
+	if not _has_active_orders() or _strategic_engine.get_outcome() != "playing":
+		return
+	_auto_run_active = true
+	_status = "Экспедиция в пути. Нажмите «Пауза», чтобы остановить отряды."
+	if _auto_run_timer != null:
+		_auto_run_timer.start()
+	queue_redraw()
+
+
+func _stop_auto_run() -> void:
+	_auto_run_active = false
+	if _auto_run_timer != null:
+		_auto_run_timer.stop()
+	queue_redraw()
+
+
+func _on_auto_run_tick() -> void:
+	if not _auto_run_active:
+		return
+	if _is_animating:
+		return
+	if not _has_active_orders():
+		_stop_auto_run()
+		return
+	_advance_strategic_turn()
+
+
 func _advance_strategic_turn() -> void:
 	if not _has_active_orders():
 		_status = "Сначала назначьте приказ хотя бы одному отряду."
@@ -728,6 +768,8 @@ func _advance_strategic_turn() -> void:
 		_turn_animation_moves.clear()
 	if _tutorial_active and not result.get("delivered", []).is_empty():
 		_complete_tutorial()
+	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty():
+		_stop_auto_run()
 	if result.get("outcome", "playing") == "won":
 		_status = "Победа! Все семена доставлены домой."
 		_mark_level_completed()
