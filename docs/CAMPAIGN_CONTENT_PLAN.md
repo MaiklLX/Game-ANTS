@@ -91,7 +91,7 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 042 The Long Burrow adds a capacity-two load behind a pair of forced turns.
 - 043 The Upper and Lower Roots teaches channel reading around a horizontal obstacle band.
 - 044 The Root Divide uses upper/lower entries to split access across the board.
-- 045 The Hollow Crown is the 15-level chapter checkpoint, with four colors and two separated lanes around central heartwood.
+- 045 The Hollow Crown is the 15-level chapter checkpoint: a coral cache sits inside a central hollow behind one upper notch, while four squads rotate through two deployment slots.
 - Automated tests assert the long detour in 042 and reachability of both lanes in 045. All use schema v1.
 
 
