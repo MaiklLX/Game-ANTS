@@ -11,7 +11,7 @@ func _initialize() -> void:
 	_check_viewport(Vector2(390, 844), 390.0 / 720.0, 278.1538, "standard iPhone portrait")
 	_check_viewport(Vector2(412, 915), 412.0 / 720.0, 319.0291, "large Android portrait")
 	_check_viewport(Vector2(720, 1280), 1.0, 0.0, "reference 9:16 viewport")
-	_check_viewport(Vector2(480, 800), 480.0 / 720.0, 0.0, "short portrait viewport")
+	_check_viewport(Vector2(480, 800), 0.625, 0.0, "short portrait viewport")
 
 	var compact_scale := float(LayoutScript.calculate(Vector2(360, 800))["scale"])
 	_check(LayoutScript.is_touch_target_usable(Vector2(196, 96), compact_scale), "squad cards must remain at least 44 px tall on compact phones")
