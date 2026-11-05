@@ -14,6 +14,7 @@ func _initialize() -> void:
 
 	var geometry_groups: Dictionary = {}
 	var gameplay_groups: Dictionary = {}
+	var route_profile_groups: Dictionary = {}
 	var chapter_stats: Dictionary = {}
 	var levels: Array = result["levels"]
 
@@ -25,12 +26,14 @@ func _initialize() -> void:
 		var gameplay_key := _gameplay_signature(data)
 		_add_group(geometry_groups, geometry_key, level_id)
 		_add_group(gameplay_groups, gameplay_key, level_id)
+		_add_group(route_profile_groups, _route_profile_signature(data), level_id)
 		_accumulate_chapter_stats(chapter_stats, chapter_id, data)
 
 	print("CAMPAIGN DESIGN AUDIT — %d levels across %d chapters" % [levels.size(), chapter_stats.size()])
 	_print_chapter_stats(chapter_stats)
 	_print_duplicate_groups("Repeated board geometry (review candidates)", geometry_groups)
 	_print_duplicate_groups("Exact gameplay signatures (high-priority review)", gameplay_groups)
+	_print_duplicate_groups("Resource route profiles (review candidates)", route_profile_groups)
 	print("Audit is informational: shared geometry can be intentional; human design review remains required.")
 	quit(0)
 
@@ -81,6 +84,26 @@ func _gameplay_signature(data: Dictionary) -> String:
 		int(data["deployment_slots"]),
 		JSON.stringify(squads),
 	]
+
+
+func _route_profile_signature(data: Dictionary) -> String:
+	var board = BoardModelScript.new()
+	var loaded: Dictionary = board.load_level(data)
+	if not loaded.get("valid", false):
+		return "invalid"
+	var resource_routes: Array[String] = []
+	for tile in data.get("tiles", []):
+		if String(tile["type"]) != "resource":
+			continue
+		var target := Vector2i(int(tile["x"]), int(tile["y"]))
+		var route: Array[Vector2i] = board.find_path(board.start, target)
+		resource_routes.append("%s:%d" % [String(tile["color"]), route.size()])
+	resource_routes.sort()
+	var squad_profile: Array[String] = []
+	for squad in data.get("squads", []):
+		squad_profile.append("%s:%d" % [String(squad["color"]), int(squad["capacity"])])
+	squad_profile.sort()
+	return "%d|%s|%s" % [int(data["deployment_slots"]), JSON.stringify(resource_routes), JSON.stringify(squad_profile)]
 
 
 func _add_group(groups: Dictionary, signature: String, level_id: String) -> void:
