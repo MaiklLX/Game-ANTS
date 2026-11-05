@@ -709,5 +709,5 @@
 - All five use existing schema-v1 mechanics; static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
 - Registered all five in the Amber Orchard pack. Campaign integration tests now include 80 level files; catalogue tests assert 80 entries and stable global index 79.
 - Campaign progress: **80/100 authored; 20 remain**. Amber Orchard: 20/30.
-- CI is pending for this batch. No Editor/device visual QA or APK is claimed.
+- CI #490 passed on the 80-level code checkpoint `feef50dae867270b62fe8481aa267c07c7f03bb5`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042680599. Godot 4.7.2 import, all 80 campaign level tests, catalogue validation, and headless main-scene launch passed. CI #495 also passed on the latest documentation head `907da8b322ed51b1feb29c92c1198e00f1e9078a`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042754078. A separate earlier CI attempt failed only because the Godot download endpoint returned HTTP 504; the subsequent full run passed. No Editor/device visual QA or APK is claimed.
 - Next: Amber Orchard 081–085. Root Labyrinth design revisions remain separate.
