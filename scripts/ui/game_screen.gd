@@ -37,6 +37,9 @@ var _last_path: Array[Vector2i] = []
 var _last_target: Vector2i = Vector2i(-1, -1)
 var _last_path_start: Vector2i = Vector2i(-1, -1)
 var _ant_progress: float = 0.0
+var _feedback_progress: float = 1.0
+var _feedback_cell: Vector2i = Vector2i(-1, -1)
+var _feedback_tween: Tween
 var _is_animating: bool = false
 var _returning_to_nest: bool = false
 var _animation_tween: Tween
@@ -56,6 +59,12 @@ func _ready() -> void:
 	_colony = ColonyModelScript.new()
 	_load_level(0)
 	queue_redraw()
+
+
+func _process(_delta: float) -> void:
+	# CanvasItem drawing is event-driven; request frames while tweens are moving.
+	if _is_animating or _feedback_progress < 1.0:
+		queue_redraw()
 
 
 func _draw() -> void:
@@ -165,15 +174,29 @@ func _draw_board(font: Font) -> void:
 			previous = step
 		if _last_target != Vector2i(-1, -1):
 			draw_circle(_cell_rect(_last_target).get_center(), 6.0, COLOR_TEXT)
-		var ant_position := _position_along_last_path(_ant_progress)
-		_draw_ant(ant_position, _selected_squad_color())
+		# A compact three-ant team reads as a living squad rather than a cursor.
+		for ant_index in range(3):
+			var ant_progress := clampf(_ant_progress - float(ant_index) * 0.045, 0.0, 1.0)
+			var ant_position := _position_along_last_path(ant_progress)
+			ant_position.y += float(ant_index - 1) * 8.0
+			_draw_ant(ant_position, _selected_squad_color(), 1.0 - float(ant_index) * 0.06)
+
+	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
+		var pulse_color := COLOR_GOLD
+		pulse_color.a = 1.0 - _feedback_progress
+		draw_arc(_cell_rect(_feedback_cell).get_center(), 14.0 + _feedback_progress * 22.0, 0.0, TAU, 32, pulse_color, 3.0)
 
 
 func _draw_status(font: Font) -> void:
 	var panel := Rect2(42, 1000, 636, 112)
-	draw_rect(panel, COLOR_PANEL)
-	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), COLOR_GOLD)
-	draw_string(font, Vector2(64, 1035), "COLONY LOG", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOR_GOLD)
+	var completed := TurnResolverScript.is_level_complete(_board, _colony)
+	var blocked := TurnResolverScript.is_level_blocked(_board, _colony)
+	var panel_color := Color("#20382d") if completed else Color("#392a26") if blocked else COLOR_PANEL
+	var accent_color := Color("#91c99a") if completed else Color("#e58b70") if blocked else COLOR_GOLD
+	draw_rect(panel, panel_color)
+	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
+	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "COLONY LOG"
+	draw_string(font, Vector2(64, 1035), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color)
 	draw_string(font, Vector2(64, 1070), _status, HORIZONTAL_ALIGNMENT_LEFT, 580, 17, COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1094), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
@@ -217,6 +240,9 @@ func _handle_tap(point: Vector2) -> void:
 			return
 	if _restart_rect.has_point(point):
 		_load_level(_level_index)
+		return
+	# Terminal fields accept only an explicit level change or retry.
+	if TurnResolverScript.is_level_complete(_board, _colony) or TurnResolverScript.is_level_blocked(_board, _colony):
 		return
 
 	for squad_id in _squad_rects:
@@ -350,6 +376,7 @@ func _on_path_animation_finished(returning: bool) -> void:
 			_status = String(result["errors"][0])
 			_last_path.clear()
 		else:
+			_trigger_feedback(_last_target)
 			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
 			if squad.get("carried", 0) >= squad.get("capacity", 1):
 				_status = "Load full. Tap the nest to deliver and free the slot."
@@ -363,6 +390,7 @@ func _finish_squad_return() -> void:
 	var result: Dictionary = _colony.return_squad(_selected_squad_id)
 	if result["valid"]:
 		_status = "%d seed(s) delivered. Deployment slot is free." % result["delivered"]
+		_trigger_feedback(_board.start)
 		_selected_squad_id = ""
 		_last_path.clear()
 		_last_target = Vector2i(-1, -1)
@@ -386,15 +414,27 @@ func _position_along_last_path(progress: float) -> Vector2:
 	return from_position.lerp(to_position, clampf(segment_progress, 0.0, 1.0))
 
 
-func _draw_ant(center: Vector2, tint: Color) -> void:
-	# Simple readable three-part ant marker; animation follows the verified route.
-	draw_circle(center + Vector2(-7, 0), 5.5, Color("#251d16"))
-	draw_circle(center + Vector2(1, 0), 7.0, tint)
-	draw_circle(center + Vector2(10, -1), 4.5, Color("#251d16"))
-	draw_line(center + Vector2(-2, -4), center + Vector2(-7, -10), Color("#251d16"), 2.0)
-	draw_line(center + Vector2(-2, 4), center + Vector2(-7, 10), Color("#251d16"), 2.0)
-	draw_line(center + Vector2(4, -4), center + Vector2(7, -10), Color("#251d16"), 2.0)
-	draw_line(center + Vector2(4, 4), center + Vector2(7, 10), Color("#251d16"), 2.0)
+func _draw_ant(center: Vector2, tint: Color, scale: float = 1.0) -> void:
+	# Three-part silhouette; the squad is animated as a short, readable formation.
+	var body_scale := Vector2.ONE * scale
+	draw_circle(center + Vector2(-7, 0) * body_scale, 5.5 * scale, Color("#251d16"))
+	draw_circle(center + Vector2(1, 0) * body_scale, 7.0 * scale, tint)
+	draw_circle(center + Vector2(10, -1) * body_scale, 4.5 * scale, Color("#251d16"))
+	draw_line(center + Vector2(-2, -4) * body_scale, center + Vector2(-7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(-2, 4) * body_scale, center + Vector2(-7, 10) * body_scale, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(4, -4) * body_scale, center + Vector2(7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
+	draw_line(center + Vector2(4, 4) * body_scale, center + Vector2(7, 10) * body_scale, Color("#251d16"), 2.0 * scale)
+
+
+func _trigger_feedback(cell: Vector2i) -> void:
+	_feedback_cell = cell
+	_feedback_progress = 0.0
+	if _feedback_tween != null and _feedback_tween.is_running():
+		_feedback_tween.kill()
+	_feedback_tween = create_tween()
+	_feedback_tween.set_trans(Tween.TRANS_CUBIC)
+	_feedback_tween.set_ease(Tween.EASE_OUT)
+	_feedback_tween.tween_property(self, "_feedback_progress", 1.0, 0.46)
 
 
 func _selected_squad_color() -> Color:
