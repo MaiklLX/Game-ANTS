@@ -575,3 +575,15 @@
 - Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 40 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
 - Root Labyrinth progress: 10/30; total campaign catalogue: 40 authored levels across two packs.
 - Next batch: levels 041–045.
+
+
+### KT-007 — Root Labyrinth batch 041–045 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 041 The Split Crossing, 042 The Long Burrow, 043 The Upper and Lower Roots, 044 The Root Divide, and 045 The Hollow Crown.
+- Root Labyrinth now contains 15/30 authored levels; total campaign catalogue is 45 levels.
+- Extended integration tests and catalog assertions through root_045; added route regression coverage for level 042 and both lanes in level 045.
+- All levels use existing schema-v1 mechanics. No new movement or terrain mechanic was introduced.
+- Next: run full CI, then continue levels 046–050 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
