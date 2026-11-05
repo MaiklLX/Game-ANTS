@@ -110,7 +110,7 @@ The audit's route-profile signature compares deployment slots, the multiset of s
 - Root Labyrinth 041 / 052
 - Amber Orchard 069 / 083 / Colony Heart 094
 
-For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layouts and corridor topologies despite similar resource-distance and squad profiles. They should be judged by the decisions they ask the player to make, not by this signature alone. The Meadow 005/011 and 013/018 route-profile matches were removed by targeted redesigns; the audit now reports seven groups rather than nine.
+For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layouts and corridor topologies despite similar resource-distance and squad profiles. They should be judged by the decisions they ask the player to make, not by this signature alone. The Meadow 005/011 and 013/018 route-profile matches were removed by targeted redesigns. The Amber Orchard 078/083/084 variants also no longer share a profile; the remaining orchard match (069/Colony Heart 094) is a deliberate cross-chapter reprise of four-color corner dispatch with different obstacle topology.
 
 ## Current status
 
@@ -119,5 +119,5 @@ For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layou
 - Audit script: added to CI and expanded with route profiles, route lengths, and deterministic expedition workloads. CI #629 passed the level-100 finale regression; CI #641 passed the Meadow 011/018 route regressions; CI #651/#652 passed the latest campaign and documentation checkpoint.
 - Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Seven route-profile similarity groups remain as review candidates; these are not exact duplicates.
 - The final level 100 now records 64 deterministic movement steps across four trips, placing it at the top of its chapter and tied for second in the campaign. Every far-side resource route must cross the single central gate.
-- Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.14 steps; max 15); the final chapter averages 5.52 (max 11). The final chapter's full deterministic expedition workload averages 36.40 steps/level and peaks at 64. Meadow now averages 33.33 steps/level after its two route-profile revisions.
+- Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.14 steps; max 15); the final chapter averages 5.52 (max 11). The final chapter's full deterministic expedition workload averages 36.40 steps/level and peaks at 64. Meadow now averages 33.33 steps/level; Amber Orchard averages 35.13 after its three route-profile revisions.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
