@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "orchard_083",
   "title": "The Hidden Sun",
-  "objective": "A sheltered central lane runs between two root shelves; four squads must share its two entrances without wasting a slot.",
+  "objective": "A coral seed rests in the sheltered central lane while the other three colors wait in outer boughs; clear the lane before splitting toward both shelves.",
   "width": 6,
   "height": 5,
   "start": [
@@ -50,8 +50,8 @@
       "color": "teal"
     },
     {
-      "x": 1,
-      "y": 4,
+      "x": 3,
+      "y": 2,
       "type": "resource",
       "color": "coral"
     },
