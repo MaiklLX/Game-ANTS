@@ -95,16 +95,6 @@ func advance_turn(colony: ColonyModel, board: BoardModel) -> Dictionary:
 	var blocked: Array[String] = []
 	var collected: Array[String] = []
 	var delivered: Array[String] = []
-	var occupied: Dictionary = {}
-	for squad_id in colony.get_squad_ids():
-		var squad: Dictionary = colony.get_squad(squad_id)
-		if not squad.get("deployed", false):
-			continue
-		var position: Vector2i = squad.get("position", board.start)
-		if position != board.start:
-			occupied[position] = squad_id
-
-	var reserved: Dictionary = {}
 	var ordered_ids: Array[String] = []
 	for squad_id in _orders:
 		ordered_ids.append(String(squad_id))
@@ -124,18 +114,6 @@ func advance_turn(colony: ColonyModel, board: BoardModel) -> Dictionary:
 			continue
 		var current: Vector2i = squad.get("position", board.start)
 		var next_cell: Vector2i = path[0]
-		if next_cell != board.start and occupied.has(next_cell) and String(occupied[next_cell]) != squad_id:
-			blocked.append(squad_id)
-			continue
-		if reserved.has(next_cell) and next_cell != board.start:
-			blocked.append(squad_id)
-			continue
-		if current != board.start:
-			occupied.erase(current)
-		if next_cell != board.start:
-			occupied[next_cell] = squad_id
-		reserved[next_cell] = squad_id
-
 		var move_result: Dictionary = colony.move_squad(squad_id, next_cell, board)
 		if not move_result.get("valid", false):
 			blocked.append(squad_id)
