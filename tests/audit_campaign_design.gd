@@ -4,9 +4,6 @@ extends SceneTree
 
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
 
-var _failures: Array[String] = []
-
-
 func _initialize() -> void:
 	var result: Dictionary = CampaignCatalogScript.load_catalog("res://campaign/campaign_manifest.json")
 	if not result.get("valid", false):
@@ -73,7 +70,7 @@ func _gameplay_signature(data: Dictionary) -> String:
 	obstacles.sort()
 	resource_cells.sort()
 	squads.sort()
-	return "%d|%d|%s|%s|%s|%s|%d|%s|%s" % [
+	return "%d|%d|%s|%s|%s|%s|%d|%s" % [
 		int(data["width"]),
 		int(data["height"]),
 		JSON.stringify(data["start"]),
@@ -82,7 +79,6 @@ func _gameplay_signature(data: Dictionary) -> String:
 		JSON.stringify(resource_cells),
 		int(data["deployment_slots"]),
 		JSON.stringify(squads),
-		String(data.get("chapter_id", "")),
 	]
 
 
