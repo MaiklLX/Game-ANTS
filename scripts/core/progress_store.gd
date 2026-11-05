@@ -8,6 +8,7 @@ var _save_path: String
 var _known_level_ids: Dictionary = {}
 var _completed_level_ids: Dictionary = {}
 var _last_selected_level_id: String = ""
+var _tutorial_completed: bool = false
 var _write_enabled: bool = true
 var _warning: String = ""
 
@@ -20,6 +21,7 @@ func load_progress(level_ids: Array[String]) -> Dictionary:
 	_known_level_ids.clear()
 	_completed_level_ids.clear()
 	_last_selected_level_id = ""
+	_tutorial_completed = false
 	_write_enabled = true
 	_warning = ""
 	for level_id in level_ids:
@@ -64,6 +66,7 @@ func load_progress(level_ids: Array[String]) -> Dictionary:
 	var stored_last_id := String(parsed.get("last_selected_level_id", ""))
 	if _known_level_ids.has(stored_last_id):
 		_last_selected_level_id = stored_last_id
+	_tutorial_completed = bool(parsed.get("tutorial_completed", false))
 
 	return {"valid": true, "is_new": false, "warning": ""}
 
@@ -101,6 +104,14 @@ func get_completed_level_ids() -> Array[String]:
 func get_last_selected_level_id() -> String:
 	return _last_selected_level_id
 
+func mark_tutorial_completed() -> Dictionary:
+	_tutorial_completed = true
+	return _save()
+
+
+func is_tutorial_completed() -> bool:
+	return _tutorial_completed
+
 
 func _save() -> Dictionary:
 	if not _write_enabled:
@@ -114,6 +125,7 @@ func _save() -> Dictionary:
 		"schema_version": SCHEMA_VERSION,
 		"completed_level_ids": get_completed_level_ids(),
 		"last_selected_level_id": _last_selected_level_id,
+		"tutorial_completed": _tutorial_completed,
 	}, "\t"))
 	file.flush()
 	file.close()
