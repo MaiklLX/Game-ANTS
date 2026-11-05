@@ -38,6 +38,24 @@ func _initialize() -> void:
 	_check(LayoutScript.is_touch_target_usable(Vector2(88, 88), compact_scale), "level buttons must meet the 44 px target on compact phones")
 	_check(absf(LayoutScript.shifted_y(1000.0, 320.0, 0.68) - 1217.6) <= 0.01, "status panel anchor must use its vertical expansion weight")
 
+	var top_bottom_safe := LayoutScript.safe_viewport_rect(
+		Vector2(320, 568), Rect2i(Vector2i(0, 24), Vector2i(320, 520)), Vector2i(320, 568)
+	)
+	_check(absf(top_bottom_safe.position.y - 24.0) <= 0.01, "safe-area top inset must be preserved in viewport coordinates")
+	_check(absf(top_bottom_safe.size.y - 520.0) <= 0.01, "safe-area bottom inset must reduce available viewport height")
+	var side_safe := LayoutScript.safe_viewport_rect(
+		Vector2(390, 844), Rect2i(Vector2i(12, 36), Vector2i(366, 772)), Vector2i(390, 844)
+	)
+	_check(absf(side_safe.position.x - 12.0) <= 0.01, "safe-area side inset must be preserved")
+	_check(absf(side_safe.position.y - 36.0) <= 0.01, "safe-area top inset must be preserved on notched phones")
+	_check(absf(side_safe.size.x - 366.0) <= 0.01, "safe-area width must exclude left and right obstructions")
+	var invalid_safe := LayoutScript.safe_viewport_rect(Vector2(320, 568), Rect2i(), Vector2i.ZERO)
+	_check(invalid_safe.size == Vector2(320, 568), "missing platform safe-area data must fall back to the full viewport")
+	var clipped_safe := LayoutScript.safe_viewport_rect(
+		Vector2(320, 568), Rect2i(Vector2i(-20, -10), Vector2i(360, 600)), Vector2i(320, 568)
+	)
+	_check(clipped_safe.position == Vector2.ZERO and clipped_safe.size == Vector2(320, 568), "safe-area data must be clipped to physical screen bounds")
+
 	_finish()
 
 
