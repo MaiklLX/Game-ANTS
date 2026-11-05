@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "orchard_083",
   "title": "The Hidden Sun",
-  "objective": "A coral seed rests in the sheltered central lane while the other three colors wait in outer boughs; clear the lane before splitting toward both shelves.",
+  "objective": "A coral seed rests at the mouth of the sheltered central lane while the other three colors wait in outer boughs; clear the near junction before splitting toward both shelves.",
   "width": 6,
   "height": 5,
   "start": [
@@ -50,7 +50,7 @@
       "color": "teal"
     },
     {
-      "x": 3,
+      "x": 2,
       "y": 2,
       "type": "resource",
       "color": "coral"
