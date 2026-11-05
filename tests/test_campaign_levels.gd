@@ -120,6 +120,7 @@ func _initialize() -> void:
 	_test_three_squad_slot_pressure()
 	_test_root_labyrinth_route_shapes()
 	_test_colony_heart_finale()
+	_test_meadow_route_variants()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -376,3 +377,25 @@ func _test_colony_heart_finale() -> void:
 		var far_route: Array[Vector2i] = board.find_path(board.start, target)
 		_check(not far_route.is_empty(), "Every far-side final seed should remain reachable")
 		_check(far_route.has(Vector2i(3, 2)), "Every far-side final route should pass through the single central root gate")
+
+
+
+func _test_meadow_route_variants() -> void:
+	var shift_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_011.json"))
+	if typeof(shift_data) == TYPE_DICTIONARY:
+		var shift_board = BoardModelScript.new()
+		var shift_loaded: Dictionary = shift_board.load_level(shift_data)
+		_check(shift_loaded["valid"], "The Long Amber Shift should load for route-variant test")
+		if shift_loaded["valid"]:
+			var amber_crossing: Array[Vector2i] = shift_board.find_path(Vector2i(5, 0), Vector2i(5, 4))
+			_check(amber_crossing.has(Vector2i(3, 2)), "The Long Amber Shift should force the capacity-two carrier around the far-bank root island")
+
+	var four_colors_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_018.json"))
+	if typeof(four_colors_data) == TYPE_DICTIONARY:
+		var four_colors_board = BoardModelScript.new()
+		var four_colors_loaded: Dictionary = four_colors_board.load_level(four_colors_data)
+		_check(four_colors_loaded["valid"], "Four Colors, Two Slots should load for route-variant test")
+		if four_colors_loaded["valid"]:
+			var upper_far_route: Array[Vector2i] = four_colors_board.find_path(four_colors_board.start, Vector2i(5, 0))
+			_check(not upper_far_route.is_empty(), "The upper far seed should remain reachable through the lower passage")
+			_check(upper_far_route.has(Vector2i(2, 4)), "The upper far seed should require the lower gate after the upper entrance is blocked")
