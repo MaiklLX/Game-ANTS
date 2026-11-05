@@ -311,7 +311,7 @@ func _draw_squads(font: Font) -> void:
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
 		draw_string(font, rect.position + Vector2(54, 34), _color_name_ru(String(squad["color"])), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
-		var carried := int(squad["несут"])
+		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
 		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d собрано" % [carried, capacity]
 		var state_label := state
@@ -374,7 +374,7 @@ func _draw_board(font: Font) -> void:
 			_draw_ant(ant_position, _selected_squad_color(), 1.0 - float(ant_index) * 0.06)
 		# Show a carried seed beside the lead worker after pickup and on the return trip.
 		var selected_squad := _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
-		if not selected_squad.is_empty() and int(selected_squad.get("несут", 0)) > 0:
+		if not selected_squad.is_empty() and int(selected_squad.get("carried", 0)) > 0:
 			var lead_position := _position_along_last_path(clampf(_ant_progress, 0.0, 1.0))
 			var seed_tint := _color_for(String(selected_squad.get("color", "amber")))
 			draw_circle(lead_position + Vector2(19, -15), 7.0, Color("#18231c"))
@@ -656,7 +656,7 @@ func _on_path_animation_finished(returning: bool) -> void:
 			if _tutorial_active and _tutorial_step == 1 and _last_target == Vector2i(4, 2):
 				_tutorial_step = 2
 			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-			if squad.get("несут", 0) >= squad.get("capacity", 1):
+			if squad.get("carried", 0) >= squad.get("capacity", 1):
 				_status = "Отряд загружен. Нажмите на муравейник, чтобы доставить груз."
 			else:
 				_status = "Семя собрано. Найдите ещё одно подходящего цвета или возвращайтесь домой."
