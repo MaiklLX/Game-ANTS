@@ -111,6 +111,8 @@ var _restart_rect := Rect2(548, 1152, 100, 58)
 
 
 func _ready() -> void:
+	if OS.get_name() == "Android":
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	_load_ru_localization()
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
@@ -312,7 +314,7 @@ func _draw_squads(font: Font) -> void:
 			draw_rect(Rect2(rect.position, Vector2(card_width, 3)), COLOR_GOLD)
 		var squad_color: Color = _color_for(String(squad["color"]))
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
-		draw_string(font, rect.position + Vector2(54, 34), _color_name_ru(String(squad["color"])), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
+		draw_string(font, rect.position + Vector2(54, 34), _color_name_short_ru(String(squad["color"])), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
@@ -805,9 +807,9 @@ func _tutorial_instruction() -> String:
 		0:
 			return "1 / 3  Нажмите на карточку янтарного отряда, чтобы отправить его в поле."
 		1:
-			return "2 / 3  Нажмите на янтарное семя на дальней стороне поля."
+			return "2 / 3  Муравьи сами найдут семя и принесут его домой."
 		2:
-			return "3 / 3  Нажмите на муравейник, чтобы доставить семя домой."
+			return "3 / 3  Дождитесь возвращения отряда в муравейник."
 	return "Выполните шаги, чтобы завершить первую экспедицию."
 
 
@@ -818,9 +820,9 @@ func _tutorial_instruction_for_display() -> String:
 		0:
 			return "1 / 3  Отправьте ЯНТАРНЫЙ отряд."
 		1:
-			return "2 / 3  Соберите янтарное семя."
+			return "2 / 3  Муравьи сами найдут семя."
 		2:
-			return "3 / 3  Вернитесь в муравейник."
+			return "3 / 3  Дождитесь возвращения домой."
 	return "Выполните все шаги."
 
 
@@ -893,6 +895,19 @@ func _color_for(color_name: String) -> Color:
 			return COLOR_VIOLET
 	return COLOR_TEXT
 
+
+
+func _color_name_short_ru(color_name: String) -> String:
+	match color_name:
+		"amber":
+			return "ЯНТАРЬ"
+		"teal":
+			return "БИРЮЗА"
+		"coral":
+			return "КОРАЛЛ"
+		"violet":
+			return "ФИОЛЕТ"
+	return _color_name_ru(color_name)
 
 func _symbol_for(color_name: String) -> String:
 	match color_name:
