@@ -52,7 +52,7 @@ jobs:
           mkdir -p templates-unpacked "$HOME/.local/share/godot/export_templates/4.7.2.stable"
           unzip -q templates.tpz -d templates-unpacked
           cp templates-unpacked/templates/* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
-          cp templates-unpacked/version.txt "$HOME/.local/share/godot/export_templates/4.7.2.stable/version.txt"
+          find templates-unpacked -maxdepth 2 -type f | sort | head -20
 
       - name: Import project
         run: godot --headless --editor --path . --quit
