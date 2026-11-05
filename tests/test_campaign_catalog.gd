@@ -20,11 +20,11 @@ func _initialize() -> void:
 		_check(levels[30]["id"] == "root_031", "second chapter should follow Meadow without reordering")
 		_check(levels[30]["chapter_id"] == "root_labyrinth", "second chapter should retain its chapter identity")
 		_check(levels[59]["id"] == "root_060", "thirtieth Root Labyrinth level should remain last")
-		_check(levels[59]["global_index"] == 59, "second chapter levels should keep stable flattened indices"
+		_check(levels[59]["global_index"] == 59, "second chapter levels should keep stable flattened indices")
 		_check(levels[60]["id"] == "orchard_061", "third chapter should follow Root Labyrinth without reordering")
 		_check(levels[60]["chapter_id"] == "amber_orchard", "third chapter should retain its chapter identity")
 		_check(levels[64]["id"] == "orchard_065", "first Amber Orchard batch should remain last")
-		_check(levels[64]["global_index"] == 64, "third chapter levels should keep stable flattened indices"))
+		_check(levels[64]["global_index"] == 64, "third chapter levels should keep stable flattened indices")
 
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://campaign/campaign_manifest.json"))
 	var duplicate_pack: Dictionary = manifest.duplicate(true)
