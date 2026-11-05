@@ -34,6 +34,9 @@ var _level_page_start: int = 0
 var _campaign_levels: Array[Dictionary] = []
 var _progress_store
 var _progress_warning: String = ""
+var _tutorial_active: bool = false
+var _tutorial_step: int = -1
+var _tutorial_skip_rect := Rect2(548, 1008, 106, 32)
 var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
@@ -242,9 +245,14 @@ func _draw_status(font: Font) -> void:
 	var accent_color := Color("#91c99a") if completed else Color("#e58b70") if blocked else COLOR_GOLD
 	draw_rect(panel, panel_color)
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
-	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "COLONY LOG"
-	draw_string(font, Vector2(64, 1035), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color)
-	draw_string(font, Vector2(64, 1070), _status, HORIZONTAL_ALIGNMENT_LEFT, 580, 17, COLOR_TEXT)
+	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
+	draw_string(font, Vector2(64, 1035), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
+	if _tutorial_active:
+		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
+		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 21), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 580, 16, COLOR_TEXT)
+	else:
+		draw_string(font, Vector2(64, 1070), _status, HORIZONTAL_ALIGNMENT_LEFT, 580, 17, COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1094), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
 
@@ -329,6 +337,9 @@ func _handle_tap(point: Vector2) -> void:
 	if _restart_rect.has_point(point):
 		_load_level(_level_index)
 		return
+	if _tutorial_active and _tutorial_skip_rect.has_point(point):
+		_complete_tutorial()
+		return
 	# Terminal fields accept only an explicit level change or retry.
 	if TurnResolverScript.is_level_complete(_board, _colony) or TurnResolverScript.is_level_blocked(_board, _colony):
 		return
@@ -364,6 +375,8 @@ func _load_level(index: int) -> void:
 		return
 	_level_index = clampi(index, 0, _campaign_levels.size() - 1)
 	_level_page_start = int(_level_index / LEVELS_PER_PAGE) * LEVELS_PER_PAGE
+	_tutorial_active = _level_index == 0 and _progress_store != null and not _progress_store.is_tutorial_completed()
+	_tutorial_step = 0 if _tutorial_active else -1
 	_level_data = _campaign_levels[_level_index]["data"].duplicate(true)
 	var result: Dictionary = LevelLoaderScript.load_into(_level_data, _board, _colony)
 	_selected_squad_id = ""
@@ -392,6 +405,8 @@ func _select_or_deploy(squad_id: String) -> void:
 		var result: Dictionary = _colony.deploy_squad(squad_id)
 		if result["valid"]:
 			_status = "%s deployed. Tap a matching seed." % squad_id.replace("_", " ")
+			if _tutorial_active and squad_id == "amber_workers":
+				_tutorial_step = 1
 		else:
 			_status = String(result["errors"][0])
 	queue_redraw()
@@ -475,6 +490,8 @@ func _on_path_animation_finished(returning: bool) -> void:
 			_last_path.clear()
 		else:
 			_trigger_feedback(_last_target)
+			if _tutorial_active and _tutorial_step == 1 and _last_target == Vector2i(4, 2):
+				_tutorial_step = 2
 			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
 			if squad.get("carried", 0) >= squad.get("capacity", 1):
 				_status = "Load full. Tap the nest to deliver and free the slot."
@@ -488,6 +505,8 @@ func _finish_squad_return() -> void:
 	var result: Dictionary = _colony.return_squad(_selected_squad_id)
 	if result["valid"]:
 		_status = "%d seed(s) delivered. Deployment slot is free." % result["delivered"]
+		if _tutorial_active and _tutorial_step == 2 and result["delivered"] > 0:
+			_complete_tutorial()
 		_trigger_feedback(_board.start)
 		_selected_squad_id = ""
 		_last_path.clear()
@@ -557,6 +576,31 @@ func _check_terminal_state() -> void:
 	elif TurnResolverScript.is_level_blocked(_board, _colony):
 		_status = "No available squad can reach the remaining seeds. Retry this field."
 
+
+func _tutorial_instruction() -> String:
+	match _tutorial_step:
+		0:
+			return "1 / 3  Tap the amber worker card to deploy your squad."
+		1:
+			return "2 / 3  Tap the amber seed on the far side of the field."
+		2:
+			return "3 / 3  Tap the nest to bring the seed home."
+	return "Follow the steps to complete your first expedition."
+
+
+func _complete_tutorial() -> void:
+	if not _tutorial_active:
+		return
+	_tutorial_active = false
+	_tutorial_step = -1
+	if _progress_store != null:
+		var save_result: Dictionary = _progress_store.mark_tutorial_completed()
+		if not save_result.get("valid", false):
+			_progress_warning = String(save_result.get("warning", "Tutorial completion could not be saved."))
+			_status = _progress_warning
+		else:
+			_status = "First expedition complete. The colony is ready."
+	queue_redraw()
 
 func _cell_at(point: Vector2) -> Vector2i:
 	for y in range(_board.height):
