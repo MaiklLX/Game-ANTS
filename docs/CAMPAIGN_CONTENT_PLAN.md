@@ -72,4 +72,13 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - The opening five levels introduce narrow passages, separated upper/lower openings, staggered S-bends, split branches, and a multi-entrance junction.
 - This batch deliberately uses only existing schema-v1 rules: static obstacles, colored resources, squads, carrying capacity, and deployment slots. No new movement rule or manual path-drawing control is implied.
 - Automated route-shape tests assert genuine detours in selected levels and reachability of both branches in Root Weave.
-- The chapter is 5/30 authored; its remaining 25 levels will deepen corridor reading and expedition ordering without relying on unimplemented mechanics.
+- The chapter is 10/30 authored; its remaining 20 levels will deepen corridor reading and expedition ordering without relying on unimplemented mechanics.
+
+
+### Root Labyrinth production batch 036–040
+- 036 The Root Ladder introduces a capacity-two collection along a constrained upper corridor.
+- 037 Forked Roots adds a three-color choice around a fork.
+- 038 Parallel Tunnels tests two active squads using separated openings while another waits for a slot.
+- 039 The Narrow Seam focuses on approaching a single crossing through a horizontal barrier.
+- 040 The Root Crown is the first ten-level checkpoint, combining four resource colors and two corridors around a central obstacle mass.
+- All puzzles remain schema v1 and are checked by the production campaign solver.
