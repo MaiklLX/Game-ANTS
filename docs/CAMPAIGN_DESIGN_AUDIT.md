@@ -79,7 +79,7 @@ The audit groups deterministic movement into consecutive five-level bands to exp
 | 021–025 / 051–055 / 081–085 | 31.20 / 2.80 / 40 | 45.20 / 3.00 / 62 | 39.60 / 3.40 / 54 | — |
 | 026–030 / 056–060 / 086–090 | 35.60 / 3.00 / 44 | 52.00 / 3.20 / 70 | 36.00 / 3.40 / 50 | — |
 
-This is a workload trend, not a difficulty curve. The strongest progression signal is the Root Labyrinth's final ten levels (056–060), which rise to 52 average steps and peak at 70. The final chapter also rises sharply in 096–100, averaging 43.20 steps and peaking at 64. Meadow's opening five are deliberately lighter, then it holds a relatively steady band around 31–37 steps.
+This is a workload trend, not a difficulty curve. The strongest progression signal is the Root Labyrinth's final ten levels (056–060), which rise to 52 average steps and peak at 70. The final chapter also rises sharply in 096–100, averaging 43.20 steps and peaking at 64. Meadow's opening five are deliberately lighter, then it holds a relatively steady band around 31–37 steps. Amber Orchard's lower-workload middle stretch (066–080) was reviewed at the level-data level: it deliberately combines capacity-two/three carriers, paired harvests, and slot pressure; level 070 contains seven resources across four squads. The lower movement count reflects more efficient grouped pickups, not proof that these puzzles are easier. No redesign is justified by this metric alone; actual play review remains necessary.
 
 ## Initial repeated-geometry findings
 
