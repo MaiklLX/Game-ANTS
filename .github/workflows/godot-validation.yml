@@ -60,6 +60,9 @@ jobs:
       - name: Run local progress persistence tests
         run: timeout 60s godot --headless --path . --script res://tests/test_progress_store.gd
 
+      - name: Run first-session onboarding contract tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_onboarding_contract.gd
+
       - name: Audit campaign geometry and chapter pacing
         run: timeout 60s godot --headless --path . --script res://tests/audit_campaign_design.gd
 
