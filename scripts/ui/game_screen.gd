@@ -225,11 +225,18 @@ func _draw_status(font: Font) -> void:
 func _draw_level_picker(font: Font) -> void:
 	draw_string(font, Vector2(44, 1150), "TEST LEVEL", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
 	_level_rects.clear()
+	var level_button_width := 78.0
+	var level_button_gap := 10.0
+	var retry_gap := 16.0
+	var level_group_width := LEVEL_PATHS.size() * level_button_width + maxi(0, LEVEL_PATHS.size() - 1) * level_button_gap
+	var controls_width := level_group_width + retry_gap + _restart_rect.size.x
+	var controls_start_x := (720.0 - controls_width) * 0.5
 	for index in range(LEVEL_PATHS.size()):
-		var rect := Rect2(160 + index * 116, 1140, 92, 58)
+		var rect := Rect2(controls_start_x + index * (level_button_width + level_button_gap), 1140, level_button_width, 58)
 		_level_rects.append(rect)
 		draw_rect(rect, COLOR_GOLD if index == _level_index else COLOR_PANEL)
 		draw_string(font, rect.position + Vector2(0, 37), "%02d" % (index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 20, COLOR_BG if index == _level_index else COLOR_TEXT)
+	_restart_rect.position = Vector2(controls_start_x + level_group_width + retry_gap, 1140)
 	draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 	draw_string(font, _restart_rect.position + Vector2(0, 36), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
 	draw_string(font, Vector2(360, 1240), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
