@@ -57,5 +57,8 @@ jobs:
       - name: Run campaign catalog tests
         run: timeout 60s godot --headless --path . --script res://tests/test_campaign_catalog.gd
 
+      - name: Audit campaign geometry and chapter pacing
+        run: timeout 60s godot --headless --path . --script res://tests/audit_campaign_design.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
