@@ -31,7 +31,7 @@ Separate the project into clear layers:
 - **Level data:** deterministic board layouts, objectives, squad queues, solution metadata.
 - **Presentation:** grid rendering, ant sprites, trails, particles, sound, camera.
 - **UI:** HUD, slots, pause, retry, level complete.
-- **Persistence:** local progress and settings, versioned save schema.
+- **Persistence:** `ProgressStore` stores completed level IDs, last selected level, and first-session tutorial completion in a versioned local save. Settings and in-progress board snapshots remain future scope.
 
 The simulation must not depend on animation completion or frame rate. Animations visualize already-determined state transitions.
 
