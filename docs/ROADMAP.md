@@ -633,3 +633,15 @@
 - Root Labyrinth progress: 25/30; total authored catalogue: 55 levels across two chapter packs.
 - Next batch: levels 056–060, then review the completed chapter before starting The Amber Orchard.
 - No editor visual QA, Android APK export, physical-device testing, or public web build is claimed. PR #9 remains Draft and unmerged.
+
+
+### KT-007.5 — Root Labyrinth 056–060 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five final chapter levels added; integration/catalog tests and chapter documentation extended. CI verification pending.
+
+- Added 056 The Switchback Gate, 057 Three Root Mouths, 058 The Heartwood Pocket, 059 The Double Bend, and 060 The Labyrinth Unbound.
+- The Root Labyrinth is now complete: 30/30 levels. Total authored catalogue: 60/300 across two chapters.
+- Added a long-route regression for level 056 and four-route reachability checks for the level 060 finale.
+- All five levels use schema v1 and existing production mechanics only.
+- Next: full CI and a chapter-level content review, then begin The Amber Orchard (061–090).
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
