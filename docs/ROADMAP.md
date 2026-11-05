@@ -446,5 +446,5 @@
 - Reworked level-picker sizing so all four level buttons and Retry are laid out as one centered group without overlap.
 - Added a deterministic integration test that deploys both squads at once, collects their separate matching-color seeds while both slots are occupied, returns both squads, and verifies victory.
 - Updated the level format guide with the new field.
-- CI for the latest KT-005.4 commit is pending confirmation; no pass is claimed yet. Latest confirmed run #147 passed the earlier meadow-texture checkpoint. Editor/device visual QA remains outstanding.
+- GitHub Actions run **#157** passed on gameplay/UI commit `afd74716a8b3e830f4d1e977a9921284300940b4`; run **#159** also passed on the latest roadmap checkpoint. Both completed Godot 4.7.2 import, all five test suites (including the concurrent-squad integration case), and headless main-scene launch. Editor/device visual QA remains outstanding.
 - PR #8 remains Draft and stacked on `feat/kt-004-squad-rules`; no merge to `main`.
