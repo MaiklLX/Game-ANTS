@@ -488,7 +488,7 @@ func _select_or_deploy(squad_id: String) -> void:
 	_selected_squad_id = squad_id
 	_last_path.clear()
 	if squad["deployed"]:
-		_status = "%s в поле. Выберите семя своего цвета или муравейник." % squad_id.replace("_", " ")
+		_status = "%s в поле. Выберите семя своего цвета или муравейник." % _color_name_ru(String(squad.get("color", "")))
 	else:
 		var result: Dictionary = _colony.deploy_squad(squad_id)
 		if result["valid"]:
@@ -692,15 +692,15 @@ func _tutorial_instruction_for_display() -> String:
 func _status_for_display() -> String:
 	if _ui_scale >= 0.48:
 		return _status
-	if _status.begins_with("Load full."):
+	if _status.begins_with("Груз собран"):
 		return "Груз собран. Нажмите на муравейник."
-	if _status.begins_with("Seed collected."):
+	if _status.begins_with("Семя собрано"):
 		return "Семя собрано. Продолжайте сбор или возвращайтесь."
-	if _status.contains("delivered. Deployment slot is free."):
-		return _status.replace("Deployment slot is free.", "Slot free.")
-	if _status.begins_with("Field cleared!"):
+	if _status.begins_with("Доставлено семян:"):
+		return _status
+	if _status.begins_with("Победа!"):
 		return "Победа! Все семена дома."
-	if _status.begins_with("No available squad"):
+	if _status.begins_with("Ни один отряд"):
 		return "Пути нет. Начните заново."
 	if _status.length() > 38:
 		return _status.left(35).strip_edges() + "…"
