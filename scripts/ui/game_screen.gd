@@ -6,6 +6,7 @@ const ColonyModelScript = preload("res://scripts/core/colony_model.gd")
 const LevelLoaderScript = preload("res://scripts/core/level_loader.gd")
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
 const ProgressStoreScript = preload("res://scripts/core/progress_store.gd")
+const LevelGuidanceScript = preload("res://scripts/ui/level_guidance.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
@@ -126,7 +127,25 @@ func _draw_header(font: Font) -> void:
 	var objective := String(_level_data.get("objective", ""))
 	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, 30, COLOR_TEXT)
 	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, 17, COLOR_MUTED)
-	draw_line(Vector2(42, 216), Vector2(678, 216), COLOR_GRID, 2.0)
+	var field_hint := _contextual_hint()
+	if not field_hint.is_empty():
+		draw_string(font, Vector2(44, 219), field_hint, HORIZONTAL_ALIGNMENT_LEFT, 632, 12, COLOR_AMBER)
+		draw_line(Vector2(42, 236), Vector2(678, 236), COLOR_GRID, 2.0)
+	else:
+		draw_line(Vector2(42, 216), Vector2(678, 216), COLOR_GRID, 2.0)
+
+
+func _contextual_hint() -> String:
+	if _campaign_levels.is_empty() or _tutorial_active:
+		return ""
+	var selected_squad: Dictionary = _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
+	return LevelGuidanceScript.get_hint(
+		String(_campaign_levels[_level_index]["id"]),
+		selected_squad,
+		_colony.get_active_slot_count(),
+		_colony.slot_capacity,
+		_colony.delivered_resources
+	)
 
 
 func _draw_slots(font: Font) -> void:

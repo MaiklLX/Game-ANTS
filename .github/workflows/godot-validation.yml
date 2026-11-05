@@ -63,6 +63,9 @@ jobs:
       - name: Run first-session onboarding contract tests
         run: timeout 60s godot --headless --path . --script res://tests/test_onboarding_contract.gd
 
+      - name: Run contextual level guidance contract tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_level_guidance.gd
+
       - name: Audit campaign geometry and chapter pacing
         run: timeout 60s godot --headless --path . --script res://tests/audit_campaign_design.gd
 
