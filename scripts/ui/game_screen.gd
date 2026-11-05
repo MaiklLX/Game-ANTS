@@ -35,6 +35,10 @@ var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
 var _last_target: Vector2i = Vector2i(-1, -1)
+var _ant_progress: float = 0.0
+var _is_animating: bool = false
+var _returning_to_nest: bool = false
+var _animation_tween: Tween
 var _ui_scale: float = 1.0
 var _ui_offset: Vector2 = Vector2.ZERO
 var _board_origin: Vector2 = Vector2.ZERO
@@ -160,6 +164,8 @@ func _draw_board(font: Font) -> void:
 			previous = step
 		if _last_target != Vector2i(-1, -1):
 			draw_circle(_cell_rect(_last_target).get_center(), 6.0, COLOR_TEXT)
+		var ant_position := _position_along_last_path(_ant_progress)
+		_draw_ant(ant_position, _selected_squad_color())
 
 
 func _draw_status(font: Font) -> void:
@@ -202,6 +208,8 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _handle_tap(point: Vector2) -> void:
+	if _is_animating:
+		return
 	for index in range(_level_rects.size()):
 		if _level_rects[index].has_point(point):
 			_load_level(index)
@@ -226,6 +234,11 @@ func _handle_tap(point: Vector2) -> void:
 
 
 func _load_level(index: int) -> void:
+	if _animation_tween != null and _animation_tween.is_running():
+		_animation_tween.kill()
+	_is_animating = false
+	_returning_to_nest = false
+	_ant_progress = 0.0
 	_level_index = clampi(index, 0, LEVEL_PATHS.size() - 1)
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(LEVEL_PATHS[_level_index]))
 	if typeof(parsed) != TYPE_DICTIONARY:
@@ -277,12 +290,11 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 		return
 	_last_path = result["path"]
 	_last_target = cell
-	var updated: Dictionary = _colony.get_squad(_selected_squad_id)
-	if updated["carried"] >= updated["capacity"]:
-		_status = "Load full. Tap the nest to deliver and free the slot."
-	else:
-		_status = "Seed collected. Tap another matching seed or return to the nest."
-	_check_terminal_state()
+	_ant_progress = 0.0
+	_returning_to_nest = false
+	_is_animating = true
+	_status = "Workers are following the trail..."
+	_start_path_animation(1.0, false)
 	queue_redraw()
 
 
@@ -296,14 +308,85 @@ func _return_selected_squad() -> void:
 		_status = "No selected squad is on the ground."
 		queue_redraw()
 		return
+	if _last_path.is_empty():
+		_finish_squad_return()
+		return
+	_returning_to_nest = true
+	_is_animating = true
+	_status = "Workers are following the trail home..."
+	_start_path_animation(0.0, true)
+	queue_redraw()
+
+
+func _start_path_animation(target_progress: float, returning: bool) -> void:
+	if _animation_tween != null and _animation_tween.is_running():
+		_animation_tween.kill()
+	var duration := maxf(0.24, float(_last_path.size()) * 0.16)
+	_animation_tween = create_tween()
+	_animation_tween.set_trans(Tween.TRANS_SINE)
+	_animation_tween.set_ease(Tween.EASE_IN_OUT)
+	_animation_tween.tween_property(self, "_ant_progress", target_progress, duration)
+	_animation_tween.finished.connect(_on_path_animation_finished.bind(returning))
+
+
+func _on_path_animation_finished(returning: bool) -> void:
+	_is_animating = false
+	if returning:
+		_finish_squad_return()
+	else:
+		var squad: Dictionary = _colony.get_squad(_selected_squad_id)
+		if squad.get("carried", 0) >= squad.get("capacity", 1):
+			_status = "Load full. Tap the nest to deliver and free the slot."
+		else:
+			_status = "Seed collected. Tap another matching seed or return to the nest."
+		_check_terminal_state()
+	queue_redraw()
+
+
+func _finish_squad_return() -> void:
 	var result: Dictionary = _colony.return_squad(_selected_squad_id)
 	if result["valid"]:
 		_status = "%d seed(s) delivered. Deployment slot is free." % result["delivered"]
 		_selected_squad_id = ""
 		_last_path.clear()
 		_last_target = Vector2i(-1, -1)
+		_ant_progress = 0.0
+	_returning_to_nest = false
+	_is_animating = false
 	_check_terminal_state()
 	queue_redraw()
+
+
+func _position_along_last_path(progress: float) -> Vector2:
+	if _last_path.is_empty():
+		return _cell_rect(_board.start).get_center()
+	var clamped_progress := clampf(progress, 0.0, 1.0)
+	var distance := clamped_progress * _last_path.size()
+	var segment_index := mini(floori(distance), _last_path.size() - 1)
+	var segment_progress := distance - segment_index
+	var from_position := _cell_rect(_board.start if segment_index == 0 else _last_path[segment_index - 1]).get_center()
+	var to_position := _cell_rect(_last_path[segment_index]).get_center()
+	return from_position.lerp(to_position, clampf(segment_progress, 0.0, 1.0))
+
+
+func _draw_ant(center: Vector2, tint: Color) -> void:
+	# Simple readable three-part ant marker; animation follows the verified route.
+	draw_circle(center + Vector2(-7, 0), 5.5, Color("#251d16"))
+	draw_circle(center + Vector2(1, 0), 7.0, tint)
+	draw_circle(center + Vector2(10, -1), 4.5, Color("#251d16"))
+	draw_line(center + Vector2(-2, -4), center + Vector2(-7, -10), Color("#251d16"), 2.0)
+	draw_line(center + Vector2(-2, 4), center + Vector2(-7, 10), Color("#251d16"), 2.0)
+	draw_line(center + Vector2(4, -4), center + Vector2(7, -10), Color("#251d16"), 2.0)
+	draw_line(center + Vector2(4, 4), center + Vector2(7, 10), Color("#251d16"), 2.0)
+
+
+func _selected_squad_color() -> Color:
+	if _selected_squad_id.is_empty():
+		return COLOR_GOLD
+	var squad := _colony.get_squad(_selected_squad_id)
+	if squad.is_empty():
+		return COLOR_GOLD
+	return _color_for(String(squad["color"]))
 
 
 func _check_terminal_state() -> void:
