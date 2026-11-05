@@ -92,6 +92,8 @@ var _feedback_progress: float = 1.0
 var _feedback_cell: Vector2i = Vector2i(-1, -1)
 var _feedback_tween: Tween
 var _is_animating: bool = false
+var _auto_dispatch: bool = false
+var _ant_wiggle: float = 0.0
 var _returning_to_nest: bool = false
 var _animation_tween: Tween
 var _ui_scale: float = 1.0
@@ -138,8 +140,9 @@ func _ready() -> void:
 	queue_redraw()
 
 
-func _process(_delta: float) -> void:
-	# CanvasItem drawing is event-driven; request frames while tweens are moving.
+func _process(delta: float) -> void:
+	if _is_animating:
+		_ant_wiggle += delta * 13.0
 	if _is_animating or _feedback_progress < 1.0:
 		queue_redraw()
 
@@ -291,7 +294,7 @@ func _draw_slots(font: Font) -> void:
 
 
 func _draw_squads(font: Font) -> void:
-	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "ОТРЯДЫ РАБОЧИХ  ·  НАЖМИТЕ ДЛЯ ВЫХОДА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "КОСНИТЕСЬ ОТРЯДА — ОН САМ НАЙДЁТ СЕМЕНА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
 	var card_width := ResponsiveLayoutScript.squad_card_width(ids.size())
@@ -562,20 +565,58 @@ func _select_or_deploy(squad_id: String) -> void:
 		return
 	_selected_squad_id = squad_id
 	_last_path.clear()
-	if squad["deployed"]:
-		_status = "%s в поле. Выберите семя своего цвета или муравейник." % _color_name_ru(String(squad.get("color", "")))
-	else:
+	if not squad["deployed"]:
 		var result: Dictionary = _colony.deploy_squad(squad_id)
-		if result["valid"]:
-			_status = "%s отправлен. Выберите семя своего цвета." % squad_id.replace("_", " ")
-			if _tutorial_active and squad_id == "amber_workers":
-				_tutorial_step = 1
+		if not result["valid"]:
+			_status = _error_ru(String(result["errors"][0]))
+			queue_redraw()
+			return
+		if _tutorial_active and squad_id == "amber_workers":
+			_tutorial_step = 1
+	_auto_dispatch = true
+	_status = "%s отряд отправился на поиск семян." % _color_name_ru(String(squad.get("color", "")))
+	_dispatch_next_seed()
+
+
+func _dispatch_next_seed() -> void:
+	if _selected_squad_id.is_empty():
+		return
+	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
+	if squad.is_empty() or not squad.get("deployed", false):
+		_auto_dispatch = false
+		return
+	if int(squad.get("carried", 0)) >= int(squad.get("capacity", 1)):
+		_status = "Отряд набрал полный груз и возвращается домой."
+		_return_selected_squad()
+		return
+	var from_cell: Vector2i = squad.get("position", _board.start)
+	if not _board.is_inside(from_cell):
+		from_cell = _board.start
+	var best_cell := Vector2i(-1, -1)
+	var best_path: Array[Vector2i] = []
+	for cell in _board.get_resource_cells():
+		if _board.resource_color_at(cell) != String(squad.get("color", "")):
+			continue
+		var path: Array[Vector2i] = _board.find_path(from_cell, cell)
+		if path.is_empty():
+			continue
+		if best_cell == Vector2i(-1, -1) or path.size() < best_path.size():
+			best_cell = cell
+			best_path = path
+	if best_cell == Vector2i(-1, -1):
+		if int(squad.get("carried", 0)) > 0:
+			_status = "Все доступные семена собраны. Отряд возвращается домой."
+			_return_selected_squad()
 		else:
-			_status = _error_ru(_error_ru(String(result["errors"][0])))
-	queue_redraw()
+			_auto_dispatch = false
+			_status = "Рядом нет доступных семян этого цвета."
+			queue_redraw()
+		return
+	_begin_collection(best_cell, best_path)
 
 
 func _collect_selected_squad(cell: Vector2i) -> void:
+	_auto_dispatch = false
 	if _selected_squad_id.is_empty():
 		_status = "Сначала выберите отряд рабочих."
 		queue_redraw()
@@ -585,21 +626,30 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 		_status = "Сначала отправьте выбранный отряд в поле."
 		queue_redraw()
 		return
-	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
-	_last_path_start = squad_position if _board.is_inside(squad_position) else _board.start
+	var from_cell: Vector2i = squad.get("position", _board.start)
+	if not _board.is_inside(from_cell):
+		from_cell = _board.start
 	var preview: Dictionary = TurnResolverScript.preview_collection(
-		_colony, _board, _selected_squad_id, _last_path_start, cell
+		_colony, _board, _selected_squad_id, from_cell, cell
 	)
 	if not preview["valid"]:
 		_status = _error_ru(String(preview["errors"][0]))
 		queue_redraw()
 		return
-	_last_path = preview["path"]
+	_begin_collection(cell, preview["path"])
+
+
+func _begin_collection(cell: Vector2i, path: Array[Vector2i]) -> void:
+	if path.is_empty():
+		return
+	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
+	_last_path_start = squad.get("position", _board.start)
 	_last_target = cell
+	_last_path = path
 	_ant_progress = 0.0
 	_returning_to_nest = false
 	_is_animating = true
-	_status = "Рабочие идут по тропе…"
+	_status = "Муравьи бегут за семенем…"
 	_start_path_animation(1.0, false)
 	queue_redraw()
 
@@ -632,9 +682,9 @@ func _return_selected_squad() -> void:
 func _start_path_animation(target_progress: float, returning: bool) -> void:
 	if _animation_tween != null and _animation_tween.is_running():
 		_animation_tween.kill()
-	var duration := maxf(0.24, float(_last_path.size()) * 0.16)
+	var duration := maxf(0.20, float(_last_path.size()) * 0.12)
 	_animation_tween = create_tween()
-	_animation_tween.set_trans(Tween.TRANS_SINE)
+	_animation_tween.set_trans(Tween.TRANS_CUBIC)
 	_animation_tween.set_ease(Tween.EASE_IN_OUT)
 	_animation_tween.tween_property(self, "_ant_progress", target_progress, duration)
 	_animation_tween.finished.connect(_on_path_animation_finished.bind(returning))
@@ -653,13 +703,16 @@ func _on_path_animation_finished(returning: bool) -> void:
 			_last_path.clear()
 		else:
 			_trigger_feedback(_last_target)
-			if _tutorial_active and _tutorial_step == 1 and _last_target == Vector2i(4, 2):
+			if _tutorial_active and _tutorial_step == 1:
 				_tutorial_step = 2
 			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-			if squad.get("carried", 0) >= squad.get("capacity", 1):
+			if _auto_dispatch:
+				_status = "Семя найдено! Муравьи ищут следующее…"
+				_dispatch_next_seed()
+			elif squad.get("carried", 0) >= squad.get("capacity", 1):
 				_status = "Отряд загружен. Нажмите на муравейник, чтобы доставить груз."
 			else:
-				_status = "Семя собрано. Найдите ещё одно подходящего цвета или возвращайтесь домой."
+				_status = "Семя собрано. Можно продолжить сбор или вернуться домой."
 		_check_terminal_state()
 	queue_redraw()
 
@@ -672,6 +725,7 @@ func _finish_squad_return() -> void:
 			_complete_tutorial()
 		_trigger_feedback(_board.start)
 		_selected_squad_id = ""
+		_auto_dispatch = false
 		_last_path.clear()
 		_last_target = Vector2i(-1, -1)
 		_ant_progress = 0.0
@@ -696,6 +750,7 @@ func _position_along_last_path(progress: float) -> Vector2:
 
 func _draw_ant(center: Vector2, tint: Color, scale: float = 1.0) -> void:
 	# Three-part silhouette; the squad is animated as a short, readable formation.
+	center.y += sin(_ant_wiggle + center.x * 0.035) * 1.8 * scale if _is_animating else 0.0
 	var body_scale := Vector2.ONE * scale
 	draw_circle(center + Vector2(1, 7) * body_scale, 12.0 * scale, Color("#101812", 0.72))
 	draw_circle(center + Vector2(-7, 0) * body_scale, 5.5 * scale, Color("#251d16"))
