@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 55 authored levels across two chapter packs: Meadow 001–030 and Root Labyrinth 031–055. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+The current campaign contains 60 authored levels across two chapter packs: Meadow 001–030 and Root Labyrinth 031–060. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
 
 ### Adding a future chapter
 
@@ -123,3 +123,9 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_053.json](../levels/level_053.json) — The Turning Fork: staggered barriers make the route change sides between chambers.
 - [level_054.json](../levels/level_054.json) — The Middle Passage: three harvest points share one crossing and two deployment slots.
 - [level_055.json](../levels/level_055.json) — The Root Labyrinth Trial: four colors and alternating openings form the chapter's 25-level checkpoint.
+
+- [level_056.json](../levels/level_056.json) — The Switchback Gate: a lower opening leads to an upper-side second entrance.
+- [level_057.json](../levels/level_057.json) — Three Root Mouths: three colors lie beyond alternating openings.
+- [level_058.json](../levels/level_058.json) — The Heartwood Pocket: one notch reaches a resource inside an obstacle ring.
+- [level_059.json](../levels/level_059.json) — The Double Bend: two barriers force two direction changes.
+- [level_060.json](../levels/level_060.json) — The Labyrinth Unbound: the 30-level chapter finale with four color routes.
