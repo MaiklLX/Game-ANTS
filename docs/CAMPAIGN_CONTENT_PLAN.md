@@ -5,7 +5,7 @@
 - **Launch campaign:** 300 hand-authored, quality-checked levels.
 - **Structure:** 10 chapters × 30 levels.
 - **Expansion:** additional chapter packs can be appended through the root campaign manifest in later updates.
-- **Current reality:** 5 playable prototype levels in the Meadow pack. The 300-level target is planned content, not yet delivered.
+- **Current reality:** 30 authored levels in the Meadow pack; the remaining nine chapters are still planned content.
 
 ## Chapter rhythm
 
