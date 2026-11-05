@@ -3,6 +3,7 @@ extends SceneTree
 ## exact gameplay signatures without treating every shared motif as a defect.
 
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
+const BoardModelScript = preload("res://scripts/core/board_model.gd")
 
 func _initialize() -> void:
 	var result: Dictionary = CampaignCatalogScript.load_catalog("res://campaign/campaign_manifest.json")
@@ -98,6 +99,10 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			"slots": 0,
 			"capacity_total": 0,
 			"capacity_max": 0,
+			"route_samples": 0,
+			"route_steps_total": 0,
+			"extra_steps_total": 0,
+			"route_steps_max": 0,
 		}
 	var entry: Dictionary = stats[chapter_id]
 	entry["levels"] += 1
@@ -107,6 +112,21 @@ func _accumulate_chapter_stats(stats: Dictionary, chapter_id: String, data: Dict
 			entry["resources"] += 1
 		elif String(tile["type"]) == "obstacle":
 			entry["obstacles"] += 1
+	var board = BoardModelScript.new()
+	var board_result: Dictionary = board.load_level(data)
+	if board_result.get("valid", false):
+		for tile in data.get("tiles", []):
+			if String(tile["type"]) != "resource":
+				continue
+			var target := Vector2i(int(tile["x"]), int(tile["y"]))
+			var route: Array[Vector2i] = board.find_path(board.start, target)
+			if route.is_empty():
+				continue
+			var direct_steps := absi(board.start.x - target.x) + absi(board.start.y - target.y)
+			entry["route_samples"] += 1
+			entry["route_steps_total"] += route.size()
+			entry["extra_steps_total"] += route.size() - direct_steps
+			entry["route_steps_max"] = maxi(int(entry["route_steps_max"]), route.size())
 	for squad in data.get("squads", []):
 		var capacity := int(squad["capacity"])
 		entry["squads"] += 1
@@ -121,7 +141,7 @@ func _print_chapter_stats(stats: Dictionary) -> void:
 		var entry: Dictionary = stats[chapter_id]
 		var count := int(entry["levels"])
 		print(
-			"CHAPTER %s: levels=%d avg_resources=%.2f avg_obstacles=%.2f avg_squads=%.2f avg_slots=%.2f max_capacity=%d" % [
+			"CHAPTER %s: levels=%d avg_resources=%.2f avg_obstacles=%.2f avg_squads=%.2f avg_slots=%.2f max_capacity=%d avg_resource_route_steps=%.2f avg_extra_steps=%.2f max_resource_route=%d" % [
 				String(chapter_id),
 				count,
 				float(entry["resources"]) / count,
@@ -129,6 +149,9 @@ func _print_chapter_stats(stats: Dictionary) -> void:
 				float(entry["squads"]) / count,
 				float(entry["slots"]) / count,
 				int(entry["capacity_max"]),
+				float(entry["route_steps_total"]) / maxf(1.0, float(entry["route_samples"])),
+				float(entry["extra_steps_total"]) / maxf(1.0, float(entry["route_samples"])),
+				int(entry["route_steps_max"]),
 			]
 		)
 
