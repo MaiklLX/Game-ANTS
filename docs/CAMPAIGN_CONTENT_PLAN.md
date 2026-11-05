@@ -119,3 +119,14 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 060 The Labyrinth Unbound is the 30-level chapter finale, with four colored harvest routes and a long eastern lane.
 - All levels use schema v1. The integration solver checks every resource collection and return; route tests assert the long switchback and all four finale routes.
 - Chapter 2 is complete at 30/30. Review the chapter's full difficulty curve before beginning The Amber Orchard (061–090).
+
+
+## Root Labyrinth design audit — 2026-11-05
+
+- The chapter is 30/30 authored and passes deterministic production-rule campaign validation, but this is not equivalent to design sign-off.
+- Audit found an identical obstacle/resource footprint across levels 037, 038, and 041; the roster/colors change but the spatial puzzle is effectively repeated.
+- Levels 047, 057, and 059 also form a related alternating-wall motif; 035, 040, 045, 050, 055, and 060 share related multi-color central/corridor structures. These need distinct decisions, not cosmetic changes.
+- The campaign integration solver proves deterministic solvability, color matching, capacity use, and returns. It does not prove strategic order choices, uniqueness, difficulty balance, or mobile readability.
+- Required before release sign-off: redesign at least one of 037/038/041; review the 047/057/059 family; add map-signature regression coverage; perform manual Godot Editor portrait playthrough; rerun CI.
+- Full findings: `docs/ROOT_LABYRINTH_AUDIT.md`.
+- Chapter 3 production may begin in five-level batches, but chapter 2's targeted revision remains an explicit open task.
