@@ -4,15 +4,11 @@ extends Control
 const BoardModelScript = preload("res://scripts/core/board_model.gd")
 const ColonyModelScript = preload("res://scripts/core/colony_model.gd")
 const LevelLoaderScript = preload("res://scripts/core/level_loader.gd")
+const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 
-const LEVEL_PATHS := [
-	"res://levels/level_001.json",
-	"res://levels/level_002.json",
-	"res://levels/level_003.json",
-	"res://levels/level_004.json",
-	"res://levels/level_005.json",
-]
+const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
+const LEVELS_PER_PAGE := 5
 const VIRTUAL_SIZE := Vector2(720.0, 1280.0)
 const CELL_SIZE := 68.0
 const CELL_GAP := 8.0
@@ -33,6 +29,8 @@ var _board: BoardModel
 var _colony: ColonyModel
 var _level_data: Dictionary = {}
 var _level_index: int = 0
+var _level_page_start: int = 0
+var _campaign_levels: Array[Dictionary] = []
 var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
@@ -53,12 +51,21 @@ var _board_gap: float = CELL_GAP
 var _slot_rects: Array[Rect2] = []
 var _squad_rects: Dictionary = {}
 var _level_rects: Array[Rect2] = []
+var _previous_page_rect := Rect2()
+var _next_page_rect := Rect2()
 var _restart_rect := Rect2(548, 1152, 100, 58)
 
 
 func _ready() -> void:
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
+	var catalog_result: Dictionary = CampaignCatalogScript.load_catalog(CAMPAIGN_MANIFEST_PATH)
+	if not catalog_result["valid"]:
+		_status = "Campaign data error: " + "; ".join(catalog_result["errors"])
+		push_error(_status)
+		queue_redraw()
+		return
+	_campaign_levels = catalog_result["levels"]
 	_load_level(0)
 	queue_redraw()
 
@@ -90,8 +97,9 @@ func _draw() -> void:
 
 func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, 32, COLOR_GOLD)
-	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  MEADOW", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOR_MUTED)
-	draw_string(font, Vector2(678, 62), "%02d / %02d" % [_level_index + 1, LEVEL_PATHS.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, 18, COLOR_TEXT)
+	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "CAMPAIGN")) if not _campaign_levels.is_empty() else "CAMPAIGN DATA"
+	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  " + chapter_title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 570, 13, COLOR_MUTED)
+	draw_string(font, Vector2(678, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, 18, COLOR_TEXT)
 
 	var title := String(_level_data.get("title", "New field"))
 	var objective := String(_level_data.get("objective", ""))
@@ -224,22 +232,43 @@ func _draw_status(font: Font) -> void:
 
 
 func _draw_level_picker(font: Font) -> void:
-	draw_string(font, Vector2(44, 1150), "TEST LEVEL", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
+	var page_count := maxi(1, ceili(float(_campaign_levels.size()) / float(LEVELS_PER_PAGE)))
+	var page_number := int(_level_page_start / LEVELS_PER_PAGE) + 1
+	draw_string(font, Vector2(44, 1150), "LEVELS  ·  PAGE %02d / %02d" % [page_number, page_count], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
 	_level_rects.clear()
-	var level_button_width := 78.0
-	var level_button_gap := 10.0
-	var retry_gap := 16.0
-	var level_group_width := LEVEL_PATHS.size() * level_button_width + maxi(0, LEVEL_PATHS.size() - 1) * level_button_gap
-	var controls_width := level_group_width + retry_gap + _restart_rect.size.x
+
+	var button_width := 54.0
+	var button_gap := 8.0
+	var page_width := LEVELS_PER_PAGE * button_width + (LEVELS_PER_PAGE - 1) * button_gap
+	var arrow_width := 48.0
+	var retry_width := 90.0
+	var controls_width := arrow_width + 8.0 + page_width + 8.0 + arrow_width + 12.0 + retry_width
 	var controls_start_x := (720.0 - controls_width) * 0.5
-	for index in range(LEVEL_PATHS.size()):
-		var rect := Rect2(controls_start_x + index * (level_button_width + level_button_gap), 1140, level_button_width, 58)
+
+	_previous_page_rect = Rect2(controls_start_x, 1140, arrow_width, 58)
+	draw_rect(_previous_page_rect, COLOR_PANEL if _level_page_start > 0 else COLOR_BG)
+	draw_string(font, _previous_page_rect.position + Vector2(0, 37), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
+
+	var buttons_start_x := controls_start_x + arrow_width + 8.0
+	var visible_count := mini(LEVELS_PER_PAGE, maxi(0, _campaign_levels.size() - _level_page_start))
+	for local_index in range(visible_count):
+		var global_index := _level_page_start + local_index
+		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1140, button_width, 58)
 		_level_rects.append(rect)
-		draw_rect(rect, COLOR_GOLD if index == _level_index else COLOR_PANEL)
-		draw_string(font, rect.position + Vector2(0, 37), "%02d" % (index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 20, COLOR_BG if index == _level_index else COLOR_TEXT)
-	_restart_rect.position = Vector2(controls_start_x + level_group_width + retry_gap, 1140)
+		var is_selected := global_index == _level_index
+		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
+		var label_color := COLOR_BG if is_selected else COLOR_TEXT
+		draw_string(font, rect.position + Vector2(0, 36), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 15, label_color)
+
+	var next_x := buttons_start_x + page_width + 8.0
+	_next_page_rect = Rect2(next_x, 1140, arrow_width, 58)
+	var has_next_page := _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size()
+	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
+	draw_string(font, _next_page_rect.position + Vector2(0, 37), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
+
+	_restart_rect = Rect2(next_x + arrow_width + 12.0, 1140, retry_width, 58)
 	draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-	draw_string(font, _restart_rect.position + Vector2(0, 36), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, 16, COLOR_TEXT)
+	draw_string(font, _restart_rect.position + Vector2(0, 36), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, retry_width, 16, COLOR_TEXT)
 	draw_string(font, Vector2(360, 1240), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
 
 
@@ -262,9 +291,17 @@ func _gui_input(event: InputEvent) -> void:
 func _handle_tap(point: Vector2) -> void:
 	if _is_animating:
 		return
+	if _previous_page_rect.has_point(point) and _level_page_start > 0:
+		_level_page_start = maxi(0, _level_page_start - LEVELS_PER_PAGE)
+		queue_redraw()
+		return
+	if _next_page_rect.has_point(point) and _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size():
+		_level_page_start += LEVELS_PER_PAGE
+		queue_redraw()
+		return
 	for index in range(_level_rects.size()):
 		if _level_rects[index].has_point(point):
-			_load_level(index)
+			_load_level(_level_page_start + index)
 			return
 	if _restart_rect.has_point(point):
 		_load_level(_level_index)
@@ -298,13 +335,13 @@ func _load_level(index: int) -> void:
 	_is_animating = false
 	_returning_to_nest = false
 	_ant_progress = 0.0
-	_level_index = clampi(index, 0, LEVEL_PATHS.size() - 1)
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(LEVEL_PATHS[_level_index]))
-	if typeof(parsed) != TYPE_DICTIONARY:
-		_status = "This field file could not be read."
+	if _campaign_levels.is_empty():
+		_status = "No playable levels are available."
 		queue_redraw()
 		return
-	_level_data = parsed
+	_level_index = clampi(index, 0, _campaign_levels.size() - 1)
+	_level_page_start = int(_level_index / LEVELS_PER_PAGE) * LEVELS_PER_PAGE
+	_level_data = _campaign_levels[_level_index]["data"].duplicate(true)
 	var result: Dictionary = LevelLoaderScript.load_into(_level_data, _board, _colony)
 	_selected_squad_id = ""
 	_last_path.clear()
