@@ -587,3 +587,10 @@
 - All levels use existing schema-v1 mechanics. No new movement or terrain mechanic was introduced.
 - Next: run full CI, then continue levels 046–050 if the batch passes.
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 041–045 (2026-11-05)
+- GitHub Actions run #345 passed on `ae5bed6a5cd85fd2c76ab8c03ef9689946ede479`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034766660.
+- Godot 4.7.2 import, all core/schema/colony/turn suites, all 45 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth progress: 15/30; total authored catalogue: 45 levels.
+- Next batch: levels 046–050.
