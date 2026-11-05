@@ -19,11 +19,11 @@ See [level_001.json](../levels/level_001.json).
 Allowed tile types:
 
 - `empty` — explicit empty cell.
-- `resource` — collectible resource.
+- `resource` — collectible resource; must include a `color` value from `amber`, `teal`, `coral`, or `violet`.
 - `obstacle` — impassable cell.
 - `nest` — colony entrance / starting point.
 
-Cells omitted from `tiles` are ordinary empty ground. At most one tile definition may occupy a coordinate. The start and goal cannot be obstacles.
+Cells omitted from `tiles` are ordinary empty ground. Resource colors are part of the game rules, not presentation metadata: a squad may collect only a matching color. At most one tile definition may occupy a coordinate. The start and goal cannot be obstacles.
 
 ## Validation
 
