@@ -816,3 +816,12 @@
 - Added headless contract cases for top/bottom and side insets, invalid platform data fallback, clipping to screen bounds, and safe-area-adjusted touch targets.
 - Dynamic level controls, squad cards, and status action hit areas preserve the 44 physical-pixel minimum after safe-area scaling; four level buttons and paging arrows still fit the 720 px design width.
 - CI #790 passed on documentation checkpoint `9b3bc79ca1b5ccfefc53ba0712c829fa6091c286`: Godot 4.7.2 import, all core/campaign/progress/onboarding/guidance suites, safe-area and responsive layout contracts, campaign audit, and headless main-scene launch. No actual Android/iOS device, exported APK, screenshot capture, or visual sign-off is claimed. PR #9 remains Draft; main is untouched.
+
+
+### KT-011.7 — rendered portrait QA pipeline and first visual fixes (2026-11-05)
+- Added a real-render screenshot harness using offscreen Godot SubViewports and Xvfb/software OpenGL in GitHub Actions. The pipeline captures 320×568, 360×800, 390×844, 412×915, and 720×1280 frames and uploads a 14-day artifact.
+- Reviewed the first rendered frames. Found and fixed clipped right-aligned level/resource counters, a footer text box positioned one full viewport too far right, and a first-tutorial instruction that was too long for the narrowest viewport.
+- The narrow-phone tutorial now uses concise contextual instructions; the longer copy remains on larger screens. Resource count now uses singular/plural wording correctly.
+- CI #794 and #795 passed the screenshot pipeline and full Godot validation. The #795 visual artifact was manually inspected at all five resolutions; the initial tutorial layout, board, squad card, status panel, and level selector remain within the captured frame.
+- Expanded the screenshot harness to include level 100 at 320×568 and 360×800 so the four-squad/finale layout is reviewed separately. That expanded capture is awaiting its next CI run.
+- Screenshots are software-rendered desktop viewport captures, not device screenshots. Android/iOS safe-area behavior and real touch input still require exported builds and physical-device QA. PR #9 remains Draft; main untouched.
