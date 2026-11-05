@@ -103,6 +103,26 @@
     {
       "id": "root_055",
       "file": "res://levels/level_055.json"
+    },
+    {
+      "id": "root_056",
+      "file": "res://levels/level_056.json"
+    },
+    {
+      "id": "root_057",
+      "file": "res://levels/level_057.json"
+    },
+    {
+      "id": "root_058",
+      "file": "res://levels/level_058.json"
+    },
+    {
+      "id": "root_059",
+      "file": "res://levels/level_059.json"
+    },
+    {
+      "id": "root_060",
+      "file": "res://levels/level_060.json"
     }
   ]
 }
