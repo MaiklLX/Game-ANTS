@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "colony_heart",
+  "title": "The Colony Heart: First Dawn",
+  "description": "A compact launch finale that combines proven squad, capacity, route, and deployment-slot decisions.",
+  "levels": [
+    {
+      "id": "colony_091",
+      "file": "res://levels/level_091.json"
+    },
+    {
+      "id": "colony_092",
+      "file": "res://levels/level_092.json"
+    },
+    {
+      "id": "colony_093",
+      "file": "res://levels/level_093.json"
+    },
+    {
+      "id": "colony_094",
+      "file": "res://levels/level_094.json"
+    },
+    {
+      "id": "colony_095",
+      "file": "res://levels/level_095.json"
+    }
+  ]
+}
