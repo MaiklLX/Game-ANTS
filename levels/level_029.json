@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "meadow_029",
+  "title": "The Last Seed Home",
+  "objective": "Carry a full amber load around the lower bend, then clear the final nearby seed.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 1,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 5,
+      "y": 2,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "type": "obstacle"
+    }
+  ]
+}

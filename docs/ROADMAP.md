@@ -452,7 +452,7 @@
 
 ### KT-005.5 — three-color slot-pressure puzzle (2026-11-05)
 **Branch:** `feat/kt-005-first-playable-levels`
-**Status:** Implementation committed; CI verification pending.
+**Status:** Implementation committed; CI PASS on PR run #182.
 
 - Added `meadow_005`, "The Busy Nest": three squad colors (amber, teal, coral), two deployment slots, and four seeds.
 - Amber has capacity two and can bring home both upper seeds in one trip; teal and coral each have a single matching seed.
@@ -467,3 +467,361 @@
 - This remains headless validation only; editor/device visual QA is not claimed.
 
 **Next:** move into KT-006 interaction clarity and a stronger first-session tutorial.
+
+
+### KT-006.1 — scalable campaign catalogue (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Base:** `feat/kt-005-first-playable-levels` (stacked after draft PR #8)
+**Status:** Implementation committed; CI verification pending.
+
+- Added a root campaign manifest and independent chapter-pack manifests. The first `meadow` pack references the existing five authored levels.
+- Added `CampaignCatalog`, which expands the manifest chain, validates each referenced level, and rejects duplicate pack IDs, duplicate level IDs, duplicate file references, missing packs, missing level files, and malformed level data.
+- Removed the hard-coded five-level path list from the game screen. Campaign levels now load through the catalog.
+- Replaced the five-button-only picker with a five-level paged selector, so the interface can navigate a large catalogue without drawing hundreds of buttons at once.
+- Added a dedicated catalog test suite and a CI step for it.
+- **Content status:** five real levels exist today. The 300+ target is not being represented as already completed; future chapters will be authored in batches and added as independent packs.
+- No merge to `main`; PR #8 remains a dependency. Editor/device visual QA remains outstanding.
+
+**Next:** verify catalog CI, then author and test the first complete 30-level chapter in small reviewed batches.
+
+### KT-006.1 — verification and 300-level production plan
+- CI run **#182** passed on catalogue checkpoint `c4135cb162de9ce52b31cfdb7014528fa12f77d7`: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42024460361).
+- Godot 4.7.2 import, all five existing test suites, new CampaignCatalog tests, and headless main-scene launch passed.
+- Added `docs/CAMPAIGN_CONTENT_PLAN.md`: 10 chapters × 30 levels, chapter pacing, quality gate, append-only content update rules, and a staged production plan.
+- Current content remains five playable levels. The first goal is to author and verify the complete 30-level Meadow chapter in reviewed batches.
+- PR #9 remains Draft and targets PR #8's feature branch; neither PR is merged to `main`.
+
+
+### KT-006.1 / Meadow content batch 001–010 — CI checkpoint
+- Latest verified implementation/documentation head: ab30a620d1e37ca1fa78b19e887d36b572f14e36.
+- GitHub Actions run #204 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025158154.
+- Godot 4.7.2 import, BoardModel, LevelDefinition, ColonyModel, TurnResolver, Campaign level integration (levels 001–010), CampaignCatalog tests, and headless main-scene launch all passed.
+- The first Meadow chapter now has 10/30 authored levels. Continue with batches of five and preserve a reviewed difficulty curve.
+- PR #9 remains Draft and stacked on PR #8. No merge to main.
+
+
+### Meadow content batch 011–015 — CI PASS
+- Added levels 011–015: Split the Shift, Stone Arch, Four Corners, Capacity Choice, and The Last Slot.
+- Meadow chapter now contains 15/30 levels; all 15 are included in deterministic campaign integration tests.
+- CI run #220 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025359991.
+- Godot 4.7.2 import, all six test suites (including campaign catalog and all 15 campaign levels), and headless main-scene launch passed.
+
+
+### Meadow content batch 016–020 — CI PASS
+- Added levels 016–020: Bramble Fork, Long Way Home, Four Colors, Two Slots, Twin Loads, and Meadow Assembly.
+- Meadow chapter now contains 20/30 authored levels; all 20 pass the production campaign integration solver.
+- GitHub Actions run #240 passed: https://github.com/MaiklLX/Game-ANTS/actions/runs/42025594751.
+- Godot 4.7.2 import, all six test suites, and headless main-scene launch passed.
+
+
+### KT-006.2 — Meadow content batch 021–025 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five new level files committed; CI verification pending.
+
+- Added 021 Narrow Gate, 022 Side Pocket, 023 Three Stops, 024 The Waiting Line, and 025 Forked Harvest.
+- Meadow chapter now contains 25/30 authored levels.
+- Extended the pack manifest, deterministic campaign integration list, catalog count/order assertions, and level format guide.
+- All levels use existing schema-v1 mechanics; no unprototyped mechanics were introduced.
+- Next: complete levels 026–030 as the Meadow chapter exam, then review the chapter curve before moving to Root Labyrinth.
+- No merge to main; PR #9 remains Draft and stacked on PR #8. Headless CI is the verification gate; editor/device QA remains outstanding.
+
+
+### KT-006.2 — Meadow chapter complete, levels 001–030 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** All 30 level files and catalogue/test/documentation updates committed; CI verification pending.
+
+- Completed the first full chapter, The Living Meadow, with 30 authored levels.
+- Added 026 Two-Way Detour, 027 Capacity Deadline, 028 Four Openings, 029 The Last Seed Home, and 030 The Meadow Crown.
+- Extended the pack manifest and deterministic campaign integration suite through level 030; catalog tests now assert 30 ordered levels and final global index 29.
+- The chapter exam uses only existing schema-v1 mechanics. No unimplemented mechanic is assumed.
+- Next: run the full Godot 4.7.2 CI suite, review the chapter's difficulty progression, then begin chapter 2 (The Root Labyrinth) with a clear mechanic/level design gate.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 — Root Labyrinth opening batch 031–035 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five schema-v1 level files and chapter pack added; CI verification pending.
+
+- Added independent chapter pack `campaign/packs/root_labyrinth/pack.json` and appended it after Meadow in the root campaign manifest.
+- Added 031 Root Gate, 032 Twin Rootways, 033 The S-Bend, 034 The Root Weave, and 035 The Buried Junction.
+- Levels focus on narrow passages, separated openings, forced detours, branching corridors, and multi-entrance routing.
+- Extended campaign integration tests and catalogue assertions to 35 ordered levels across two chapters.
+- Added route-shape regression tests for non-Manhattan detours and both Root Weave branches.
+- Only existing schema-v1 mechanics are used; no new movement controls or unimplemented terrain rules are claimed.
+- Next: run CI, inspect any failures, then continue Root Labyrinth 036–040 after reviewing the first batch's path geometry.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 031–035 (2026-11-05)
+- GitHub Actions run #306 passed on `ccbe28ae067966f0b86f9c2bc0543c6910e360a1`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034141116.
+- Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 35 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth now has 5/30 authored levels; next batch is 036–040.
+
+
+### KT-007 — Root Labyrinth batch 036–040 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 036 The Root Ladder, 037 Forked Roots, 038 Parallel Tunnels, 039 The Narrow Seam, and 040 The Root Crown.
+- Root Labyrinth now contains 10/30 authored levels; total campaign catalogue is 40/300 target levels across two packs.
+- Added the five level references to the Root Labyrinth pack and campaign integration suite; catalog assertions now verify 40 ordered entries and final index 39.
+- All resources are reachable using existing deterministic pathfinding; no new movement or terrain mechanic was introduced.
+- Next: run full CI, then continue 041–045 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 031–040 (2026-11-05)
+- GitHub Actions run #324 passed on `a1e1754a44b3e3f5d5aa932be61c35ea5bc3f563`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034463578.
+- Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 40 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth progress: 10/30; total campaign catalogue: 40 authored levels across two packs.
+- Next batch: levels 041–045.
+
+
+### KT-007 — Root Labyrinth batch 041–045 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 041 The Split Crossing, 042 The Long Burrow, 043 The Upper and Lower Roots, 044 The Root Divide, and 045 The Hollow Crown.
+- Root Labyrinth now contains 15/30 authored levels; total campaign catalogue is 45 levels.
+- Extended integration tests and catalog assertions through root_045; added route regression coverage for level 042 and both lanes in level 045.
+- All levels use existing schema-v1 mechanics. No new movement or terrain mechanic was introduced.
+- Next: run full CI, then continue levels 046–050 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 041–045 (2026-11-05)
+- GitHub Actions run #345 passed on `ae5bed6a5cd85fd2c76ab8c03ef9689946ede479`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034766660.
+- Godot 4.7.2 import, all core/schema/colony/turn suites, all 45 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth progress: 15/30; total authored catalogue: 45 levels.
+- Next batch: levels 046–050.
+
+
+### KT-007 — Root Labyrinth batch 046–050 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 046 The Stair of Roots, 047 Crossed Passages, 048 The Hidden Pocket, 049 The Deep Turn, and 050 The Labyrinth Heart.
+- Root Labyrinth now contains 20/30 authored levels; total campaign catalogue is 50 levels across two packs.
+- Extended campaign integration and catalog assertions through root_050; added a route-shape check for the single-entry side pocket in level 048.
+- All resources are reachable using existing schema-v1 rules and deterministic pathfinding.
+- Next: run full CI, then continue levels 051–055 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 046–050 (2026-11-05)
+- GitHub Actions run #364 passed on `dccaea00798d345e2c52ca8f44834cc024666ee8`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42035050710.
+- Godot 4.7.2 import, core/schema/colony/turn suites, all 50 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth progress: 20/30; total authored catalogue: 50 levels across two chapters.
+- Next batch: levels 051–055.
+
+
+### KT-007 — Root Labyrinth batch 051–055 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five authored schema-v1 levels added; integration/catalog tests and chapter documentation extended. CI verification pending.
+
+- Added 051 The Bent Gate, 052 Twin Root Mouths, 053 The Turning Fork, 054 The Middle Passage, and 055 The Root Labyrinth Trial.
+- Root Labyrinth now contains 25/30 authored levels; total campaign catalogue contains 55 levels across two packs.
+- Added a route-shape regression for the forced low crossing in level 051.
+- Every level is included in the production-rule campaign solver; no unprototyped mechanic was added.
+- Next: run full CI, review difficulty/readability, then continue levels 056–060 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 051–055 (2026-11-05)
+- GitHub Actions run #381 passed on `327e90c0760c95d3ff47d96094b571d8e426fe08`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42036509316.
+- Godot 4.7.2 version check and project import passed; all deterministic core, level validation, colony/squad, turn resolver, campaign level, and campaign catalogue tests passed; the main scene launched headlessly.
+- Root Labyrinth progress: 25/30; total authored catalogue: 55 levels across two chapter packs.
+- Next batch: levels 056–060, then review the completed chapter before starting The Amber Orchard.
+- No editor visual QA, Android APK export, physical-device testing, or public web build is claimed. PR #9 remains Draft and unmerged.
+
+
+### KT-007.5 — Root Labyrinth 056–060 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five final chapter levels added; integration/catalog tests and chapter documentation extended. CI verification pending.
+
+- Added 056 The Switchback Gate, 057 Three Root Mouths, 058 The Heartwood Pocket, 059 The Double Bend, and 060 The Labyrinth Unbound.
+- The Root Labyrinth is now complete: 30/30 levels. Total authored catalogue: 60/300 across two chapters.
+- Added a long-route regression for level 056 and four-route reachability checks for the level 060 finale.
+- All five levels use schema v1 and existing production mechanics only.
+- Next: full CI and a chapter-level content review, then begin The Amber Orchard (061–090).
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+
+### KT-008 — Root Labyrinth design audit (2026-11-05)
+- Reviewed all 30 chapter level files, pack manifest, BoardModel/TurnResolver behavior, campaign integration solver, and route-shape regression coverage.
+- Confirmed production-rule solvability coverage for all 60 authored levels; CI run #406 passed on head `b9b10645b56f3ad29162d674b8af4e632b16ea4f`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42037763989.
+- Design audit found a repeated obstacle/resource footprint across levels 037, 038, and 041, plus related barrier-layout families around 047/057/059 and four-resource crown/finale layouts.
+- Current campaign solver proves deterministic collection/return and reachability, not strategic variety, route-order decisions, difficulty balance, or mobile readability.
+- Chapter 2 is **30/30 authored and automated-validation passed**, but **not yet design-signed-off**. Targeted geometry revision, map-signature regression tests, and manual portrait Editor QA remain open.
+- Full audit: `docs/ROOT_LABYRINTH_AUDIT.md`. Chapter 3 may proceed in reviewed five-level batches; retain a separate revision task for the Root Labyrinth duplication cluster.
+- PR #9 remains Draft and stacked on PR #8. No merge to main. No editor/device QA, APK, or public web build is claimed.
+
+
+
+### KT-008.1 — Amber Orchard opening batch 061–065 (2026-11-05)
+- Added the third chapter pack `amber_orchard` and appended it after Root Labyrinth in the root campaign manifest.
+- Added 061 First Golden Bough, 062 Twin Canopies, 063 The Long Golden Cluster, 064 The Middle Crossing, and 065 The Balanced Harvest.
+- The batch focuses on load planning and squad specialization using existing schema-v1 capacity, color, slot, obstacle, and deterministic path rules only.
+- Campaign integration tests now include levels 061–065; catalogue assertions expect 65 ordered levels and verify chapter 3 identity and global indices.
+- Root Labyrinth design audit remains open as a separate revision task; no claim of chapter 2 design sign-off or manual visual QA.
+- CI run #415 passed on corrected code head `2d6e25c2e0320346397da087082007c50bbad920`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42038997667. Godot 4.7.2 import, all deterministic/core/schema/colony/turn tests, all 65 campaign level solutions, catalogue validation, and headless main-scene launch passed.
+- PR #9 remains Draft, stacked on PR #8; no merge to main.
+
+
+### KT-008.2 — Version 1.0 campaign scope approved (2026-11-05)
+**Decision:** Version 1.0 targets 100 quality-checked levels. The 300+ level ambition remains the long-term campaign vision for post-launch updates.
+
+- Approved launch structure: The Living Meadow 001–030, The Root Labyrinth 031–060, The Amber Orchard 061–090, and a compact 10-level conclusion 091–100.
+- Current content at the KT-008.2 decision: 65/100 authored; 35 levels remained.
+- The short finale is a release-structure decision; its detailed theme and levels remain subject to design review. No unproven mechanics are required for v1.
+- Release readiness is broader than level count: variety, difficulty balance, onboarding, save/progress reliability, portrait mobile readability, performance, and device QA remain required.
+- CI run #417 passed on the prior code/documentation head `1e726ab87bb514f8c22891e87e96e1ea2030722c`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42039105315. This verifies the existing 65-level state, not the new documentation-only scope decision.
+- Next: continue Amber Orchard in five-level batches, starting at 066–070, while retaining Root Labyrinth's separate design-revision task.
+- PR #9 remains Draft, open, stacked on PR #8, and unmerged. No editor/device visual QA, APK, or public web build is claimed.
+
+
+### KT-008.3 — Amber Orchard batch 066–070 (2026-11-05)
+- Added 066 The Fork of Gold, 067 The Hollow Canopy, 068 Three Golden Steps, 069 The Four Boughs, and 070 The Orchard Weave.
+- The batch varies central-crossing, heartwood-island, staggered-branch, divided-trunk, and multi-color slot-pressure layouts while staying within schema v1.
+- Registered all five levels in the Amber Orchard pack; campaign level tests include all 70 level files and catalogue tests assert stable order through global index 69.
+- Amber Orchard progress: 10/30. Version 1.0 campaign progress: 70/100; 30 levels remain.
+- CI #451 passed for the 70-level checkpoint; the follow-up batch 071–075 is now registered and awaits CI. No editor/device visual QA or APK is claimed.
+- Root Labyrinth design revisions remain a separate open task. PR #9 remains Draft, stacked, and unmerged.
+
+- Follow-up after KT-008.2: Amber Orchard batch 066–070 is now authored and registered. Current campaign content is 70/100; 30 levels remain. CI run #444 passed on corrected code head `cb0033dce2644d3e7623f1d606f5f54cef32fc14`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42040921577. Godot 4.7.2 import, all core/schema/colony/turn tests, all 70 campaign level tests, and campaign catalogue tests passed. Documentation-only CI #449 is in progress on the latest head.
+
+- Latest verification: CI run #451 passed on current branch head b87ae97d35604aebd113fce22ad5d265a08467c0: https://github.com/MaiklLX/Game-ANTS/actions/runs/42041100657. Godot 4.7.2 import, every deterministic/core/schema/colony/turn suite, all 70 campaign levels, campaign catalogue checks, and headless main-scene launch passed.
+
+
+### KT-008.4 — Amber Orchard batch 071–075 (2026-11-05)
+- Added The Split Crown (071), The Sunken Branch (072), The Amber Spiral (073), The Crosswind Grove (074), and The Golden Canopy Trial (075).
+- All five levels use existing schema-v1 mechanics. Added to the Amber Orchard pack; deterministic campaign test list now covers 75 level files; catalogue assertions verify 75 entries and stable final index 74.
+- Campaign progress: **75/100 authored; 25 remain**. Amber Orchard: 15/30.
+- CI #474 passed on corrected 75-level code head `614804d513df89dee6b18620e6f4efe08653ad22`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042309984. Godot 4.7.2 import, all campaign-level integration tests (75 levels), catalogue tests, and headless main-scene launch passed. No editor/device visual QA or APK is claimed.
+- Next batch: Amber Orchard 076–080. Root Labyrinth design revisions remain separate.
+
+- CI #474 also confirms the level 074 route correction; all test suites passed. Documentation-only CI #475 is still running on the same 75-level state.
+
+
+### KT-008.5 — Amber Orchard batch 076–080 (2026-11-05)
+- Added The Bramble Window (076), The Falling Leaves (077), The Four Hidden Boughs (078), The Golden Switchback (079), and The Orchard Crossroads (080).
+- All five use existing schema-v1 mechanics; static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
+- Registered all five in the Amber Orchard pack. Campaign integration tests now include 80 level files; catalogue tests assert 80 entries and stable global index 79.
+- Campaign progress: **80/100 authored; 20 remain**. Amber Orchard: 20/30.
+- CI #490 passed on the 80-level code checkpoint `feef50dae867270b62fe8481aa267c07c7f03bb5`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042680599. Godot 4.7.2 import, all 80 campaign level tests, catalogue validation, and headless main-scene launch passed. CI #495 also passed on the latest documentation head `907da8b322ed51b1feb29c92c1198e00f1e9078a`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042754078. A separate earlier CI attempt failed only because the Godot download endpoint returned HTTP 504; the subsequent full run passed. No Editor/device visual QA or APK is claimed.
+- Next: Amber Orchard 081–085. Root Labyrinth design revisions remain separate.
+
+
+### KT-008.6 — Amber Orchard batch 081–085 (2026-11-05)
+- Added The Bent Orchard (081), The Canopy Steps (082), The Hidden Sun (083), The Compass Branches (084), and The Orchard Keeper's Trial (085).
+- All five use existing schema-v1 mechanics. Static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
+- Registered all five in the Amber Orchard pack. Campaign integration tests now include 85 level files; catalogue tests assert 85 entries and stable global index 84.
+- Campaign progress: **85/100 authored; 15 remain**. Amber Orchard: 25/30.
+- CI #510 passed on the 85-level code checkpoint `80238ba57c119e2f27e2952691d5926bba572725`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043097564. All 85 campaign levels, catalogue validation, and headless main-scene launch passed. CI #513 also passed on the latest documentation head `9abbcde5274de05ba024152425f23d09c894b46d`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043145157. A duplicate runner attempt hit a transient Godot download HTTP 504; the successful full run confirms the branch. No Editor/device visual QA or APK is claimed.
+- Next: Amber Orchard 086–090, completing chapter three. Then design the 10-level v1 finale 091–100.
+
+
+### KT-008.7 — Amber Orchard chapter complete (086–090, 2026-11-05)
+- Added The Amber Gatehouse (086), The Orchard's Last Shade (087), The Three Canopies (088), The Orchard's Long Walk (089), and The Heart of Amber (090).
+- All five use existing schema-v1 mechanics. Static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
+- Registered levels 086–090 in the Amber Orchard pack. Campaign integration tests now include 90 level files; catalogue tests assert 90 entries and stable global index 89.
+- **Amber Orchard complete: 30/30. Version 1.0 campaign progress: 90/100; 10 levels remain.**
+- CI #529 passed on the 90-level code checkpoint `5fdaab407b2f7c7ccbafac307ed30947708c91a2`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043542765. All 90 campaign levels, catalogue validation, and headless main-scene launch passed. CI #533 and #534 also passed on the latest documentation head `588d7818f1e633106914f1b29f283cc96163e038`. Previous 85-level code and documentation checks passed.
+- Next: design and implement the compact v1 finale 091–100. Do not introduce new mechanics without a prototype.
+
+
+### KT-008.8 — Version 1.0 campaign content authored (091–100, 2026-11-05)
+- Added the fourth chapter pack `colony_heart`, provisionally titled **The Colony Heart: First Dawn**, and appended it after Amber Orchard in the root campaign manifest.
+- Authored all ten finale levels: First Light at the Nest, The First Ring, Three Seeds, Three Paths, The Four Fires, The Shared Passage, The Rooted Crown, The Long Return, Four Branches, One Nest, The Last Crossing, and The Colony Heart.
+- No new mechanics were introduced. The finale recombines schema-v1 squads, carrying capacities, deployment slots, and obstacle routing.
+- Campaign level tests now include all 100 level files; catalogue tests assert 100 ordered entries, fourth-chapter identity, and global index 99.
+- **Version 1.0 content target reached: 100/100.** The 300+ level long-term vision remains unchanged.
+- CI #572 passed on the corrected 100-level code head `691fc269ac1832c3a2073e32d62ad3a2ec17d5c9`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42044346311. Godot 4.7.2 import, deterministic core/schema/colony/turn suites, all 100 campaign level integration tests, 100-entry catalogue checks, and headless main-scene launch passed. Reaching 100 authored levels does not equal release sign-off; variety/balance, onboarding, save/progress, portrait mobile QA, performance, and device testing remain open.
+- Next phase: audit chapter-to-chapter difficulty and map variety, prioritize the Root Labyrinth duplication findings, then perform visual/device QA and release-readiness work.
+
+
+### KT-010 — Local campaign progress persistence (2026-11-05)
+- Added `ProgressStore` with schema-versioned local data at `user://campaign_progress.json`.
+- Saves completed levels and the last selected level by stable campaign ID, never by array index.
+- Uses a temporary file and backup rotation for replacement. Malformed saves are preserved in a `.corrupt` sidecar; unsupported future schemas are protected from overwrite; removed level IDs are filtered safely.
+- Game screen resumes the last selected level, shows a cleared-level count, and marks completed level buttons. All levels remain selectable; sequential unlock gating was not introduced.
+- Added `tests/test_progress_store.gd` and a dedicated CI step. CI #706/#707 verified the persistence test integration; #708/#709/#710 passed after explicit GDScript typing and quiet corrupt-JSON recovery.
+- Current save scope is completed IDs + last selected ID only. It does not save an in-progress board, score, stars, cloud data, or settings.
+- Atomic replacement backup rotation is covered by regression tests; CI #711/#712 passed.
+- No local editor, APK, or physical-device test is claimed. PR #9 remains Draft and unmerged.
+
+
+### KT-011 — first-session guided expedition (2026-11-05)
+- Added a three-step, context-sensitive onboarding sequence to the first field: deploy the amber squad, collect the amber seed, and return it to the nest.
+- The guide is shown in the existing colony-log panel, so it does not block the board or intercept ordinary gameplay. A visible Skip control lets experienced players dismiss it.
+- Tutorial completion is stored by ProgressStore in the existing schema-v1 save as an optional boolean. Older schema-v1 saves without this field remain compatible; no save migration or level-ID change was needed.
+- Added persistence tests for initial tutorial state, completion across reload, and compatibility with older saves. CI #718/#719 passed ProgressStore tests; CI #720/#721 passed full import, all deterministic/core/campaign/catalog/progress/audit suites, and headless main-scene launch on 8bdce10ae0e591413a35e6a16af25c3929ae8d4a.
+- Added `tests/test_onboarding_contract.gd` and a CI step that locks the tutorial's dependency on level 001: nest `(0,2)`, one deployment slot, amber one-capacity squad, and amber seed `(4,2)`. An initial coordinate assertion was corrected to compare integer components explicitly; CI #728 passed and logged `First-session onboarding contract tests passed.`
+- Tutorial is currently limited to level 001, whose authored objective is a single amber expedition. It does not yet teach multi-squad coordination, capacity-two/three planning, or route choice.
+- No Godot Editor visual QA, APK export, physical-device touch QA, or public web build is claimed. PR #9 remains Draft and unmerged.
+
+**Current KT-011 checkpoint:** first-session tutorial and persistence tests pass CI. Next: inspect the full 100-level mobile UI in Godot Editor/device when an execution environment is available; then design a broader, optional interactive guide for multi-squad and capacity mechanics based on actual usability findings. Do not merge to main without explicit owner approval.
+
+
+### KT-011.2 — responsive portrait layout foundation (2026-11-05)
+- Replaced the fixed-height letterbox assumption with a shared viewport transform; extra portrait height is consumed progressively by the lower HUD sections while the board keeps uniform cell proportions.
+- Enlarged squad cards, level buttons, previous/next controls, Retry, and tutorial Skip hit areas to at least 44 physical pixels in both dimensions at the 360×800 compact reference scale.
+- Moved Retry into the status panel; it is mutually exclusive with the tutorial Skip control.
+- Added responsive transform and touch-target contract tests for five representative portrait sizes. CI #743 passed all project suites, campaign audit, and headless main-scene launch.
+- CI #744 passed the checkpoint-document update. CI #745 is validating this roadmap/checkpoint append.
+- This is geometry-level automated verification only. No Godot Editor screenshot, Android export, or physical-device test is claimed. PR #9 remains Draft and unmerged.
+
+
+
+### KT-011.2 follow-up — four-squad portrait fit (2026-11-05)
+- Inspection of level 100 identified four squad cards; the former 196 px single-row layout exceeded the 720 px canvas.
+- Added a compact four-squad row (156 px cards, 8 px gaps, 648 px total) and shorter status/load labels for this case. Slots, squad cards, board, status panel, and level picker now all consume vertical expansion at their intended staggered positions.
+- CI #753/#754 passed Godot 4.7.2 import, all core and campaign suites, the responsive layout contract, campaign audit, and headless main-scene launch on `d06fd323a543150ae4254497b2b596a6141fa666`.
+- Remaining: rendered Godot Editor review, safe-area inspection, Android export, and real-device touch/performance QA. PR #9 remains Draft and unmerged.
+
+
+### KT-011.2 follow-up — extra-narrow phone hit targets (2026-11-05)
+- Added a 320×568 test profile. At this scale, the level picker switches to four 100×100 controls per page; standard compact devices retain five 88×88 controls.
+- Squad cards and Retry/Skip action areas now use 100 logical-pixel height, maintaining the 44 physical-pixel minimum at the 320 px reference scale.
+- Contract tests assert the 320×568 transform, page density, and touch-target dimensions. This is not a substitute for rendered or physical-device QA.
+
+
+### KT-011.3 — extra-narrow mobile contract passed (2026-11-05)
+- Code checkpoint `529a418da35b4b388e65fc8745b3ee8e1b047ad6`; CI #759 passed all project suites and headless main-scene launch.
+- 320×568 phones use four 100×100 level/page controls; standard compact phones keep five 88×88 controls. Both layouts fit the 720 px design width.
+- Squad cards and Retry/Skip hit areas are 100 logical pixels high. This proves geometry constraints only, not rendered visual quality or device input behavior.
+- Next: Godot Editor rendered review, then Android export and physical-device touch/safe-area QA. PR #9 remains Draft; main remains untouched.
+
+
+### KT-011.4 — compact-phone typography follow-up (2026-11-05)
+- Static UI audit found that the uniform canvas transform reduced 12 px labels to about 5.3 physical px at 320×568, despite the hit-area geometry passing.
+- Added a shared typography helper that preserves an 8.5 physical-pixel minimum for HUD labels while retaining authored sizes on the 720×1280 reference viewport.
+- Applied the helper consistently to all 26 `draw_string` calls in the gameplay screen, including board resource marks.
+- Added responsive contract assertions for 320×568, 360×800, and the reference viewport.
+- This is a code-level typography correction, not a rendered visual sign-off. CI #770 passed on `0292a5fcd0179d4729e0f90c5ac139666969ed16`; Godot 4.7.2 import, contextual guidance, responsive typography/layout contracts, campaign audit, and headless main-scene launch passed. Godot Editor screenshots, safe-area review, Android export, and physical-device QA remain outstanding.
+
+
+### KT-011.5 — narrow-screen HUD spacing audit (2026-11-05)
+- Follow-up geometry review found two text collisions amplified by the compact-phone typography correction: the board heading sat over the board frame, and the decorative footer could overlap the enlarged level controls on 320×568.
+- Moved the board-heading baseline relative to the actual board frame and hid the nonessential footer below the 0.48 layout scale threshold. Standard compact phones retain the footer.
+- Added responsive contract assertions for the footer visibility threshold. The narrow-phone layout retains four 100×100 level/page controls within the 720 px design width.
+- CI #777 passed on code checkpoint `b21231f4e5710ac947e9025e59f8bc670d80f8e4`: Godot 4.7.2 import, all core/campaign/progress/onboarding/guidance suites, responsive layout and typography contracts, campaign audit, and headless main-scene launch.
+- This remains code/contract verification, not rendered visual sign-off. Godot Editor screenshot review, safe-area inspection, Android export, and physical-device QA remain outstanding.
+
+
+### KT-011.6 — mobile safe-area integration (2026-11-05)
+- Added a shared safe-viewport calculation using Godot DisplayServer's display safe-area rectangle and physical screen dimensions on Android/iOS only.
+- The gameplay drawing transform and inverse tap-coordinate transform now share the same safe-area offset and scale, keeping HUD controls away from camera cutouts and system gesture zones.
+- Added headless contract cases for top/bottom and side insets, invalid platform data fallback, clipping to screen bounds, and safe-area-adjusted touch targets.
+- Dynamic level controls, squad cards, and status action hit areas preserve the 44 physical-pixel minimum after safe-area scaling; four level buttons and paging arrows still fit the 720 px design width.
+- CI #790 passed on documentation checkpoint `9b3bc79ca1b5ccfefc53ba0712c829fa6091c286`: Godot 4.7.2 import, all core/campaign/progress/onboarding/guidance suites, safe-area and responsive layout contracts, campaign audit, and headless main-scene launch. No actual Android/iOS device, exported APK, screenshot capture, or visual sign-off is claimed. PR #9 remains Draft; main is untouched.
+
+
+### KT-011.7 — rendered portrait QA pipeline and first visual fixes (2026-11-05)
+- Added a real-render screenshot harness using offscreen Godot SubViewports and Xvfb/software OpenGL in GitHub Actions. The pipeline captures 320×568, 360×800, 390×844, 412×915, and 720×1280 frames and uploads a 14-day artifact.
+- Reviewed the first rendered frames. Found and fixed clipped right-aligned level/resource counters, a footer text box positioned one full viewport too far right, and a first-tutorial instruction that was too long for the narrowest viewport.
+- The narrow-phone tutorial now uses concise contextual instructions; the longer copy remains on larger screens. Resource count now uses singular/plural wording correctly.
+- CI #794 and #795 passed the screenshot pipeline and full Godot validation. The #795 visual artifact was manually inspected at all five resolutions; the initial tutorial layout, board, squad card, status panel, and level selector remain within the captured frame.
+- Expanded the screenshot harness to include level 100 at 320×568 and 360×800 so the four-squad/finale layout is reviewed separately. The first expanded frames exposed three deployment-slot cards overflowing the design width and a long finale objective clipping on compact phones; slot widths now adapt to the number of slots and the narrow-screen objective uses concise copy. CI #800 passed, and the corrected level-100 frames were manually reviewed at both sizes: all three slots, four squad cards, board, status panel, and selected level 100 fit within the viewport.
+- Screenshots are software-rendered desktop viewport captures, not device screenshots. Android/iOS safe-area behavior and real touch input still require exported builds and physical-device QA. PR #9 remains Draft; main untouched.

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "meadow_014",
+  "title": "Capacity Choice",
+  "objective": "Use one full amber load and two teal trips.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    4,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_carriers",
+      "color": "teal",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 4,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "obstacle"
+    }
+  ]
+}

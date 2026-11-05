@@ -31,7 +31,7 @@ Separate the project into clear layers:
 - **Level data:** deterministic board layouts, objectives, squad queues, solution metadata.
 - **Presentation:** grid rendering, ant sprites, trails, particles, sound, camera.
 - **UI:** HUD, slots, pause, retry, level complete.
-- **Persistence:** local progress and settings, versioned save schema.
+- **Persistence:** `ProgressStore` stores completed level IDs, last selected level, and first-session tutorial completion in a versioned local save. Settings and in-progress board snapshots remain future scope.
 
 The simulation must not depend on animation completion or frame rate. Animations visualize already-determined state transitions.
 
@@ -44,9 +44,19 @@ The simulation must not depend on animation completion or frame rate. Animations
 - `LevelValidator`: checks level data and solvability metadata.
 - `LevelLoader`: loads versioned local level resources.
 - `GamePresenter`: translates state changes into visual effects.
-- `SaveService`: local progress/settings with schema version.
+- `ProgressStore`: local campaign progress with a versioned schema and stable level IDs.
 
 Names may change as the implementation takes shape; boundaries should remain clear.
+
+### Current local progress contract
+
+- File: `user://campaign_progress.json`; schema version 1.
+- Stores completed level IDs and the last selected level ID. It never stores array indices, so inserting or reorganizing chapter packs does not redirect a saved player to the wrong level.
+- Writes use a temporary file and rotate the previous valid save to a backup. Malformed JSON is preserved in a `.corrupt` sidecar before recovery; an unsupported future schema is not overwritten.
+- IDs removed from the current campaign are ignored safely. A missing or removed last-selected ID falls back to the first current level.
+- The level picker displays completion marks and a cleared-level count. All 100 levels remain directly selectable; sequential unlock gating has deliberately not been introduced.
+- Current scope does not include in-progress board snapshots, scores, stars, cloud sync, or settings. On restart, the last selected level reloads from its initial board state.
+
 
 ## 5. Determinism and testing
 
