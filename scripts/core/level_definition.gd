@@ -5,6 +5,7 @@ extends RefCounted
 const CURRENT_SCHEMA_VERSION := 1
 const MAX_BOARD_DIMENSION := 32
 const VALID_TILE_TYPES := ["empty", "resource", "obstacle", "nest"]
+const VALID_RESOURCE_COLORS := ["amber", "teal", "coral", "violet"]
 
 
 static func validate(data: Dictionary) -> Dictionary:
@@ -68,7 +69,11 @@ static func validate(data: Dictionary) -> Dictionary:
 				errors.append("tiles[%d] has an unsupported type." % index)
 				continue
 			if tile_type == "resource":
-				resource_count += 1
+				var resource_color: Variant = tile.get("color")
+				if typeof(resource_color) != TYPE_STRING or not VALID_RESOURCE_COLORS.has(resource_color):
+					errors.append("tiles[%d] resource color must be one of: %s." % [index, ", ".join(VALID_RESOURCE_COLORS)])
+				else:
+					resource_count += 1
 			elif tile_type == "obstacle":
 				obstacle_cells[cell] = true
 
