@@ -121,6 +121,7 @@ func _initialize() -> void:
 	_test_root_labyrinth_route_shapes()
 	_test_colony_heart_finale()
 	_test_meadow_route_variants()
+	_test_amber_orchard_route_variants()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -399,3 +400,33 @@ func _test_meadow_route_variants() -> void:
 			var upper_far_route: Array[Vector2i] = four_colors_board.find_path(four_colors_board.start, Vector2i(5, 0))
 			_check(not upper_far_route.is_empty(), "The upper far seed should remain reachable through the lower passage")
 			_check(upper_far_route.has(Vector2i(2, 4)), "The upper far seed should require the lower gate after the upper entrance is blocked")
+
+
+
+func _test_amber_orchard_route_variants() -> void:
+	var bough_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_078.json"))
+	if typeof(bough_data) == TYPE_DICTIONARY:
+		var bough_board = BoardModelScript.new()
+		var bough_loaded: Dictionary = bough_board.load_level(bough_data)
+		_check(bough_loaded["valid"], "The Four Hidden Boughs should load for capacity-route test")
+		if bough_loaded["valid"]:
+			var amber_cells: Array[Vector2i] = []
+			for cell in bough_board.get_resource_cells():
+				if bough_board.resource_color_at(cell) == "amber":
+					amber_cells.append(cell)
+			_check(amber_cells.size() == 2, "The Four Hidden Boughs should give amber a paired harvest")
+			if amber_cells.size() == 2:
+				var amber_route: Array[Vector2i] = bough_board.find_path(amber_cells[0], amber_cells[1])
+				_check(amber_route.has(Vector2i(3, 0)), "The heavy amber carrier should cross the upper corridor between its two boughs")
+
+	var sun_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_083.json"))
+	if typeof(sun_data) == TYPE_DICTIONARY:
+		var sun_board = BoardModelScript.new()
+		var sun_loaded: Dictionary = sun_board.load_level(sun_data)
+		_check(sun_loaded["valid"], "The Hidden Sun should load for central-lane test")
+		if sun_loaded["valid"]:
+			_check(sun_board.resource_color_at(Vector2i(3, 2)) == "coral", "The Hidden Sun coral seed should sit in the central lane")
+
+	var compass_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_084.json"))
+	if typeof(compass_data) == TYPE_DICTIONARY:
+		_check(int(compass_data["deployment_slots"]) == 1, "The Compass Branches should enforce its single-slot finale variant")
