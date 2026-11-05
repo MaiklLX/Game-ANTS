@@ -11,7 +11,7 @@ func _initialize() -> void:
 	_check(result["valid"], "root manifest and chapter pack should load: %s" % str(result["errors"]))
 	if result["valid"]:
 		var levels: Array = result["levels"]
-		_check(levels.size() == 50, "meadow pack should expose all fifty authored levels across both chapters")
+		_check(levels.size() == 55, "meadow pack should expose all fifty-five authored levels across both chapters")
 		_check(levels[0]["id"] == "meadow_001", "first manifest level should remain first")
 		_check(levels[29]["id"] == "meadow_030", "thirtieth manifest level should remain last")
 		_check(levels[0]["chapter_id"] == "meadow", "level should retain its chapter identity")
@@ -19,8 +19,8 @@ func _initialize() -> void:
 
 		_check(levels[30]["id"] == "root_031", "second chapter should follow Meadow without reordering")
 		_check(levels[30]["chapter_id"] == "root_labyrinth", "second chapter should retain its chapter identity")
-		_check(levels[49]["id"] == "root_050", "twentieth Root Labyrinth level should remain last")
-		_check(levels[49]["global_index"] == 49, "second chapter levels should keep stable flattened indices")
+		_check(levels[54]["id"] == "root_055", "twenty-fifth Root Labyrinth level should remain last")
+		_check(levels[54]["global_index"] == 54, "second chapter levels should keep stable flattened indices")
 
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://campaign/campaign_manifest.json"))
 	var duplicate_pack: Dictionary = manifest.duplicate(true)
