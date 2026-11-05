@@ -39,6 +39,11 @@ Use stable IDs; never recycle a released level ID. Add new chapters as separate 
 - [level_013.json](../levels/level_013.json) — four resource colors placed around a blocked center.
 - [level_014.json](../levels/level_014.json) — compare a full two-seed load with two single-seed trips.
 - [level_015.json](../levels/level_015.json) — four squads competing for three deployment slots.
+- [level_016.json](../levels/level_016.json) — a long lower crossing around a bramble wall.
+- [level_017.json](../levels/level_017.json) — three colors and intersecting lanes around a central clearing.
+- [level_018.json](../levels/level_018.json) — four-color coordination with two active slots.
+- [level_019.json](../levels/level_019.json) — two full-capacity teams on opposite sides of the field.
+- [level_020.json](../levels/level_020.json) — Meadow chapter midpoint mastery puzzle.
 
 ## Fields
 
