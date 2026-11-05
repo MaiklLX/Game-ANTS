@@ -63,16 +63,26 @@ static func levels_per_page(scale: float) -> int:
 	return 4 if scale < 0.48 else 5
 
 
+static func minimum_touch_extent(scale: float, authored_minimum: float = 100.0) -> float:
+	if scale <= 0.0:
+		return authored_minimum
+	return maxf(authored_minimum, ceili(44.0 / scale))
+
+
 static func level_button_size(scale: float) -> float:
-	return 100.0 if scale < 0.48 else 88.0
+	return minimum_touch_extent(scale) if scale < 0.48 else 88.0
 
 
-static func squad_card_height() -> float:
-	return 100.0
+static func squad_card_height(scale: float) -> float:
+	return minimum_touch_extent(scale)
 
 
-static func status_action_height() -> float:
-	return 100.0
+static func status_action_height(scale: float) -> float:
+	return minimum_touch_extent(scale)
+
+
+static func status_action_width(scale: float) -> float:
+	return minimum_touch_extent(scale, 106.0)
 
 
 static func level_controls_width(scale: float) -> float:
