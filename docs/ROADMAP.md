@@ -800,3 +800,11 @@
 - Applied the helper consistently to all 26 `draw_string` calls in the gameplay screen, including board resource marks.
 - Added responsive contract assertions for 320×568, 360×800, and the reference viewport.
 - This is a code-level typography correction, not a rendered visual sign-off. CI #770 passed on `0292a5fcd0179d4729e0f90c5ac139666969ed16`; Godot 4.7.2 import, contextual guidance, responsive typography/layout contracts, campaign audit, and headless main-scene launch passed. Godot Editor screenshots, safe-area review, Android export, and physical-device QA remain outstanding.
+
+
+### KT-011.5 — narrow-screen HUD spacing audit (2026-11-05)
+- Follow-up geometry review found two text collisions amplified by the compact-phone typography correction: the board heading sat over the board frame, and the decorative footer could overlap the enlarged level controls on 320×568.
+- Moved the board-heading baseline relative to the actual board frame and hid the nonessential footer below the 0.48 layout scale threshold. Standard compact phones retain the footer.
+- Added responsive contract assertions for the footer visibility threshold. The narrow-phone layout retains four 100×100 level/page controls within the 720 px design width.
+- CI #777 passed on code checkpoint `b21231f4e5710ac947e9025e59f8bc670d80f8e4`: Godot 4.7.2 import, all core/campaign/progress/onboarding/guidance suites, responsive layout and typography contracts, campaign audit, and headless main-scene launch.
+- This remains code/contract verification, not rendered visual sign-off. Godot Editor screenshot review, safe-area inspection, Android export, and physical-device QA remain outstanding.
