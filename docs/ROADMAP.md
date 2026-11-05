@@ -702,3 +702,12 @@
 - Next batch: Amber Orchard 076–080. Root Labyrinth design revisions remain separate.
 
 - CI #474 also confirms the level 074 route correction; all test suites passed. Documentation-only CI #475 is still running on the same 75-level state.
+
+
+### KT-008.5 — Amber Orchard batch 076–080 (2026-11-05)
+- Added The Bramble Window (076), The Falling Leaves (077), The Four Hidden Boughs (078), The Golden Switchback (079), and The Orchard Crossroads (080).
+- All five use existing schema-v1 mechanics; static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
+- Registered all five in the Amber Orchard pack. Campaign integration tests now include 80 level files; catalogue tests assert 80 entries and stable global index 79.
+- Campaign progress: **80/100 authored; 20 remain**. Amber Orchard: 20/30.
+- CI is pending for this batch. No Editor/device visual QA or APK is claimed.
+- Next: Amber Orchard 081–085. Root Labyrinth design revisions remain separate.
