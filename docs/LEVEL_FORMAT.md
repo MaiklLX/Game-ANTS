@@ -92,3 +92,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_023.json](../levels/level_023.json) — Three Stops: one capacity-three route through a scattered harvest.
 - [level_024.json](../levels/level_024.json) — The Waiting Line: four squads competing for one deployment slot.
 - [level_025.json](../levels/level_025.json) — Forked Harvest: two active slots and a split multi-color harvest.
+- [level_026.json](../levels/level_026.json) — Two-Way Detour: two safe openings through a wall.
+- [level_027.json](../levels/level_027.json) — Capacity Deadline: capacity-two harvest alongside two smaller teams.
+- [level_028.json](../levels/level_028.json) — Four Openings: four-color routing around staggered stonework.
+- [level_029.json](../levels/level_029.json) — The Last Seed Home: full amber load around a lower bend.
+- [level_030.json](../levels/level_030.json) — The Meadow Crown: chapter exam combining capacity, slots, colors, and obstacles.
