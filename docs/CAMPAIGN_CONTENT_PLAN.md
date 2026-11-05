@@ -153,3 +153,13 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 - Do not add unprototyped mechanics merely to make the finale feel different. Version 1.0 should use proven, readable rules.
 - Do not treat 100 authored levels as sufficient by themselves: release also requires campaign variety, difficulty/balance review, onboarding, save/progress reliability, portrait mobile QA, and performance checks.
 - Chapters beyond level 100 are post-launch expansion content; the 300-level vision is not cancelled.
+
+
+### Amber Orchard production batch 066–070
+- 066 The Fork of Gold: one central crossing connects a two-seed amber bough and a separate teal harvest.
+- 067 The Hollow Canopy: a central heartwood island creates upper and lower loops for two full-load carriers.
+- 068 Three Golden Steps: a capacity-three amber squad clears a staggered three-seed branch in one expedition.
+- 069 The Four Boughs: four colors sit on opposite sides of a divided trunk, with only two deployment slots.
+- 070 The Orchard Weave: a capacity-three amber cluster and paired teal harvest share the field with two single-seed scouts.
+- All five levels use schema-v1 mechanics only. Each resource is reachable under the current board rules; campaign integration tests cover deterministic collection and return.
+- Amber Orchard progress: 10/30. Total catalogue: 70/100 for version 1.0; 30 levels remain.
