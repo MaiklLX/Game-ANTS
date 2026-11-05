@@ -727,5 +727,5 @@
 - All five use existing schema-v1 mechanics. Static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
 - Registered levels 086–090 in the Amber Orchard pack. Campaign integration tests now include 90 level files; catalogue tests assert 90 entries and stable global index 89.
 - **Amber Orchard complete: 30/30. Version 1.0 campaign progress: 90/100; 10 levels remain.**
-- CI for the 90-level batch is pending. Previous 85-level code and documentation checks passed.
+- CI #529 passed on the 90-level code checkpoint `5fdaab407b2f7c7ccbafac307ed30947708c91a2`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043542765. All 90 campaign levels, catalogue validation, and headless main-scene launch passed. CI #533 and #534 also passed on the latest documentation head `588d7818f1e633106914f1b29f283cc96163e038`. Previous 85-level code and documentation checks passed.
 - Next: design and implement the compact v1 finale 091–100. Do not introduce new mechanics without a prototype.
