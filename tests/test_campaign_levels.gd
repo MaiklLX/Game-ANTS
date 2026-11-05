@@ -328,3 +328,14 @@ func _test_root_labyrinth_route_shapes() -> void:
 				var branch_path: Array[Vector2i] = split_board.find_path(split_board.start, target)
 				_check(not branch_path.is_empty(), "The Split Crossing far branches should both be reachable")
 				_check(branch_path.has(Vector2i(2, 2)), "Every Split Crossing far route should pass through the single shared gate")
+
+	var turning_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_053.json"))
+	if typeof(turning_data) == TYPE_DICTIONARY:
+		var turning_board = BoardModelScript.new()
+		var turning_loaded: Dictionary = turning_board.load_level(turning_data)
+		_check(turning_loaded["valid"], "The Turning Fork should load for intermediate-pickup test")
+		if turning_loaded["valid"]:
+			var intermediate_path: Array[Vector2i] = turning_board.find_path(turning_board.start, Vector2i(3, 4))
+			var far_path: Array[Vector2i] = turning_board.find_path(turning_board.start, Vector2i(5, 0))
+			_check(not intermediate_path.is_empty() and intermediate_path.has(Vector2i(2, 4)), "The Turning Fork violet cache should be reached through the lower first gate")
+			_check(not far_path.is_empty() and far_path.has(Vector2i(4, 0)), "The Turning Fork far harvest should require the upper second gate")
