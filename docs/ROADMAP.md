@@ -739,3 +739,14 @@
 - **Version 1.0 content target reached: 100/100.** The 300+ level long-term vision remains unchanged.
 - CI #572 passed on the corrected 100-level code head `691fc269ac1832c3a2073e32d62ad3a2ec17d5c9`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42044346311. Godot 4.7.2 import, deterministic core/schema/colony/turn suites, all 100 campaign level integration tests, 100-entry catalogue checks, and headless main-scene launch passed. Reaching 100 authored levels does not equal release sign-off; variety/balance, onboarding, save/progress, portrait mobile QA, performance, and device testing remain open.
 - Next phase: audit chapter-to-chapter difficulty and map variety, prioritize the Root Labyrinth duplication findings, then perform visual/device QA and release-readiness work.
+
+
+### KT-010 — Local campaign progress persistence (2026-11-05)
+- Added `ProgressStore` with schema-versioned local data at `user://campaign_progress.json`.
+- Saves completed levels and the last selected level by stable campaign ID, never by array index.
+- Uses a temporary file and backup rotation for replacement. Malformed saves are preserved in a `.corrupt` sidecar; unsupported future schemas are protected from overwrite; removed level IDs are filtered safely.
+- Game screen resumes the last selected level, shows a cleared-level count, and marks completed level buttons. All levels remain selectable; sequential unlock gating was not introduced.
+- Added `tests/test_progress_store.gd` and a dedicated CI step. CI #706/#707 verified the persistence test integration; #708/#709/#710 passed after explicit GDScript typing and quiet corrupt-JSON recovery.
+- Current save scope is completed IDs + last selected ID only. It does not save an in-progress board, score, stars, cloud data, or settings.
+- A further regression now checks that atomic replacement preserves a valid previous-save backup; CI for this final test addition is pending.
+- No local editor, APK, or physical-device test is claimed. PR #9 remains Draft and unmerged.
