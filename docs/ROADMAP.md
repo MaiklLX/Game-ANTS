@@ -452,7 +452,7 @@
 
 ### KT-005.5 — three-color slot-pressure puzzle (2026-11-05)
 **Branch:** `feat/kt-005-first-playable-levels`
-**Status:** Implementation committed; CI verification pending.
+**Status:** Implementation committed; CI PASS on PR run #182.
 
 - Added `meadow_005`, "The Busy Nest": three squad colors (amber, teal, coral), two deployment slots, and four seeds.
 - Amber has capacity two and can bring home both upper seeds in one trip; teal and coral each have a single matching seed.
@@ -483,3 +483,10 @@
 - No merge to `main`; PR #8 remains a dependency. Editor/device visual QA remains outstanding.
 
 **Next:** verify catalog CI, then author and test the first complete 30-level chapter in small reviewed batches.
+
+### KT-006.1 — verification and 300-level production plan
+- CI run **#182** passed on catalogue checkpoint `c4135cb162de9ce52b31cfdb7014528fa12f77d7`: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42024460361).
+- Godot 4.7.2 import, all five existing test suites, new CampaignCatalog tests, and headless main-scene launch passed.
+- Added `docs/CAMPAIGN_CONTENT_PLAN.md`: 10 chapters × 30 levels, chapter pacing, quality gate, append-only content update rules, and a staged production plan.
+- Current content remains five playable levels. The first goal is to author and verify the complete 30-level Meadow chapter in reviewed batches.
+- PR #9 remains Draft and targets PR #8's feature branch; neither PR is merged to `main`.
