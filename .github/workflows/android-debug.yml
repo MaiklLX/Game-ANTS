@@ -26,6 +26,9 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # The legacy "tools" package is no longer published by Google.
+          packages: platform-tools
 
       - name: Install Android SDK packages
         run: |
@@ -55,9 +58,6 @@ jobs:
         run: godot --headless --editor --path . --quit
 
       - name: Export debug APK
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
         run: |
           mkdir -p build/android
           godot --headless --path . --export-debug "Android Debug" build/android/Game-ANTS-debug.apk
