@@ -65,7 +65,7 @@ func deploy_squad(squad_id: String) -> Dictionary:
 	return _failure("No deployment slot is available.")
 
 
-func collect_resource(squad_id: String, cell: Vector2i, board: BoardModel) -> Dictionary:
+func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector2i, board: BoardModel) -> Dictionary:
 	if not _squads.has(squad_id):
 		return _failure("Unknown squad: %s." % squad_id)
 
@@ -74,12 +74,14 @@ func collect_resource(squad_id: String, cell: Vector2i, board: BoardModel) -> Di
 		return _failure("Squad must be deployed before collecting.")
 	if squad["carried"] >= squad["capacity"]:
 		return _failure("Squad carrying capacity is full.")
-	if not board.has_resource(cell):
+	if not board.has_resource(target_cell):
 		return _failure("No resource is available at the target cell.")
-	if board.resource_color_at(cell) != squad["color"]:
+	if board.resource_color_at(target_cell) != squad["color"]:
 		return _failure("Resource color does not match the squad.")
+	if board.find_path(from_cell, target_cell).is_empty():
+		return _failure("Target resource is not reachable.")
 
-	if not board.collect_resource(cell, squad["color"]):
+	if not board.collect_resource(target_cell, squad["color"]):
 		return _failure("Resource could not be collected.")
 
 	squad["carried"] += 1
