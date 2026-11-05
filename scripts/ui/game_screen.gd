@@ -150,13 +150,13 @@ func _contextual_hint() -> String:
 
 
 func _draw_slots(font: Font) -> void:
-	draw_string(font, Vector2(44, 258), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
+	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
 	_slot_rects.clear()
 	var slot_count: int = _colony.slot_capacity
 	var slot_width := 290.0 if slot_count == 1 else 290.0
 	var start_x := (720.0 - slot_count * slot_width - (slot_count - 1) * 14.0) * 0.5
 	for index in range(slot_count):
-		var rect := Rect2(start_x + index * (slot_width + 14.0), 276, slot_width, 72)
+		var rect := Rect2(start_x + index * (slot_width + 14.0), 276 + _layout_extra * 0.08, slot_width, 80)
 		_slot_rects.append(rect)
 		draw_rect(rect, COLOR_PANEL_LIGHT if _slot_is_occupied(index) else COLOR_PANEL)
 		draw_rect(Rect2(rect.position, Vector2(4, rect.size.y)), COLOR_GOLD if _slot_is_occupied(index) else COLOR_GRID)
@@ -176,7 +176,7 @@ func _draw_squads(font: Font) -> void:
 	for index in range(ids.size()):
 		var squad_id: String = ids[index]
 		var squad: Dictionary = _colony.get_squad(squad_id)
-		var rect := Rect2(start_x + index * (card_width + gap), 410, card_width, 92)
+		var rect := Rect2(start_x + index * (card_width + gap), 410 + _layout_extra * 0.18, card_width, 96)
 		_squad_rects[squad_id] = rect
 		var selected := squad_id == _selected_squad_id
 		draw_rect(rect, COLOR_PANEL_LIGHT if selected else COLOR_PANEL)
@@ -189,7 +189,9 @@ func _draw_squads(font: Font) -> void:
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
 		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d carried" % [carried, capacity]
-		var state_label := "FIELD" if squad["deployed"] else "READY" if ids.size() >= 4 else state
+		var state_label := state
+		if ids.size() >= 4:
+			state_label = "FIELD" if squad["deployed"] else "READY"
 		draw_string(font, rect.position + Vector2(18, 68), state_label + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, 12, COLOR_MUTED)
 		var meter := Rect2(rect.position + Vector2(18, 79), Vector2(card_width - 36, 4))
 		draw_rect(meter, Color("#17231d"))
