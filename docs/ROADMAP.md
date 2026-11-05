@@ -686,9 +686,17 @@
 - The batch varies central-crossing, heartwood-island, staggered-branch, divided-trunk, and multi-color slot-pressure layouts while staying within schema v1.
 - Registered all five levels in the Amber Orchard pack; campaign level tests include all 70 level files and catalogue tests assert stable order through global index 69.
 - Amber Orchard progress: 10/30. Version 1.0 campaign progress: 70/100; 30 levels remain.
-- Automated CI is pending for the 70-level batch. No editor/device visual QA or APK is claimed.
+- CI #451 passed for the 70-level checkpoint; the follow-up batch 071–075 is now registered and awaits CI. No editor/device visual QA or APK is claimed.
 - Root Labyrinth design revisions remain a separate open task. PR #9 remains Draft, stacked, and unmerged.
 
 - Follow-up after KT-008.2: Amber Orchard batch 066–070 is now authored and registered. Current campaign content is 70/100; 30 levels remain. CI run #444 passed on corrected code head `cb0033dce2644d3e7623f1d606f5f54cef32fc14`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42040921577. Godot 4.7.2 import, all core/schema/colony/turn tests, all 70 campaign level tests, and campaign catalogue tests passed. Documentation-only CI #449 is in progress on the latest head.
 
 - Latest verification: CI run #451 passed on current branch head b87ae97d35604aebd113fce22ad5d265a08467c0: https://github.com/MaiklLX/Game-ANTS/actions/runs/42041100657. Godot 4.7.2 import, every deterministic/core/schema/colony/turn suite, all 70 campaign levels, campaign catalogue checks, and headless main-scene launch passed.
+
+
+### KT-008.4 — Amber Orchard batch 071–075 (2026-11-05)
+- Added The Split Crown (071), The Sunken Branch (072), The Amber Spiral (073), The Crosswind Grove (074), and The Golden Canopy Trial (075).
+- All five levels use existing schema-v1 mechanics. Added to the Amber Orchard pack; deterministic campaign test list now covers 75 level files; catalogue assertions verify 75 entries and stable final index 74.
+- Campaign progress: **75/100 authored; 25 remain**. Amber Orchard: 15/30.
+- CI for the 75-level branch head is pending. No editor/device visual QA or APK is claimed.
+- Next batch: Amber Orchard 076–080. Root Labyrinth design revisions remain separate.
