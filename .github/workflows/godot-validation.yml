@@ -1,0 +1,45 @@
+name: Godot project validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "foundation/**"
+  push:
+    branches:
+      - "feat/**"
+      - "foundation/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Import and launch (Godot 4.7.2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download Godot 4.7.2 stable
+        run: |
+          curl --fail --location --retry 3 \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
+            --output godot.zip
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          sudo ln -sf "$PWD/godot-bin/Godot_v4.7.2-stable_linux.x86_64" /usr/local/bin/godot
+
+      - name: Verify engine version
+        run: godot --version
+
+      - name: Import and parse project
+        run: godot --headless --editor --path . --quit
+
+      - name: Run deterministic core tests
+        run: godot --headless --path . --script res://tests/test_board_model.gd
+
+      - name: Launch main scene headlessly
+        run: godot --headless --path . --quit
