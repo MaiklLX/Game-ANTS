@@ -6,7 +6,7 @@ This audit is a repeatable screening tool for the 100-level launch campaign. It 
 
 A matching signature is a review signal, not an automatic design defect. Different resource colors, squad capacities, deployment-slot limits, route order, and intended teaching goals can make similar geometry play differently. Conversely, different geometry can still produce the same decision. Automated solvability remains necessary but does not prove puzzle quality, strategic variety, difficulty, or phone readability.
 
-The audit runs in Godot CI through `tests/audit_campaign_design.gd`. It uses the production board pathfinder for shortest nest-to-resource route measurements.
+The audit runs in Godot CI through `tests/audit_campaign_design.gd`. It uses the production board pathfinder for shortest nest-to-resource route measurements and reproduces the campaign test's deterministic capacity-based expedition sequence.
 
 ## First 100-level baseline
 
@@ -35,6 +35,35 @@ The audit now measures the shortest path from the nest to each resource independ
 The route length excludes the starting cell. Extra detour steps are the shortest route length minus Manhattan distance. Averages are weighted by individual resource samples, not by level.
 
 This snapshot confirms that Root Labyrinth has the longest average and maximum individual resource routes. The final 10-level chapter is more compact by this metric, despite carrying more resources on average and using a slightly higher average slot count. That is a useful pacing question for the next review, not proof that the finale is too easy: this metric does not model sequential pickup routes, returns to the nest, squad capacity, simultaneous deployment, or player choice among alternatives.
+
+### Deterministic test-solver workload
+
+A second measurement follows the same deterministic per-color collection order used by the campaign integration test: each squad collects up to its capacity, then returns to the nest before its next trip. It sums movement steps and trip count across squads. It is a reproducible workload proxy, not an optimal strategy or a direct player-difficulty score.
+
+| Chapter | Avg. movement steps per level | Avg. trips per level | Highest level workload |
+|---|---:|---:|---:|
+| The Living Meadow | 33.20 | 2.80 | 48 |
+| The Root Labyrinth | 42.47 | 3.00 | 70 |
+| The Amber Orchard | 34.80 | 3.03 | 56 |
+| The Colony Heart: First Dawn | 34.40 | 3.10 | 48 |
+
+The ten finale levels currently score:
+
+| Level | Steps | Trips |
+|---|---:|---:|
+| 091 | 20 | 2 |
+| 092 | 24 | 2 |
+| 093 | 36 | 3 |
+| 094 | 40 | 4 |
+| 095 | 28 | 2 |
+| 096 | 34 | 3 |
+| 097 | 30 | 3 |
+| 098 | 48 | 4 |
+| 099 | 40 | 4 |
+| 100 | 44 | 4 |
+
+The current top workload candidates are Root Labyrinth 056 (70), 035 (64), 053 and 057 (62 each), 055 and Orchard 065 (56 each), and Orchard 085 (54). The finale's heaviest level is 098 (48), slightly above 100 (44). This does not prove level 100 is too easy, but it makes the finale's climax and decision density a clear human-review target.
+
 
 
 ## Initial repeated-geometry findings
