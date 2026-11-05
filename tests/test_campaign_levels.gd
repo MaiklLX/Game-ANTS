@@ -284,8 +284,13 @@ func _test_root_labyrinth_route_shapes() -> void:
 	if typeof(crown_data) == TYPE_DICTIONARY:
 		var crown_board = BoardModelScript.new()
 		var crown_loaded: Dictionary = crown_board.load_level(crown_data)
-		_check(crown_loaded["valid"], "The Hollow Crown should load for branch test")
+		_check(crown_loaded["valid"], "The Hollow Crown should load for its single-notch route test")
+		_check(int(crown_data["deployment_slots"]) == 2, "The Hollow Crown should limit four crews to two field slots")
 		if crown_loaded["valid"]:
+			var hollow_cache: Array[Vector2i] = crown_board.find_path(crown_board.start, Vector2i(3, 2))
+			_check(not hollow_cache.is_empty(), "Hollow Crown's central coral cache should be reachable")
+			_check(hollow_cache.has(Vector2i(3, 1)), "Hollow Crown's central cache should be entered through the upper notch")
+			_check(crown_board.resource_color_at(Vector2i(3, 2)) == "coral", "Hollow Crown's single-entry pocket should contain the coral cache")
 			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 0)).is_empty(), "Hollow Crown upper corridor should be reachable")
 			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 4)).is_empty(), "Hollow Crown lower corridor should be reachable")
 
