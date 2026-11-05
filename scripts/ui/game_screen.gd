@@ -33,6 +33,7 @@ var _level_data: Dictionary = {}
 var _level_index: int = 0
 var _level_page_start: int = 0
 var _campaign_levels: Array[Dictionary] = []
+var _ru_localization: Dictionary = {}
 var _progress_store
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
@@ -65,6 +66,7 @@ var _restart_rect := Rect2(548, 1152, 100, 58)
 
 
 func _ready() -> void:
+	_load_ru_localization()
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
 	var catalog_result: Dictionary = CampaignCatalogScript.load_catalog(CAMPAIGN_MANIFEST_PATH)
@@ -131,8 +133,10 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	draw_string(font, Vector2(560, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 
-	var title := String(_level_data.get("title", "Новое поле"))
-	var objective := _objective_for_display(String(_level_data.get("objective", "")))
+	var level_id := String(_campaign_levels[_level_index].get("id", "")) if not _campaign_levels.is_empty() else ""
+	var translated_level: Dictionary = _ru_localization.get("levels", {}).get(level_id, {})
+	var title := String(translated_level.get("title", _level_data.get("title", "Новое поле")))
+	var objective := _objective_for_display(String(translated_level.get("objective", _level_data.get("objective", ""))))
 	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_TEXT)
 	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_MUTED)
 	var field_hint := _contextual_hint()
@@ -144,26 +148,39 @@ func _draw_header(font: Font) -> void:
 
 
 
+func _load_ru_localization() -> void:
+	var path := "res://localization/ru.json"
+	if not FileAccess.file_exists(path):
+		push_warning("Russian localization file is missing: " + path)
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if typeof(parsed) == TYPE_DICTIONARY:
+		_ru_localization = parsed
+	else:
+		push_warning("Russian localization file is invalid.")
+
+
 func _chapter_title_ru(value: String) -> String:
+	var chapters: Dictionary = _ru_localization.get("chapter_titles", {})
+	return String(chapters.get(value, value))
+
+
+func _color_name_ru(value: String) -> String:
 	match value:
-		"The Living Meadow":
-			return "ЖИВОЙ ЛУГ"
-		"The Root Labyrinth":
-			return "ЛАБИРИНТ КОРНЕЙ"
-		"The Amber Orchard":
-			return "ЯНТАРНЫЙ САД"
-		"The Colony Heart: First Dawn":
-			return "СЕРДЦЕ КОЛОНИИ: ПЕРВЫЙ РАССВЕТ"
-		"CAMPAIGN":
-			return "КАМПАНИЯ"
-	return value
+		"amber":
+			return "ЯНТАРНЫЙ"
+		"teal":
+			return "БИРЮЗОВЫЙ"
+		"coral":
+			return "КОРАЛЛОВЫЙ"
+		"violet":
+			return "ФИОЛЕТОВЫЙ"
+	return value.to_upper()
 
 
 func _objective_for_display(objective: String) -> String:
 	if _ui_scale >= 0.52 or objective.length() <= 56:
 		return objective
-	if objective.begins_with("Eight seeds lie in paired pockets"):
-		return "Eight seeds. Four colors. Near and far pockets."
 	return objective.left(53).strip_edges() + "…"
 
 
@@ -217,7 +234,7 @@ func _draw_squads(font: Font) -> void:
 			draw_rect(Rect2(rect.position, Vector2(card_width, 3)), COLOR_GOLD)
 		var squad_color: Color = _color_for(String(squad["color"]))
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
-		draw_string(font, rect.position + Vector2(54, 34), String(squad["color"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
+		draw_string(font, rect.position + Vector2(54, 34), _color_name_ru(String(squad["color"])), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
 		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
 		var carried := int(squad["несут"])
 		var capacity := int(squad["capacity"])
@@ -471,11 +488,11 @@ func _select_or_deploy(squad_id: String) -> void:
 	_selected_squad_id = squad_id
 	_last_path.clear()
 	if squad["deployed"]:
-		_status = "%s is on the ground. Tap a matching seed or the nest." % squad_id.replace("_", " ")
+		_status = "%s в поле. Выберите семя своего цвета или муравейник." % squad_id.replace("_", " ")
 	else:
 		var result: Dictionary = _colony.deploy_squad(squad_id)
 		if result["valid"]:
-			_status = "%s deployed. Tap a matching seed." % squad_id.replace("_", " ")
+			_status = "%s отправлен. Выберите семя своего цвета." % squad_id.replace("_", " ")
 			if _tutorial_active and squad_id == "amber_workers":
 				_tutorial_step = 1
 		else:
@@ -514,12 +531,12 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 
 func _return_selected_squad() -> void:
 	if _selected_squad_id.is_empty():
-		_status = "Select a deployed squad before returning."
+		_status = "Выберите отряд в поле, чтобы вернуть его домой."
 		queue_redraw()
 		return
 	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
 	if squad.is_empty() or not squad["deployed"]:
-		_status = "No selected squad is on the ground."
+		_status = "Выбранный отряд сейчас не в поле."
 		queue_redraw()
 		return
 	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
@@ -575,7 +592,7 @@ func _on_path_animation_finished(returning: bool) -> void:
 func _finish_squad_return() -> void:
 	var result: Dictionary = _colony.return_squad(_selected_squad_id)
 	if result["valid"]:
-		_status = "%d seed(s) delivered. Deployment slot is free." % result["delivered"]
+		_status = "Доставлено семян: %d. Место для отряда свободно." % result["delivered"]
 		if _tutorial_active and _tutorial_step == 2 and result["delivered"] > 0:
 			_complete_tutorial()
 		_trigger_feedback(_board.start)
@@ -725,7 +742,7 @@ func _slot_occupant(slot_index: int) -> String:
 	for squad_id in _colony.get_squad_ids():
 		var squad: Dictionary = _colony.get_squad(squad_id)
 		if squad["deployed"] and squad["slot_index"] == slot_index:
-			return squad_id.replace("_", " ").to_upper()
+			return _color_name_ru(String(_colony.get_squad(squad_id).get("color", "")))
 	return ""
 
 
