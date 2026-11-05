@@ -20,7 +20,8 @@ func _initialize() -> void:
 
 	var data: Dictionary = parsed
 	_check(String(data.get("id", "")) == "meadow_001", "tutorial must remain attached to stable level meadow_001")
-	_check(Array(data.get("start", [])) == [0, 2], "tutorial nest should remain at the expected starting cell")
+	var start: Array = data.get("start", [])
+	_check(start.size() == 2 and int(start[0]) == 0 and int(start[1]) == 2, "tutorial nest should remain at the expected starting cell")
 	_check(int(data.get("deployment_slots", 0)) == 1, "first tutorial expedition should teach one deployment slot")
 
 	var amber_squad_found := false
