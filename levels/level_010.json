@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "meadow_010",
+  "title": "Quiet Clearing",
+  "objective": "Split the harvest between a violet carrier and an amber scout.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    4,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "violet_carriers",
+      "color": "violet",
+      "capacity": 2
+    },
+    {
+      "id": "amber_scouts",
+      "color": "amber",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 4,
+      "y": 0,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "obstacle"
+    }
+  ]
+}
