@@ -135,8 +135,14 @@ func _draw_squads(font: Font) -> void:
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
 		draw_string(font, rect.position + Vector2(54, 34), String(squad["color"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, squad_color)
 		var state := "ON FIELD" if squad["deployed"] else "READY"
-		var load_text := "%d / %d carried" % [squad["carried"], squad["capacity"]]
+		var carried := int(squad["carried"])
+		var capacity := int(squad["capacity"])
+		var load_text := "%d / %d carried" % [carried, capacity]
 		draw_string(font, rect.position + Vector2(18, 68), state + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, 12, COLOR_MUTED)
+		var meter := Rect2(rect.position + Vector2(18, 79), Vector2(card_width - 36, 4))
+		draw_rect(meter, Color("#17231d"))
+		if carried > 0 and capacity > 0:
+			draw_rect(Rect2(meter.position, Vector2(meter.size.x * float(carried) / float(capacity), meter.size.y)), squad_color)
 
 
 func _draw_board(font: Font) -> void:
@@ -184,6 +190,14 @@ func _draw_board(font: Font) -> void:
 			var ant_position := _position_along_last_path(ant_progress)
 			ant_position.y += float(ant_index - 1) * 8.0
 			_draw_ant(ant_position, _selected_squad_color(), 1.0 - float(ant_index) * 0.06)
+		# Show a carried seed beside the lead worker after pickup and on the return trip.
+		var selected_squad := _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
+		if not selected_squad.is_empty() and int(selected_squad.get("carried", 0)) > 0:
+			var lead_position := _position_along_last_path(clampf(_ant_progress, 0.0, 1.0))
+			var seed_tint := _color_for(String(selected_squad.get("color", "amber")))
+			draw_circle(lead_position + Vector2(19, -15), 7.0, Color("#18231c"))
+			draw_circle(lead_position + Vector2(19, -17), 5.0, seed_tint)
+			draw_line(lead_position + Vector2(21, -21), lead_position + Vector2(25, -26), Color("#9bc88e"), 1.5)
 
 	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
 		var pulse_color := COLOR_GOLD
