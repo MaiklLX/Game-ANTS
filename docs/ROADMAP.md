@@ -762,3 +762,13 @@
 - No Godot Editor visual QA, APK export, physical-device touch QA, or public web build is claimed. PR #9 remains Draft and unmerged.
 
 **Current KT-011 checkpoint:** first-session tutorial and persistence tests pass CI. Next: inspect the full 100-level mobile UI in Godot Editor/device when an execution environment is available; then design a broader, optional interactive guide for multi-squad and capacity mechanics based on actual usability findings. Do not merge to main without explicit owner approval.
+
+
+### KT-011.2 — responsive portrait layout foundation (2026-11-05)
+- Replaced the fixed-height letterbox assumption with a shared viewport transform; extra portrait height is consumed progressively by the lower HUD sections while the board keeps uniform cell proportions.
+- Enlarged squad cards, level buttons, previous/next controls, Retry, and tutorial Skip hit areas to at least 44 physical pixels in both dimensions at the 360×800 compact reference scale.
+- Moved Retry into the status panel; it is mutually exclusive with the tutorial Skip control.
+- Added responsive transform and touch-target contract tests for five representative portrait sizes. CI #743 passed all project suites, campaign audit, and headless main-scene launch.
+- CI #744 passed the checkpoint-document update. CI #745 is validating this roadmap/checkpoint append.
+- This is geometry-level automated verification only. No Godot Editor screenshot, Android export, or physical-device test is claimed. PR #9 remains Draft and unmerged.
+
