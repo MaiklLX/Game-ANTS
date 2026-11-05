@@ -99,40 +99,30 @@ The revised Root Labyrinth maps and final-level redesign have targeted route reg
 
 ### Route-profile similarity groups
 
-The audit's route-profile signature compares deployment slots, the multiset of shortest nest-to-resource distances by color, and each squad's color/capacity. It deliberately ignores obstacle coordinates and route shape. These groups are review prompts, not duplicates:
+The refined route-profile signature compares deployment slots, each resource color's shortest nest-to-resource distance and number of shortest paths, and each squad's color/capacity. It ignores obstacle coordinates and full route shape, so matching groups are review prompts rather than automatic duplicates.
+
+Only two groups remain after adding shortest-path multiplicity:
 
 - Meadow 008 / Root Labyrinth 032 / 047
-- Meadow 016 / 021
-- Root Labyrinth 031 / 051
-- Root Labyrinth 034 / 038 / 043 / 059
-- Root Labyrinth 040 / 050
 - Root Labyrinth 041 / 052
-- Amber Orchard 069 / Colony Heart 094
 
-For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layouts and corridor topologies despite similar resource-distance and squad profiles. They should be judged by the decisions they ask the player to make, not by this signature alone. The Meadow 005/011 and 013/018 route-profile matches were removed by targeted redesigns. The Amber Orchard 078/083/084 variants also no longer share a profile; the remaining orchard match (069/Colony Heart 094) is a deliberate cross-chapter reprise of four-color corner dispatch with different obstacle topology.
+Both groups were compared against the actual JSON maps and path topology:
 
-### Human review of remaining route-profile groups
-
-Reviewed against the current level JSON and obstacle topology on 2026-11-05. These groups share a coarse distance/squad profile, but their board structures are materially different:
-
-| Group | Distinguishing structure | Review |
+| Group | Shared profile | Why the puzzles remain distinct |
 |---|---|---|
-| Meadow 008 / Root 032 / Root 047 | Extra side gate; single two-opening wall; two successive walls | Different crossing count and corridor layout |
-| Meadow 016 / Meadow 021 | Two staggered barriers; one low-only barrier | Deliberate gate-complexity variation |
-| Root 031 / Root 051 | One low gate; offset second barrier that lengthens the upper harvest | Intentional escalation |
-| Root 034 / 038 / 043 / 059 | Staggered interior weave; parallel tunnels; horizontal upper/lower channels; double bend | Four distinct corridor topologies |
-| Root 040 / Root 050 | Central crown corridors; winding twin passages | Related crown theme, different route shape |
-| Root 041 / Root 052 | One shared gate feeding a far-side branch; separate upper/lower entrances | Different bottleneck logic |
-| Orchard 069 / Colony Heart 094 | Cross-shaped central screen; single central vertical gate | Retained as a deliberate cross-chapter four-color dispatch reprise |
+| Meadow 008 / Root 032 / Root 047 | Same three resource positions, colors, squad capacities, two slots, and shortest-path multiplicities | Meadow 008 alternates between two staggered gates; Root 032 has one wall with upper/lower mouths; Root 047 uses two successive aligned walls |
+| Root 041 / Root 052 | Same color-by-color shortest distances and path counts | Root 041 places the coral cache beyond a shared central bottleneck; Root 052 places coral near the nest and sends far harvests through separate upper/lower mouths |
 
-This is a data-level review only. It does not replace visual inspection or player testing. No further map changes are required solely to eliminate these route-profile matches.
+The earlier distance-only groups across Root Labyrinth and Amber Orchard were split by path multiplicity: their route lengths looked alike, but the number of shortest alternatives and therefore the route-choice pressure differed. The remaining two groups are intentional topology variations. **No further map changes are justified by route-profile similarity alone.**
+
+This remains a data-level review. It does not replace Godot Editor visual inspection or player testing.
 
 ## Current status
 
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
 - Audit script: added to CI and expanded with route profiles, route lengths, and deterministic expedition workloads. CI #665 passed the latest Orchard route regressions; CI #672 passed the current full campaign audit and documentation checkpoint.
-- Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Seven route-profile similarity groups remain as review candidates; these are not exact duplicates.
+- Latest audit: **0 repeated board-geometry groups and 0 exact gameplay-signature groups** across all 100 levels. Two route-profile similarity groups remain after shortest-path multiplicity review; both were compared manually and retained as distinct puzzles.
 - The final level 100 now records 64 deterministic movement steps across four trips, placing it at the top of its chapter and tied for second in the campaign. Every far-side resource route must cross the single central gate.
 - Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.14 steps; max 15); the final chapter averages 5.52 (max 11). The final chapter's full deterministic expedition workload averages 36.40 steps/level and peaks at 64. Meadow averages 33.33 steps/level; Amber Orchard averages 35.13 after its route-profile revisions.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
