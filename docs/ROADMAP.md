@@ -665,5 +665,5 @@
 - The batch focuses on load planning and squad specialization using existing schema-v1 capacity, color, slot, obstacle, and deterministic path rules only.
 - Campaign integration tests now include levels 061–065; catalogue assertions expect 65 ordered levels and verify chapter 3 identity and global indices.
 - Root Labyrinth design audit remains open as a separate revision task; no claim of chapter 2 design sign-off or manual visual QA.
-- CI verification for this 65-level checkpoint is pending.
+- CI run #415 passed on corrected code head `2d6e25c2e0320346397da087082007c50bbad920`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42038997667. Godot 4.7.2 import, all deterministic/core/schema/colony/turn tests, all 65 campaign level solutions, catalogue validation, and headless main-scene launch passed.
 - PR #9 remains Draft, stacked on PR #8; no merge to main.
