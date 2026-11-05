@@ -74,3 +74,21 @@ jobs:
 
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
+
+      - name: Install virtual display for rendered mobile QA
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+
+      - name: Capture rendered portrait viewports
+        run: |
+          mkdir -p artifacts/mobile-visual-qa
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a godot --path . --script res://tests/capture_mobile_layout.gd
+
+      - name: Upload rendered mobile QA screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-ants-mobile-visual-qa
+          path: artifacts/mobile-visual-qa/*.png
+          if-no-files-found: error
+          retention-days: 14
