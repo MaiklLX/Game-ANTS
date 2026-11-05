@@ -68,3 +68,9 @@ static func level_controls_width(scale: float) -> float:
 	var count := levels_per_page(scale)
 	var button := level_button_size(scale)
 	return count * button + (count - 1) * 4.0 + button * 2.0 + 16.0
+
+
+static func font_size(base_size: int, scale: float, minimum_physical: float = 8.5) -> int:
+	if scale <= 0.0:
+		return base_size
+	return maxi(base_size, ceili(minimum_physical / scale))
