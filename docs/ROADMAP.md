@@ -68,3 +68,32 @@
 **Checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-001 FOUNDATION. Continue from branch foundation/kt-001-game-direction. GitHub Issues are the only task source. Development is handled directly with ChatGPT and GitHub tools; no DeepSeek Harness or external coding agent. Next: validate Godot 4.x setup and begin KT-002 graybox prototype. Preserve all approved design and agent rules. Never merge to main without owner approval.`
+
+
+### KT-002 — Bootstrap started (2026-11-05)
+**Branch:** `feat/kt-002-godot-bootstrap`  
+**PR:** [#5 — Godot 4.7.2 mobile project bootstrap](https://github.com/MaiklLX/Game-ANTS/pull/5)  
+**Base:** `foundation/kt-001-game-direction` (stacked on open PR #4)
+
+**Completed in the branch**
+- Pinned the project baseline to Godot 4.7.2-stable (Standard); 4.8 is still beta.
+- Added portrait project settings (720 × 1280) and Compatibility renderer.
+- Added a minimal launch placeholder scene.
+- Added local setup and Android export notes.
+- Added a headless GitHub Actions validation workflow.
+- Added ignore rules and starter folder guides.
+
+**Verification status**
+- Files are committed and visible in the GitHub branch.
+- No CI run has been confirmed yet.
+- Godot editor launch, Android export, and physical-device checks remain unverified.
+- No APK or gameplay build exists.
+
+**Next**
+1. Confirm the workflow executes and fix any parse/import failures.
+2. Open the project in Godot 4.7.2 and visually inspect portrait layout.
+3. Once the bootstrap is verified, proceed to the deterministic board model (Issue #2).
+
+**Checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-002 BOOTSTRAP IN PROGRESS. Continue from branch feat/kt-002-godot-bootstrap and draft PR #5, based on foundation/kt-001-game-direction. Godot 4.7.2-stable is pinned. Project settings, portrait placeholder scene, setup guide, folder guides, and headless CI workflow are committed. CI and local/device launch are not yet verified. Keep PR #4 as the foundation dependency. GitHub Issues remain the only task source. No external agents. Never merge to main without owner approval.`
