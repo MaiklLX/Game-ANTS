@@ -435,3 +435,16 @@
 - Added restrained, deterministic grass/ground details to meadow tiles, behind gameplay objects. The details vary by cell and stay low-contrast so seeds, nest, rocks, and route markers remain dominant.
 - No gameplay rules, level data, pathfinding, animation timing, or touch mapping changed.
 - GitHub Actions run **#143** passed on this gameplay commit: Godot 4.7.2 version check, project import, all five test suites, and headless main-scene launch succeeded. Visual editor/device inspection remains outstanding.
+
+
+### KT-005.4 — first concurrent-squad campaign puzzle (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Latest gameplay/UI commit:** `afd74716a8b3e830f4d1e977a9921284300940b4`
+
+- Added `meadow_004`, a four-way campaign step with two resource colors, two simultaneous deployment slots, and a narrow shared passage through a stone barrier.
+- Added the fourth field to the campaign selector and updated the level counter.
+- Reworked level-picker sizing so all four level buttons and Retry are laid out as one centered group without overlap.
+- Added a deterministic integration test that deploys both squads at once, collects their separate matching-color seeds while both slots are occupied, returns both squads, and verifies victory.
+- Updated the level format guide with the new field.
+- CI for the latest KT-005.4 commit is pending confirmation; no pass is claimed yet. Latest confirmed run #147 passed the earlier meadow-texture checkpoint. Editor/device visual QA remains outstanding.
+- PR #8 remains Draft and stacked on `feat/kt-004-squad-rules`; no merge to `main`.
