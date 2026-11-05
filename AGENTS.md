@@ -48,3 +48,13 @@ At each milestone, update the relevant docs with:
 
 ## Communication
 Be concise, factual, and explicit about uncertainty. Never claim that a build, test, deployment, or installation succeeded unless its result was observed.
+
+## DeepSeek Harness security boundary
+- DeepSeek Harness is experimental developer-preview software and has not undergone a security audit.
+- Run it only in a dedicated, isolated Game-ANTS workspace or disposable environment with least privilege.
+- Use a separate GitHub identity with write access limited to `MaiklLX/Game-ANTS`; do not reuse a personal token with broader access.
+- Keep the Web UI bound to localhost; do not expose it publicly or through an untrusted network.
+- Review the installed release against current security advisories before use. Do not use versions affected by published authentication or sandbox vulnerabilities.
+- Do not install unreviewed third-party plugins. Do not give the agent unrestricted filesystem, shell, or network access.
+- Store the DeepSeek API key only in the local credential/settings store or environment; never in Git, Issues, PRs, or project documentation.
+- Require human approval for destructive actions, permission changes, external writes, pushes, and merges. Agent may create branches and PRs but must never merge.
