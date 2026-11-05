@@ -41,4 +41,4 @@ See:
 
 ## Current status
 
-The Godot project skeleton and launch placeholder are being added on a feature branch. CI and local/device verification must pass before this bootstrap is considered complete. No Android package or playable gameplay build exists yet.
+The Godot project skeleton and launch placeholder are being developed on a feature branch. An internal Android Debug export preset and CI APK workflow are now configured; the first successful export and physical-device validation are still pending. The current launch scene remains a technical placeholder, not the finished game.
