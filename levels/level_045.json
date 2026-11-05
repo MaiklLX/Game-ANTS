@@ -38,22 +38,51 @@
   ],
   "tiles": [
     {
+      "x": 1,
+      "y": 0,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
       "x": 5,
       "y": 0,
       "type": "resource",
       "color": "amber"
     },
     {
-      "x": 5,
-      "y": 4,
-      "type": "resource",
-      "color": "teal"
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
     },
     {
-      "x": 1,
-      "y": 0,
-      "type": "resource",
-      "color": "coral"
+      "x": 4,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
     },
     {
       "x": 1,
@@ -62,44 +91,10 @@
       "color": "violet"
     },
     {
-      "x": 2,
-      "y": 1,
-      "type": "obstacle"
-    },
-    {
-      "x": 2,
-      "y": 2,
-      "type": "obstacle"
-    },
-    {
-      "x": 2,
-      "y": 3,
-      "type": "obstacle"
-    },
-    {
-      "x": 3,
-      "y": 0,
-      "type": "obstacle"
-    },
-    {
-      "x": 3,
+      "x": 5,
       "y": 4,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
-      "y": 1,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
-      "y": 2,
-      "type": "obstacle"
-    },
-    {
-      "x": 4,
-      "y": 3,
-      "type": "obstacle"
+      "type": "resource",
+      "color": "teal"
     }
   ]
 }
