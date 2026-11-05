@@ -467,3 +467,19 @@
 - This remains headless validation only; editor/device visual QA is not claimed.
 
 **Next:** move into KT-006 interaction clarity and a stronger first-session tutorial.
+
+
+### KT-006.1 — scalable campaign catalogue (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Base:** `feat/kt-005-first-playable-levels` (stacked after draft PR #8)
+**Status:** Implementation committed; CI verification pending.
+
+- Added a root campaign manifest and independent chapter-pack manifests. The first `meadow` pack references the existing five authored levels.
+- Added `CampaignCatalog`, which expands the manifest chain, validates each referenced level, and rejects duplicate pack IDs, duplicate level IDs, duplicate file references, missing packs, missing level files, and malformed level data.
+- Removed the hard-coded five-level path list from the game screen. Campaign levels now load through the catalog.
+- Replaced the five-button-only picker with a five-level paged selector, so the interface can navigate a large catalogue without drawing hundreds of buttons at once.
+- Added a dedicated catalog test suite and a CI step for it.
+- **Content status:** five real levels exist today. The 300+ target is not being represented as already completed; future chapters will be authored in batches and added as independent packs.
+- No merge to `main`; PR #8 remains a dependency. Editor/device visual QA remains outstanding.
+
+**Next:** verify catalog CI, then author and test the first complete 30-level chapter in small reviewed batches.
