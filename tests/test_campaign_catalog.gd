@@ -11,11 +11,11 @@ func _initialize() -> void:
 	_check(result["valid"], "root manifest and chapter pack should load: %s" % str(result["errors"]))
 	if result["valid"]:
 		var levels: Array = result["levels"]
-		_check(levels.size() == 5, "meadow pack should expose all five authored levels")
+		_check(levels.size() == 10, "meadow pack should expose all ten authored levels")
 		_check(levels[0]["id"] == "meadow_001", "first manifest level should remain first")
-		_check(levels[4]["id"] == "meadow_005", "fifth manifest level should remain last")
+		_check(levels[9]["id"] == "meadow_010", "tenth manifest level should remain last")
 		_check(levels[0]["chapter_id"] == "meadow", "level should retain its chapter identity")
-		_check(levels[4]["global_index"] == 4, "catalog should assign a stable zero-based global index")
+		_check(levels[9]["global_index"] == 9, "catalog should assign a stable zero-based global index")
 
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://campaign/campaign_manifest.json"))
 	var duplicate_pack: Dictionary = manifest.duplicate(true)
