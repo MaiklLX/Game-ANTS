@@ -4,6 +4,9 @@ const BoardModelScript = preload("res://scripts/core/board_model.gd")
 const ColonyModelScript = preload("res://scripts/core/colony_model.gd")
 
 
+var _failures: Array[String] = []
+
+
 func _initialize() -> void:
 	var board = BoardModelScript.new()
 	var sample_text := FileAccess.get_file_as_string("res://levels/level_001.json")
@@ -47,12 +50,16 @@ func _initialize() -> void:
 	_check(colony.delivered_resources == 1, "delivered total should update")
 	_check(colony.deploy_squad("amber_c")["valid"], "waiting squad should use the released slot")
 
-	print("ColonyModel tests passed.")
-	quit(0)
+	if _failures.is_empty():
+		print("ColonyModel tests passed.")
+		quit(0)
+	else:
+		for failure in _failures:
+			push_error("ColonyModel test failed: " + failure)
+		quit(1)
 
 
 func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
-	push_error("ColonyModel test failed: " + message)
-	quit(1)
+	_failures.append(message)
