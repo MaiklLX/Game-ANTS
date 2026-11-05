@@ -11,6 +11,7 @@ const LEVEL_PATHS := [
 	"res://levels/level_002.json",
 	"res://levels/level_003.json",
 	"res://levels/level_004.json",
+	"res://levels/level_005.json",
 ]
 const VIRTUAL_SIZE := Vector2(720.0, 1280.0)
 const CELL_SIZE := 68.0
@@ -90,7 +91,7 @@ func _draw() -> void:
 func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, 32, COLOR_GOLD)
 	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  MEADOW", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOR_MUTED)
-	draw_string(font, Vector2(678, 62), "%02d / 04" % (_level_index + 1), HORIZONTAL_ALIGNMENT_RIGHT, -1, 18, COLOR_TEXT)
+	draw_string(font, Vector2(678, 62), "%02d / %02d" % [_level_index + 1, LEVEL_PATHS.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, 18, COLOR_TEXT)
 
 	var title := String(_level_data.get("title", "New field"))
 	var objective := String(_level_data.get("objective", ""))
