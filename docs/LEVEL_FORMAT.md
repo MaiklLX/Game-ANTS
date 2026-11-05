@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current meadow pack contains 25 authored levels. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+The current campaign contains 35 authored levels across two chapter packs: Meadow 001–030 and Root Labyrinth 031–035. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
 
 ### Adding a future chapter
 
@@ -97,3 +97,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_028.json](../levels/level_028.json) — Four Openings: four-color routing around staggered stonework.
 - [level_029.json](../levels/level_029.json) — The Last Seed Home: full amber load around a lower bend.
 - [level_030.json](../levels/level_030.json) — The Meadow Crown: chapter exam combining capacity, slots, colors, and obstacles.
+- [level_031.json](../levels/level_031.json) — Root Gate: a lower-only crossing forces a long detour to the upper chamber.
+- [level_032.json](../levels/level_032.json) — Twin Rootways: two separated openings connect the nest to upper and lower chambers.
+- [level_033.json](../levels/level_033.json) — The S-Bend: staggered walls create a forced two-stage corridor.
+- [level_034.json](../levels/level_034.json) — The Root Weave: upper and lower branches are split by a central root.
+- [level_035.json](../levels/level_035.json) — The Buried Junction: four harvest points are arranged beyond two narrow entrances.
