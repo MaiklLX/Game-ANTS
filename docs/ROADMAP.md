@@ -556,3 +556,15 @@
 - GitHub Actions run #306 passed on `ccbe28ae067966f0b86f9c2bc0543c6910e360a1`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034141116.
 - Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 35 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
 - Root Labyrinth now has 5/30 authored levels; next batch is 036–040.
+
+
+### KT-007 — Root Labyrinth batch 036–040 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** Five additional level files committed; pack/test/documentation updates committed; CI verification pending.
+
+- Added 036 The Root Ladder, 037 Forked Roots, 038 Parallel Tunnels, 039 The Narrow Seam, and 040 The Root Crown.
+- Root Labyrinth now contains 10/30 authored levels; total campaign catalogue is 40/300 target levels across two packs.
+- Added the five level references to the Root Labyrinth pack and campaign integration suite; catalog assertions now verify 40 ordered entries and final index 39.
+- All resources are reachable using existing deterministic pathfinding; no new movement or terrain mechanic was introduced.
+- Next: run full CI, then continue 041–045 if the batch passes.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
