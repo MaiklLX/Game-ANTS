@@ -308,7 +308,9 @@ func _error_ru(value: String) -> String:
 	return value
 
 func _draw_slots(font: Font) -> void:
-	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "МЕСТА ДЛЯ ОТРЯДОВ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	var occupied_slots := _colony.get_active_slot_count()
+	var slot_summary := "МЕСТА ДЛЯ ОТРЯДОВ  ·  %d / %d ЗАНЯТО" % [occupied_slots, _colony.slot_capacity]
+	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), slot_summary, HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_slot_rects.clear()
 	var slot_count: int = _colony.slot_capacity
 	var slot_gap := 8.0 if slot_count >= 3 else 14.0
@@ -1039,12 +1041,24 @@ func _symbol_for(color_name: String) -> String:
 
 
 func _draw_nest(center: Vector2) -> void:
+	# Delivery briefly wakes the nest entrance; the effect sleeps between deliveries.
+	var delivery_active := _feedback_kind == "delivery" and _feedback_cell == _board.start and _feedback_progress < 1.0
+	var delivery_strength := 1.0 - _feedback_progress if delivery_active else 0.0
+	if delivery_active:
+		var entrance_glow := Color("#f2c978", 0.20 * delivery_strength)
+		draw_circle(center, 31.0 + _feedback_progress * 7.0, entrance_glow)
+		draw_arc(center, 29.0 + _feedback_progress * 5.0, 0.0, TAU, 36, Color("#f2c978", 0.72 * delivery_strength), 2.0)
 	# Layered earthen nest entrance with a warm rim and a readable dark opening.
 	draw_circle(center, 25.0, Color("#6c5738"))
 	draw_circle(center, 20.0, Color("#b28a4d"))
 	draw_circle(center, 14.0, Color("#493b2b"))
 	draw_arc(center + Vector2(-1, -2), 18.0, PI * 1.08, PI * 1.9, 20, Color("#d6b36d"), 2.0)
 	draw_arc(center, 23.0, PI * 0.12, PI * 0.88, 24, Color("#e2c27c"), 2.5)
+	if delivery_active:
+		var inner_glow := Color("#f5d58f", 0.62 * delivery_strength)
+		draw_arc(center + Vector2(0, 1), 9.0 + _feedback_progress * 2.0, PI * 0.08, PI * 0.92, 20, inner_glow, 2.8)
+		draw_circle(center + Vector2(-13.0 - _feedback_progress * 8.0, -7.0), 2.0 * delivery_strength, inner_glow)
+		draw_circle(center + Vector2(13.0 + _feedback_progress * 8.0, -7.0), 2.0 * delivery_strength, inner_glow)
 	draw_circle(center + Vector2(0, 1), 7.0, Color("#211f18"))
 	draw_circle(center + Vector2(-2, -3), 2.0, Color("#d9b76e"))
 
