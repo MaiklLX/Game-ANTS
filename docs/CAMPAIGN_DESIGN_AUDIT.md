@@ -62,9 +62,24 @@ The ten finale levels currently score:
 | 099 | 40 | 4 |
 | 100 | 64 | 4 |
 
-The current top workload candidates are Root Labyrinth 056 (70), Colony Heart 100 and Root Labyrinth 035 (64 each), Root Labyrinth 053 and 057 (62 each), Root Labyrinth 055 and Orchard 065 (56 each), Orchard 085 (54), and Orchard 078 (52). Level 100 is now the heaviest level in its chapter and the second-heaviest in the full campaign by this deterministic workload proxy.
+The current top workload candidates are Root Labyrinth 056 (70), Colony Heart 100 and Root Labyrinth 035 (64 each), Root Labyrinth 053 and 057 (62 each), Root Labyrinth 055 and Orchard 065 (56 each), Orchard 085 (54), Orchard 078 (52), and Orchard 090 (50). Level 100 is now the heaviest level in its chapter and the second-heaviest in the full campaign by this deterministic workload proxy.
 
 
+
+### Five-level workload progression
+
+The audit groups deterministic movement into consecutive five-level bands to expose pacing changes inside each chapter. Values are average movement steps per level / average trips / maximum steps in the band.
+
+| Levels | Meadow | Root Labyrinth | Amber Orchard | Colony Heart |
+|---|---:|---:|---:|---:|
+| 001–005 / 031–035 / 061–065 / 091–095 | 24.80 / 2.00 / 34 | 42.40 / 2.80 / 64 | 36.80 / 2.60 / 56 | 29.60 / 2.60 / 40 |
+| 006–010 / 036–040 / 066–070 / 096–100 | 35.20 / 2.60 / 48 | 36.40 / 3.00 / 40 | 31.60 / 2.80 / 46 | 43.20 / 3.60 / 64 |
+| 011–015 / 041–045 / 071–075 | 36.00 / 3.40 / 40 | 38.80 / 3.00 / 48 | 33.60 / 3.20 / 40 | — |
+| 016–020 / 046–050 / 076–080 | 37.20 / 3.00 / 46 | 41.60 / 3.00 / 48 | 33.20 / 2.80 / 52 | — |
+| 021–025 / 051–055 / 081–085 | 31.20 / 2.80 / 40 | 45.20 / 3.00 / 62 | 39.60 / 3.40 / 54 | — |
+| 026–030 / 056–060 / 086–090 | 35.60 / 3.00 / 44 | 52.00 / 3.20 / 70 | 36.00 / 3.40 / 50 | — |
+
+This is a workload trend, not a difficulty curve. The strongest progression signal is the Root Labyrinth's final ten levels (056–060), which rise to 52 average steps and peak at 70. The final chapter also rises sharply in 096–100, averaging 43.20 steps and peaking at 64. Meadow's opening five are deliberately lighter, then it holds a relatively steady band around 31–37 steps.
 
 ## Initial repeated-geometry findings
 
