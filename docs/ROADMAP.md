@@ -550,3 +550,9 @@
 - Only existing schema-v1 mechanics are used; no new movement controls or unimplemented terrain rules are claimed.
 - Next: run CI, inspect any failures, then continue Root Labyrinth 036–040 after reviewing the first batch's path geometry.
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 031–035 (2026-11-05)
+- GitHub Actions run #306 passed on `ccbe28ae067966f0b86f9c2bc0543c6910e360a1`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034141116.
+- Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 35 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth now has 5/30 authored levels; next batch is 036–040.
