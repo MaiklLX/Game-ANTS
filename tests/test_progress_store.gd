@@ -19,6 +19,9 @@ func _initialize() -> void:
 	_check(store.mark_level_completed("meadow_001")["valid"], "completed level should be saved")
 	_check(store.mark_level_completed("meadow_001")["valid"], "re-completing a level should remain valid")
 	_check(store.get_completed_count() == 1, "completed level IDs should be unique")
+	_check(FileAccess.file_exists(TEST_PATH + ".bak"), "atomic replacement should preserve the previous progress file")
+	var backup_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(TEST_PATH + ".bak"))
+	_check(typeof(backup_data) == TYPE_DICTIONARY and int(backup_data.get("schema_version", 0)) == 1, "progress backup should remain a valid versioned record")
 	_check(not store.mark_level_completed("removed_level")["valid"], "unknown level IDs should not be saved")
 
 	var reopened = ProgressStoreScript.new(TEST_PATH)
