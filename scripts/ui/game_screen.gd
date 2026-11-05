@@ -205,8 +205,9 @@ func _draw_board(font: Font) -> void:
 	_board_cell_size = CELL_SIZE
 	_board_gap = CELL_GAP
 
-	draw_string(font, Vector2(44, 548 + _layout_extra * 0.40), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(676, 548 + _layout_extra * 0.40), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
+	var board_label_y := _board_origin.y - 22.0
+	draw_string(font, Vector2(44, board_label_y), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(676, board_label_y), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
 	draw_rect(board_frame, Color("#182820"))
@@ -323,7 +324,8 @@ func _draw_level_picker(font: Font) -> void:
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
 	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, ResponsiveLayoutScript.font_size(20, _ui_scale), COLOR_TEXT if has_next_page else COLOR_GRID)
 
-	draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+	if ResponsiveLayoutScript.show_footer(_ui_scale):
+		draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _levels_per_page() -> int:
