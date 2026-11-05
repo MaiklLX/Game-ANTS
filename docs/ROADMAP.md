@@ -625,3 +625,11 @@
 - Every level is included in the production-rule campaign solver; no unprototyped mechanic was added.
 - Next: run full CI, review difficulty/readability, then continue levels 056–060 if the batch passes.
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 051–055 (2026-11-05)
+- GitHub Actions run #381 passed on `327e90c0760c95d3ff47d96094b571d8e426fe08`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42036509316.
+- Godot 4.7.2 version check and project import passed; all deterministic core, level validation, colony/squad, turn resolver, campaign level, and campaign catalogue tests passed; the main scene launched headlessly.
+- Root Labyrinth progress: 25/30; total authored catalogue: 55 levels across two chapter packs.
+- Next batch: levels 056–060, then review the completed chapter before starting The Amber Orchard.
+- No editor visual QA, Android APK export, physical-device testing, or public web build is claimed. PR #9 remains Draft and unmerged.
