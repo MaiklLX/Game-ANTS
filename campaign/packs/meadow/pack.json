@@ -43,6 +43,26 @@
     {
       "id": "meadow_010",
       "file": "res://levels/level_010.json"
+    },
+    {
+      "id": "meadow_011",
+      "file": "res://levels/level_011.json"
+    },
+    {
+      "id": "meadow_012",
+      "file": "res://levels/level_012.json"
+    },
+    {
+      "id": "meadow_013",
+      "file": "res://levels/level_013.json"
+    },
+    {
+      "id": "meadow_014",
+      "file": "res://levels/level_014.json"
+    },
+    {
+      "id": "meadow_015",
+      "file": "res://levels/level_015.json"
     }
   ]
 }
