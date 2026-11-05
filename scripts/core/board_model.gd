@@ -53,7 +53,7 @@ func load_level(data: Dictionary) -> Dictionary:
 			"obstacle":
 				_blocked[cell] = true
 			"resource":
-				_resources[cell] = true
+				_resources[cell] = tile["color"]
 
 	remaining_resources = _resources.size()
 	return {
@@ -81,8 +81,16 @@ func has_resource(cell: Vector2i) -> bool:
 	return _resources.has(cell)
 
 
-func collect_resource(cell: Vector2i) -> bool:
+func resource_color_at(cell: Vector2i) -> String:
+	if not _resources.has(cell):
+		return ""
+	return _resources[cell]
+
+
+func collect_resource(cell: Vector2i, expected_color: String = "") -> bool:
 	if not is_inside(cell) or not _resources.has(cell):
+		return false
+	if not expected_color.is_empty() and _resources[cell] != expected_color:
 		return false
 	_resources.erase(cell)
 	remaining_resources -= 1
