@@ -29,7 +29,7 @@ The audit now measures the shortest path from the nest to each resource independ
 |---|---:|---:|---:|
 | The Living Meadow | 6.08 | 0.79 | 11 |
 | The Root Labyrinth | 7.14 | 1.22 | 15 |
-| The Amber Orchard | 5.87 | 0.79 | 13 |
+| The Amber Orchard | 5.89 | 0.81 | 13 |
 | The Colony Heart: First Dawn | 5.52 | 0.42 | 11 |
 
 The route length excludes the starting cell. Extra detour steps are the shortest route length minus Manhattan distance. Averages are weighted by individual resource samples, not by level.
@@ -44,7 +44,7 @@ A second measurement follows the same deterministic per-color collection order u
 |---|---:|---:|---:|
 | The Living Meadow | 33.33 | 2.80 | 48 |
 | The Root Labyrinth | 42.73 | 3.00 | 70 |
-| The Amber Orchard | 34.80 | 3.03 | 56 |
+| The Amber Orchard | 35.20 | 3.03 | 56 |
 | The Colony Heart: First Dawn | 36.40 | 3.10 | 64 |
 
 The ten finale levels currently score:
@@ -62,7 +62,7 @@ The ten finale levels currently score:
 | 099 | 40 | 4 |
 | 100 | 64 | 4 |
 
-The current top workload candidates are Root Labyrinth 056 (70), Colony Heart 100 and Root Labyrinth 035 (64 each), Root Labyrinth 053 and 057 (62 each), Root Labyrinth 055 and Orchard 065 (56 each), and Orchard 085 (54). Level 100 is now the heaviest level in its chapter and the second-heaviest in the full campaign by this deterministic workload proxy.
+The current top workload candidates are Root Labyrinth 056 (70), Colony Heart 100 and Root Labyrinth 035 (64 each), Root Labyrinth 053 and 057 (62 each), Root Labyrinth 055 and Orchard 065 (56 each), Orchard 085 (54), and Orchard 078 (52). Level 100 is now the heaviest level in its chapter and the second-heaviest in the full campaign by this deterministic workload proxy.
 
 
 
@@ -82,6 +82,8 @@ Related motifs across levels 047, 057, and 059 and the repeated crown/finale fam
 - `root_041` — replaced the duplicate of `root_038` with a single-cell bottleneck that feeds a three-way harvest junction; all far branches must pass through the same gate.
 - `root_053` — moved the violet cache to the lower intermediate segment between two staggered gates, creating a distinct route-order decision from `root_056`.
 - `root_045` — moved the coral cache into a central hollow accessible only through the upper notch and reduced deployment slots from three to two; regression coverage locks the single-entry route.
+- `orchard_083` — moved the coral resource into the sheltered central lane to break the repeated four-corner resource pattern.
+- `orchard_084` — reduced deployment slots to one, turning the same four-pocket layout into a deliberate squad-rotation puzzle.
 - `colony_100` — rebuilt the finale around eight seeds in four paired colors, with each pair split across a single central root gate. Every far-side resource route must pass through that gate; each carrier uses its capacity-two load.
 - Stable level IDs and campaign order are preserved. No new mechanics or schema changes were introduced.
 
@@ -106,7 +108,7 @@ The audit's route-profile signature compares deployment slots, the multiset of s
 - Root Labyrinth 034 / 038 / 043 / 059
 - Root Labyrinth 040 / 050
 - Root Labyrinth 041 / 052
-- Amber Orchard 069 / 078 / 083 / 084 / Colony Heart 094
+- Amber Orchard 069 / 083 / Colony Heart 094
 
 For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layouts and corridor topologies despite similar resource-distance and squad profiles. They should be judged by the decisions they ask the player to make, not by this signature alone. The Meadow 005/011 and 013/018 route-profile matches were removed by targeted redesigns; the audit now reports seven groups rather than nine.
 
