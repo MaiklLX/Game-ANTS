@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "colony_100",
   "title": "The Colony Heart",
-  "objective": "The final trial gathers eight seeds of four colors with three field slots; every carrier must return to complete the colony.",
+  "objective": "Eight seeds lie in paired pockets on opposite sides of one root gate. Every two-seed carrier must cross the shared passage and return before the colony is complete.",
   "width": 6,
   "height": 5,
   "start": [
@@ -38,34 +38,16 @@
   ],
   "tiles": [
     {
-      "x": 4,
-      "y": 0,
-      "type": "resource",
-      "color": "amber"
-    },
-    {
-      "x": 5,
-      "y": 1,
-      "type": "resource",
-      "color": "amber"
-    },
-    {
-      "x": 4,
-      "y": 4,
-      "type": "resource",
-      "color": "teal"
-    },
-    {
-      "x": 5,
-      "y": 3,
-      "type": "resource",
-      "color": "teal"
-    },
-    {
       "x": 1,
       "y": 0,
       "type": "resource",
-      "color": "coral"
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
     },
     {
       "x": 1,
@@ -74,30 +56,43 @@
       "color": "coral"
     },
     {
+      "x": 5,
+      "y": 1,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
       "x": 1,
       "y": 4,
       "type": "resource",
-      "color": "violet"
+      "color": "teal"
     },
     {
-      "x": 2,
+      "x": 5,
       "y": 4,
       "type": "resource",
-      "color": "violet"
+      "color": "teal"
     },
     {
-      "x": 2,
+      "x": 3,
       "y": 0,
       "type": "obstacle"
     },
     {
-      "x": 2,
+      "x": 3,
       "y": 1,
-      "type": "obstacle"
-    },
-    {
-      "x": 2,
-      "y": 3,
       "type": "obstacle"
     },
     {
@@ -106,8 +101,28 @@
       "type": "obstacle"
     },
     {
+      "x": 3,
+      "y": 4,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
       "x": 4,
-      "y": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
       "type": "obstacle"
     }
   ]
