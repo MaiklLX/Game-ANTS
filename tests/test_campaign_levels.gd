@@ -306,3 +306,25 @@ func _test_root_labyrinth_route_shapes() -> void:
 		if weave_loaded["valid"]:
 			_check(not weave_board.find_path(weave_board.start, Vector2i(5, 0)).is_empty(), "Root Weave upper branch should be reachable")
 			_check(not weave_board.find_path(weave_board.start, Vector2i(5, 4)).is_empty(), "Root Weave lower branch should be reachable")
+
+	var fork_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_037.json"))
+	if typeof(fork_data) == TYPE_DICTIONARY:
+		var fork_board = BoardModelScript.new()
+		var fork_loaded: Dictionary = fork_board.load_level(fork_data)
+		_check(fork_loaded["valid"], "Forked Roots should load for branch identity test")
+		if fork_loaded["valid"]:
+			var upper_branch: Array[Vector2i] = fork_board.find_path(fork_board.start, Vector2i(5, 0))
+			var lower_branch: Array[Vector2i] = fork_board.find_path(fork_board.start, Vector2i(5, 4))
+			_check(not upper_branch.is_empty() and upper_branch.has(Vector2i(3, 0)), "Forked Roots upper branch should pass the north side of the heartwood island")
+			_check(not lower_branch.is_empty() and lower_branch.has(Vector2i(3, 4)), "Forked Roots lower branch should pass the south side of the heartwood island")
+
+	var split_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_041.json"))
+	if typeof(split_data) == TYPE_DICTIONARY:
+		var split_board = BoardModelScript.new()
+		var split_loaded: Dictionary = split_board.load_level(split_data)
+		_check(split_loaded["valid"], "The Split Crossing should load for bottleneck identity test")
+		if split_loaded["valid"]:
+			for target in [Vector2i(5, 0), Vector2i(5, 4)]:
+				var branch_path: Array[Vector2i] = split_board.find_path(split_board.start, target)
+				_check(not branch_path.is_empty(), "The Split Crossing far branches should both be reachable")
+				_check(branch_path.has(Vector2i(2, 2)), "Every Split Crossing far route should pass through the single shared gate")
