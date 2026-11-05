@@ -663,9 +663,14 @@ func _position_along_last_path(progress: float) -> Vector2:
 func _draw_ant(center: Vector2, tint: Color, scale: float = 1.0) -> void:
 	# Three-part silhouette; the squad is animated as a short, readable formation.
 	var body_scale := Vector2.ONE * scale
+	draw_circle(center + Vector2(1, 7) * body_scale, 12.0 * scale, Color("#101812", 0.72))
 	draw_circle(center + Vector2(-7, 0) * body_scale, 5.5 * scale, Color("#251d16"))
 	draw_circle(center + Vector2(1, 0) * body_scale, 7.0 * scale, tint)
 	draw_circle(center + Vector2(10, -1) * body_scale, 4.5 * scale, Color("#251d16"))
+	draw_arc(center + Vector2(1, 0) * body_scale, 5.5 * scale, PI * 1.08, PI * 1.82, 12, tint.lightened(0.3), 1.5 * scale)
+	draw_circle(center + Vector2(11, -2) * body_scale, 1.1 * scale, Color("#fff1c9"))
+	draw_line(center + Vector2(12, -4) * body_scale, center + Vector2(16, -9) * body_scale, Color("#251d16"), 1.4 * scale)
+	draw_line(center + Vector2(12, 1) * body_scale, center + Vector2(18, 0) * body_scale, Color("#251d16"), 1.4 * scale)
 	draw_line(center + Vector2(-2, -4) * body_scale, center + Vector2(-7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
 	draw_line(center + Vector2(-2, 4) * body_scale, center + Vector2(-7, 10) * body_scale, Color("#251d16"), 2.0 * scale)
 	draw_line(center + Vector2(4, -4) * body_scale, center + Vector2(7, -10) * body_scale, Color("#251d16"), 2.0 * scale)
@@ -818,6 +823,7 @@ func _draw_nest(center: Vector2) -> void:
 	draw_circle(center, 25.0, Color("#6c5738"))
 	draw_circle(center, 20.0, Color("#b28a4d"))
 	draw_circle(center, 14.0, Color("#493b2b"))
+	draw_arc(center + Vector2(-1, -2), 18.0, PI * 1.08, PI * 1.9, 20, Color("#d6b36d"), 2.0)
 	draw_arc(center, 23.0, PI * 0.12, PI * 0.88, 24, Color("#e2c27c"), 2.5)
 	draw_circle(center + Vector2(0, 1), 7.0, Color("#211f18"))
 	draw_circle(center + Vector2(-2, -3), 2.0, Color("#d9b76e"))
@@ -826,9 +832,12 @@ func _draw_nest(center: Vector2) -> void:
 func _draw_resource(center: Vector2, color_name: String) -> void:
 	# Distinct seed body plus a small leaf; color is reinforced by shape labels.
 	var tint := _color_for(color_name)
-	draw_circle(center + Vector2(0, 2), 20.0, Color("#17231c"))
-	draw_circle(center, 17.0, tint)
-	draw_circle(center + Vector2(-5, -5), 5.0, Color(1.0, 1.0, 1.0, 0.28))
+	draw_circle(center + Vector2(1, 5), 21.0, Color("#111c15", 0.72))
+	draw_circle(center, 18.0, tint.darkened(0.28))
+	draw_circle(center + Vector2(-1, -2), 16.0, tint)
+	draw_arc(center + Vector2(-1, -2), 13.0, PI * 1.05, PI * 1.85, 18, tint.lightened(0.34), 2.0)
+	draw_circle(center + Vector2(-6, -7), 5.0, Color(1.0, 1.0, 1.0, 0.48))
+	draw_circle(center + Vector2(7, 5), 2.0, Color("#fff1c9", 0.62))
 	draw_line(center + Vector2(5, -12), center + Vector2(12, -20), Color("#8fc28a"), 3.0)
 	draw_string(ThemeDB.fallback_font, center + Vector2(-17, 26), _symbol_for(color_name), HORIZONTAL_ALIGNMENT_CENTER, 34, ResponsiveLayoutScript.font_size(11, _ui_scale), COLOR_BG)
 
