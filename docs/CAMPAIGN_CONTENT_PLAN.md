@@ -5,7 +5,7 @@
 - **Launch campaign:** 300 hand-authored, quality-checked levels.
 - **Structure:** 10 chapters × 30 levels.
 - **Expansion:** additional chapter packs can be appended through the root campaign manifest in later updates.
-- **Current reality:** 55 authored levels: Meadow 001–030 (30/30) and Root Labyrinth 031–055 (25/30). Chapters 3–10 remain planned content.
+- **Current reality:** 60 authored levels: Meadow 001–030 (30/30) and Root Labyrinth 031–060 (30/30). Chapters 3–10 remain planned content.
 
 ## Chapter rhythm
 
@@ -109,3 +109,13 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 054 The Middle Passage combines three resource colors behind one crossing and two deployment slots.
 - 055 The Root Labyrinth Trial is the 25-level checkpoint, combining four colors, slot pressure, and alternating openings.
 - All five levels use schema v1 and are covered by the deterministic campaign solver; no new mechanic is introduced.
+
+
+### Root Labyrinth production batch 056–060 — chapter complete
+- 056 The Switchback Gate uses a low first opening and an upper-side second entrance.
+- 057 Three Root Mouths combines three harvest colors with alternating corridor openings.
+- 058 The Heartwood Pocket places a resource inside a ring with one open access notch.
+- 059 The Double Bend forces two direction changes across staggered barriers.
+- 060 The Labyrinth Unbound is the 30-level chapter finale, with four colored harvest routes and a long eastern lane.
+- All levels use schema v1. The integration solver checks every resource collection and return; route tests assert the long switchback and all four finale routes.
+- Chapter 2 is complete at 30/30. Review the chapter's full difficulty curve before beginning The Amber Orchard (061–090).
