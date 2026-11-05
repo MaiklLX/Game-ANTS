@@ -38,6 +38,14 @@ func _initialize() -> void:
 	bad_tile["tiles"].append({"x": 3, "y": 2, "type": "lava"})
 	_check(not LevelDefinitionScript.validate(bad_tile)["valid"], "unsupported tile type should fail")
 
+	var missing_color: Dictionary = sample_data.duplicate(true)
+	missing_color["tiles"][1].erase("color")
+	_check(not LevelDefinitionScript.validate(missing_color)["valid"], "resource without a color should fail")
+
+	var bad_color: Dictionary = sample_data.duplicate(true)
+	bad_color["tiles"][1]["color"] = "ultraviolet"
+	_check(not LevelDefinitionScript.validate(bad_color)["valid"], "unsupported resource color should fail")
+
 	print("LevelDefinition tests completed.")
 	quit(0)
 
