@@ -425,7 +425,7 @@ func _test_amber_orchard_route_variants() -> void:
 		var sun_loaded: Dictionary = sun_board.load_level(sun_data)
 		_check(sun_loaded["valid"], "The Hidden Sun should load for central-lane test")
 		if sun_loaded["valid"]:
-			_check(sun_board.resource_color_at(Vector2i(3, 2)) == "coral", "The Hidden Sun coral seed should sit in the central lane")
+			_check(sun_board.resource_color_at(Vector2i(2, 2)) == "coral", "The Hidden Sun coral seed should sit in the central lane")
 
 	var compass_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_084.json"))
 	if typeof(compass_data) == TYPE_DICTIONARY:
