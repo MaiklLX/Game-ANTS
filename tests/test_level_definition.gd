@@ -2,12 +2,19 @@ extends SceneTree
 
 const LevelDefinitionScript = preload("res://scripts/core/level_definition.gd")
 
+var _failed := false
+
 
 func _initialize() -> void:
-	var sample_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_001.json"))
+	call_deferred("_run_tests")
+
+
+func _run_tests() -> void:
+	var sample_text := FileAccess.get_file_as_string("res://levels/level_001.json")
+	var sample_data: Variant = JSON.parse_string(sample_text)
 	_check(typeof(sample_data) == TYPE_DICTIONARY, "sample level should parse as an object")
 	if typeof(sample_data) != TYPE_DICTIONARY:
-		quit(1)
+		_finish()
 		return
 
 	var result: Dictionary = LevelDefinitionScript.validate(sample_data)
@@ -29,12 +36,17 @@ func _initialize() -> void:
 	var version_result: Dictionary = LevelDefinitionScript.validate(version_data)
 	_check(not version_result["valid"], "unsupported schema version should fail")
 
-	print("LevelDefinition tests passed.")
-	quit(0)
+	if not _failed:
+		print("LevelDefinition tests passed.")
+	_finish()
 
 
 func _check(condition: bool, message: String) -> void:
 	if condition:
 		return
+	_failed = true
 	push_error("LevelDefinition test failed: " + message)
-	quit(1)
+
+
+func _finish() -> void:
+	quit(1 if _failed else 0)
