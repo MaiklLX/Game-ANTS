@@ -24,6 +24,8 @@ func _initialize() -> void:
 	_check(LayoutScript.font_size(12, narrow_scale) == 20, "extra-narrow phones must scale small labels up to a readable physical size")
 	_check(LayoutScript.font_size(12, compact_scale) == 17, "compact phones must preserve small-label legibility")
 	_check(LayoutScript.font_size(12, 1.0) == 12, "reference-size screens must retain authored typography")
+	_check(not LayoutScript.show_footer(narrow_scale), "extra-narrow phones must hide the decorative footer to protect the level controls")
+	_check(LayoutScript.show_footer(compact_scale), "standard compact phones must retain the decorative footer")
 	_check(float(LayoutScript.font_size(12, narrow_scale)) * narrow_scale >= 8.5, "extra-narrow label text must meet the minimum physical size")
 	_check(float(LayoutScript.font_size(12, compact_scale)) * compact_scale >= 8.5, "compact label text must meet the minimum physical size")
 	_check(LayoutScript.is_touch_target_usable(Vector2(100, 100), narrow_scale), "extra-narrow level controls must remain at least 44 physical px")
