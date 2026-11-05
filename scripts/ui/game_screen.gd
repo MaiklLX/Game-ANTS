@@ -101,9 +101,17 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
-	var layout: Dictionary = ResponsiveLayoutScript.calculate(size)
+	var safe_rect := Rect2(Vector2.ZERO, size)
+	var platform := OS.get_name()
+	if platform == "Android" or platform == "iOS":
+		safe_rect = ResponsiveLayoutScript.safe_viewport_rect(
+			size,
+			DisplayServer.get_display_safe_area(),
+			DisplayServer.screen_get_size()
+		)
+	var layout: Dictionary = ResponsiveLayoutScript.calculate(safe_rect.size)
 	_ui_scale = float(layout["scale"])
-	_ui_offset = layout["offset"]
+	_ui_offset = safe_rect.position + layout["offset"]
 	_layout_extra = float(layout["extra_height"])
 	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BG)
 	draw_set_transform(_ui_offset, 0.0, Vector2(_ui_scale, _ui_scale))
