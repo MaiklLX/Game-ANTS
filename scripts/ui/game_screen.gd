@@ -766,12 +766,19 @@ func _advance_strategic_turn() -> void:
 		_is_animating = true
 		_turn_animation_tween = create_tween()
 		_turn_animation_tween.set_trans(Tween.TRANS_CUBIC)
-		_turn_animation_tween.set_ease(Tween.EASE_IN_OUT)
-		_turn_animation_tween.tween_property(self, "_turn_animation_progress", 1.0, 0.24)
+		_turn_animation_tween.set_ease(Tween.EASE_OUT)
+		_turn_animation_tween.tween_property(self, "_turn_animation_progress", 1.0, 0.34)
 		_turn_animation_tween.finished.connect(_on_turn_animation_finished)
 	else:
 		_is_animating = false
 		_turn_animation_moves.clear()
+	# Give harvest and delivery a clear visual punctuation instead of silently changing counters.
+	for collected_id in result.get("collected", []):
+		var collected_squad: Dictionary = _colony.get_squad(String(collected_id))
+		if not collected_squad.is_empty():
+			_trigger_feedback(collected_squad.get("position", _board.start))
+	for delivered_id in result.get("delivered", []):
+		_trigger_feedback(_board.start)
 	if _tutorial_active and not result.get("delivered", []).is_empty():
 		_complete_tutorial()
 	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty() or not result.get("blocked", []).is_empty():
