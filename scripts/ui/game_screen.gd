@@ -125,9 +125,9 @@ func _ready() -> void:
 	_progress_store = ProgressStoreScript.new()
 	var progress_result: Dictionary = _progress_store.load_progress(level_ids)
 	if not progress_result.get("valid", false):
-		_progress_warning = String(progress_result.get("warning", "Не удалось загрузить прогресс."))
+		_progress_warning = _error_ru(String(progress_result.get("warning", "Не удалось загрузить прогресс.")))
 	else:
-		_progress_warning = String(progress_result.get("warning", ""))
+		_progress_warning = _error_ru(String(progress_result.get("warning", "")))
 	var initial_index := 0
 	var saved_level_id: String = _progress_store.get_last_selected_level_id()
 	for index in range(_campaign_levels.size()):
@@ -571,7 +571,7 @@ func _select_or_deploy(squad_id: String) -> void:
 			if _tutorial_active and squad_id == "amber_workers":
 				_tutorial_step = 1
 		else:
-			_status = _error_ru(String(result["errors"][0]))
+			_status = _error_ru(_error_ru(String(result["errors"][0])))
 	queue_redraw()
 
 
@@ -591,7 +591,7 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 		_colony, _board, _selected_squad_id, _last_path_start, cell
 	)
 	if not preview["valid"]:
-		_status = String(preview["errors"][0])
+		_status = _error_ru(String(preview["errors"][0]))
 		queue_redraw()
 		return
 	_last_path = preview["path"]
@@ -795,7 +795,7 @@ func _complete_tutorial() -> void:
 	if _progress_store != null:
 		var save_result: Dictionary = _progress_store.mark_tutorial_completed()
 		if not save_result.get("valid", false):
-			_progress_warning = String(save_result.get("warning", "Не удалось сохранить завершение обучения."))
+			_progress_warning = _error_ru(String(save_result.get("warning", "Не удалось сохранить завершение обучения.")))
 			_status = _progress_warning
 		else:
 			_status = "Первая экспедиция завершена. Колония готова!"
