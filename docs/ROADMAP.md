@@ -679,3 +679,12 @@
 - CI run #417 passed on the prior code/documentation head `1e726ab87bb514f8c22891e87e96e1ea2030722c`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42039105315. This verifies the existing 65-level state, not the new documentation-only scope decision.
 - Next: continue Amber Orchard in five-level batches, starting at 066–070, while retaining Root Labyrinth's separate design-revision task.
 - PR #9 remains Draft, open, stacked on PR #8, and unmerged. No editor/device visual QA, APK, or public web build is claimed.
+
+
+### KT-008.3 — Amber Orchard batch 066–070 (2026-11-05)
+- Added 066 The Fork of Gold, 067 The Hollow Canopy, 068 Three Golden Steps, 069 The Four Boughs, and 070 The Orchard Weave.
+- The batch varies central-crossing, heartwood-island, staggered-branch, divided-trunk, and multi-color slot-pressure layouts while staying within schema v1.
+- Registered all five levels in the Amber Orchard pack; campaign level tests include all 70 level files and catalogue tests assert stable order through global index 69.
+- Amber Orchard progress: 10/30. Version 1.0 campaign progress: 70/100; 30 levels remain.
+- Automated CI is pending for the 70-level batch. No editor/device visual QA or APK is claimed.
+- Root Labyrinth design revisions remain a separate open task. PR #9 remains Draft, stacked, and unmerged.
