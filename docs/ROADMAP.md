@@ -785,3 +785,10 @@
 - Added a 320×568 test profile. At this scale, the level picker switches to four 100×100 controls per page; standard compact devices retain five 88×88 controls.
 - Squad cards and Retry/Skip action areas now use 100 logical-pixel height, maintaining the 44 physical-pixel minimum at the 320 px reference scale.
 - Contract tests assert the 320×568 transform, page density, and touch-target dimensions. This is not a substitute for rendered or physical-device QA.
+
+
+### KT-011.3 — extra-narrow mobile contract passed (2026-11-05)
+- Code checkpoint `529a418da35b4b388e65fc8745b3ee8e1b047ad6`; CI #759 passed all project suites and headless main-scene launch.
+- 320×568 phones use four 100×100 level/page controls; standard compact phones keep five 88×88 controls. Both layouts fit the 720 px design width.
+- Squad cards and Retry/Skip hit areas are 100 logical pixels high. This proves geometry constraints only, not rendered visual quality or device input behavior.
+- Next: Godot Editor rendered review, then Android export and physical-device touch/safe-area QA. PR #9 remains Draft; main remains untouched.
