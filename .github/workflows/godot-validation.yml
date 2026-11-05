@@ -41,5 +41,8 @@ jobs:
       - name: Run deterministic core tests
         run: godot --headless --path . --script res://tests/test_board_model.gd
 
+      - name: Run level data validation tests
+        run: godot --headless --path . --script res://tests/test_level_definition.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
