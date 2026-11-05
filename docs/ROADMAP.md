@@ -718,5 +718,5 @@
 - All five use existing schema-v1 mechanics. Static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
 - Registered all five in the Amber Orchard pack. Campaign integration tests now include 85 level files; catalogue tests assert 85 entries and stable global index 84.
 - Campaign progress: **85/100 authored; 15 remain**. Amber Orchard: 25/30.
-- CI is pending for this batch. No Editor/device visual QA or APK is claimed.
+- CI #510 passed on the 85-level code checkpoint `80238ba57c119e2f27e2952691d5926bba572725`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043097564. All 85 campaign levels, catalogue validation, and headless main-scene launch passed. CI #513 also passed on the latest documentation head `9abbcde5274de05ba024152425f23d09c894b46d`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043145157. A duplicate runner attempt hit a transient Godot download HTTP 504; the successful full run confirms the branch. No Editor/device visual QA or APK is claimed.
 - Next: Amber Orchard 086–090, completing chapter three. Then design the 10-level v1 finale 091–100.
