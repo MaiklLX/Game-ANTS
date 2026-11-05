@@ -62,6 +62,11 @@ const LEVEL_PATHS := [
 	"res://levels/level_053.json",
 	"res://levels/level_054.json",
 	"res://levels/level_055.json",
+	"res://levels/level_056.json",
+	"res://levels/level_057.json",
+	"res://levels/level_058.json",
+	"res://levels/level_059.json",
+	"res://levels/level_060.json",
 ]
 
 
@@ -217,6 +222,7 @@ func _test_root_labyrinth_route_shapes() -> void:
 		{"path": "res://levels/level_042.json", "target": Vector2i(4, 0), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_048.json", "target": Vector2i(4, 2), "minimum_extra_steps": 3},
 		{"path": "res://levels/level_051.json", "target": Vector2i(5, 0), "minimum_extra_steps": 3},
+		{"path": "res://levels/level_056.json", "target": Vector2i(5, 0), "minimum_extra_steps": 4},
 	]
 	for route_case in route_cases:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(route_case["path"]))
@@ -242,6 +248,15 @@ func _test_root_labyrinth_route_shapes() -> void:
 		if crown_loaded["valid"]:
 			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 0)).is_empty(), "Hollow Crown upper corridor should be reachable")
 			_check(not crown_board.find_path(crown_board.start, Vector2i(5, 4)).is_empty(), "Hollow Crown lower corridor should be reachable")
+
+	var finale_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_060.json"))
+	if typeof(finale_data) == TYPE_DICTIONARY:
+		var finale_board = BoardModelScript.new()
+		var finale_loaded: Dictionary = finale_board.load_level(finale_data)
+		_check(finale_loaded["valid"], "The Labyrinth Unbound should load for finale branch test")
+		if finale_loaded["valid"]:
+			for target in [Vector2i(5, 0), Vector2i(5, 4), Vector2i(1, 0), Vector2i(1, 4)]:
+				_check(not finale_board.find_path(finale_board.start, target).is_empty(), "Labyrinth Unbound should keep all four color routes reachable")
 
 	var weave_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_034.json"))
 	if typeof(weave_data) == TYPE_DICTIONARY:
