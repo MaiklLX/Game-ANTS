@@ -7,6 +7,7 @@ const LevelLoaderScript = preload("res://scripts/core/level_loader.gd")
 const CampaignCatalogScript = preload("res://scripts/core/campaign_catalog.gd")
 const ProgressStoreScript = preload("res://scripts/core/progress_store.gd")
 const LevelGuidanceScript = preload("res://scripts/ui/level_guidance.gd")
+const ResponsiveLayoutScript = preload("res://scripts/ui/responsive_layout.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
@@ -37,7 +38,7 @@ var _progress_store
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
 var _tutorial_step: int = -1
-var _tutorial_skip_rect := Rect2(548, 1008, 106, 32)
+var _tutorial_skip_rect := Rect2(548, 1000 + _layout_extra * 0.68 + 8, 106, 44)
 var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
@@ -52,6 +53,7 @@ var _returning_to_nest: bool = false
 var _animation_tween: Tween
 var _ui_scale: float = 1.0
 var _ui_offset: Vector2 = Vector2.ZERO
+var _layout_extra: float = 0.0
 var _board_origin: Vector2 = Vector2.ZERO
 var _board_cell_size: float = CELL_SIZE
 var _board_gap: float = CELL_GAP
@@ -100,13 +102,12 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
-	_ui_scale = minf(size.x / VIRTUAL_SIZE.x, size.y / VIRTUAL_SIZE.y)
-	if _ui_scale <= 0.0:
-		_ui_scale = 1.0
-	_ui_offset = (size - VIRTUAL_SIZE * _ui_scale) * 0.5
+	var layout: Dictionary = ResponsiveLayoutScript.calculate(size)
+	_ui_scale = float(layout["scale"])
+	_ui_offset = layout["offset"]
+	_layout_extra = float(layout["extra_height"])
+	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BG)
 	draw_set_transform(_ui_offset, 0.0, Vector2(_ui_scale, _ui_scale))
-
-	draw_rect(Rect2(Vector2.ZERO, VIRTUAL_SIZE), COLOR_BG)
 	_draw_header(font)
 	_draw_slots(font)
 	_draw_squads(font)
@@ -165,7 +166,7 @@ func _draw_slots(font: Font) -> void:
 
 
 func _draw_squads(font: Font) -> void:
-	draw_string(font, Vector2(44, 392), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
+	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
 	var card_width := 196.0
@@ -198,12 +199,12 @@ func _draw_squads(font: Font) -> void:
 func _draw_board(font: Font) -> void:
 	var board_width: float = _board.width * CELL_SIZE + maxi(0, _board.width - 1) * CELL_GAP
 	var board_height: float = _board.height * CELL_SIZE + maxi(0, _board.height - 1) * CELL_GAP
-	_board_origin = Vector2((720.0 - board_width) * 0.5, 570.0 + (340.0 - board_height) * 0.5)
+	_board_origin = Vector2((720.0 - board_width) * 0.5, 570.0 + _layout_extra * 0.40 + (340.0 - board_height) * 0.5)
 	_board_cell_size = CELL_SIZE
 	_board_gap = CELL_GAP
 
-	draw_string(font, Vector2(44, 548), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
-	draw_string(font, Vector2(676, 548), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, COLOR_GOLD)
+	draw_string(font, Vector2(44, 548 + _layout_extra * 0.40), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
+	draw_string(font, Vector2(676, 548 + _layout_extra * 0.40), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
 	draw_rect(board_frame, Color("#182820"))
@@ -257,7 +258,7 @@ func _draw_board(font: Font) -> void:
 
 
 func _draw_status(font: Font) -> void:
-	var panel := Rect2(42, 1000, 636, 112)
+	var panel := Rect2(42, 1000 + _layout_extra * 0.68, 636, 124)
 	var completed := TurnResolverScript.is_level_complete(_board, _colony)
 	var blocked := TurnResolverScript.is_level_blocked(_board, _colony)
 	var panel_color := Color("#20382d") if completed else Color("#392a26") if blocked else COLOR_PANEL
@@ -265,15 +266,15 @@ func _draw_status(font: Font) -> void:
 	draw_rect(panel, panel_color)
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
 	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
-	draw_string(font, Vector2(64, 1035), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
+	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, accent_color if not _tutorial_active else COLOR_GOLD)
 	if _tutorial_active:
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 21), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, 12, COLOR_TEXT)
-		draw_string(font, Vector2(64, 1070), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 580, 16, COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 580, 16, COLOR_TEXT)
 	else:
 		draw_string(font, Vector2(64, 1070), _status, HORIZONTAL_ALIGNMENT_LEFT, 580, 17, COLOR_TEXT)
 	var delivered := _colony.delivered_resources
-	draw_string(font, Vector2(64, 1094), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
+	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, COLOR_MUTED)
 
 
 func _draw_level_picker(font: Font) -> void:
@@ -282,7 +283,7 @@ func _draw_level_picker(font: Font) -> void:
 	var completed_count: int = 0
 	if _progress_store != null:
 		completed_count = int(_progress_store.get_completed_count())
-	draw_string(font, Vector2(44, 1150), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
+	draw_string(font, Vector2(44, 1150 + _layout_extra * 0.86), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, 12, COLOR_MUTED)
 	_level_rects.clear()
 
 	var button_width := 54.0
@@ -293,33 +294,33 @@ func _draw_level_picker(font: Font) -> void:
 	var controls_width := arrow_width + 8.0 + page_width + 8.0 + arrow_width + 12.0 + retry_width
 	var controls_start_x := (720.0 - controls_width) * 0.5
 
-	_previous_page_rect = Rect2(controls_start_x, 1140, arrow_width, 58)
+	_previous_page_rect = Rect2(controls_start_x, 1140 + _layout_extra * 0.86, arrow_width, 84)
 	draw_rect(_previous_page_rect, COLOR_PANEL if _level_page_start > 0 else COLOR_BG)
-	draw_string(font, _previous_page_rect.position + Vector2(0, 37), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
+	draw_string(font, _previous_page_rect.position + Vector2(0, 52), "<", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if _level_page_start > 0 else COLOR_GRID)
 
 	var buttons_start_x := controls_start_x + arrow_width + 8.0
 	var visible_count := mini(LEVELS_PER_PAGE, maxi(0, _campaign_levels.size() - _level_page_start))
 	for local_index in range(visible_count):
 		var global_index := _level_page_start + local_index
-		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1140, button_width, 58)
+		var rect := Rect2(buttons_start_x + local_index * (button_width + button_gap), 1140 + _layout_extra * 0.86, button_width, 84)
 		_level_rects.append(rect)
 		var is_selected := global_index == _level_index
 		draw_rect(rect, COLOR_GOLD if is_selected else COLOR_PANEL)
 		var label_color := COLOR_BG if is_selected else COLOR_TEXT
-		draw_string(font, rect.position + Vector2(0, 36), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 15, label_color)
+		draw_string(font, rect.position + Vector2(0, 52), "%03d" % (global_index + 1), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 15, label_color)
 		if _progress_store != null and _progress_store.is_level_completed(String(_campaign_levels[global_index]["id"])):
 			draw_circle(rect.position + Vector2(rect.size.x - 7.0, 7.0), 3.0, COLOR_GOLD)
 
 	var next_x := buttons_start_x + page_width + 8.0
-	_next_page_rect = Rect2(next_x, 1140, arrow_width, 58)
+	_next_page_rect = Rect2(next_x, 1140 + _layout_extra * 0.86, arrow_width, 84)
 	var has_next_page := _level_page_start + LEVELS_PER_PAGE < _campaign_levels.size()
 	draw_rect(_next_page_rect, COLOR_PANEL if has_next_page else COLOR_BG)
 	draw_string(font, _next_page_rect.position + Vector2(0, 37), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, 20, COLOR_TEXT if has_next_page else COLOR_GRID)
 
-	_restart_rect = Rect2(next_x + arrow_width + 12.0, 1140, retry_width, 58)
+	_restart_rect = Rect2(next_x + arrow_width + 12.0, 1140 + _layout_extra * 0.86, retry_width, 84)
 	draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 	draw_string(font, _restart_rect.position + Vector2(0, 36), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, retry_width, 16, COLOR_TEXT)
-	draw_string(font, Vector2(360, 1240), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
+	draw_string(font, Vector2(360, 1240 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, 12, COLOR_MUTED)
 
 
 func _gui_input(event: InputEvent) -> void:

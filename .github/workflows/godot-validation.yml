@@ -66,6 +66,9 @@ jobs:
       - name: Run contextual level guidance contract tests
         run: timeout 60s godot --headless --path . --script res://tests/test_level_guidance.gd
 
+      - name: Run responsive portrait layout contract tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_responsive_layout.gd
+
       - name: Audit campaign geometry and chapter pacing
         run: timeout 60s godot --headless --path . --script res://tests/audit_campaign_design.gd
 
