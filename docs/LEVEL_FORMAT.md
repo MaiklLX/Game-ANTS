@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 80 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–080. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
+The current campaign contains 85 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–085. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
 
 ### Adding a future chapter
 
@@ -163,3 +163,11 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - level_078.json — The Four Hidden Boughs: four colors sit behind an L-shaped root screen; two field slots require careful squad rotation.
 - level_079.json — The Golden Switchback: a capacity-three amber squad follows a staggered route around a root shelf, with a separate teal pickup.
 - level_080.json — The Orchard Crossroads: two paired loads and two single seeds converge around a central crossing with three deployment slots.
+
+
+### Amber Orchard — batch 081–085
+- level_081.json — The Bent Orchard: a squared root bend separates a paired amber harvest from a coral pocket and a nearby teal seed.
+- level_082.json — The Canopy Steps: two paired harvests sit on opposite sides of a rising root stair.
+- level_083.json — The Hidden Sun: four colors are placed beyond a sheltered central lane between two root shelves.
+- level_084.json — The Compass Branches: two separated openings in a central trunk connect four outer pockets.
+- level_085.json — The Orchard Keeper's Trial: a capacity-three amber branch, paired teal load, and two lone seeds test all four squad roles across three slots.
