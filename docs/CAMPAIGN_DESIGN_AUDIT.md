@@ -41,17 +41,16 @@ The first redesign pass removed the exact duplicate, and CI #584 passed that int
 
 ## Next review sequence
 
-1. Confirm CI for the `root_037` and `root_041` revisions and rerun the geometry report.
-2. Review the `root_053` / `root_056` shared motif and the related barrier families in the Root Labyrinth.
-3. Compare the full chapter progression using route length, bottleneck placement, resource distribution, capacity, and slot pressure; averages alone are insufficient.
-4. Add targeted route/decision regression checks for any revised puzzle where a distinctive route shape is part of its identity.
-5. Keep manual Godot Editor portrait review and real-device playtesting as separate release gates. Headless CI is not visual QA.
+1. Review the remaining related barrier motifs across levels 047, 057, and 059, and the repeated crown/finale family (035, 040, 045, 050, 055, 060) for genuinely different route decisions.
+2. Compare the full chapter progression using route length, bottleneck placement, resource distribution, capacity, and slot pressure; averages alone are insufficient.
+3. Add targeted route/decision regression checks where a distinctive route shape is part of a level's identity.
+4. Keep manual Godot Editor portrait review and real-device playtesting as separate release gates. Headless CI is not visual QA.
 
 ## Current status
 
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
-- Audit script: added to CI; run #579 passed on the baseline and run #584 passed after the map revisions.
-- Latest map revisions: `root_037`, `root_041`, and `root_053`; Godot CI #597 passed on the map-content commit, with zero repeated geometry groups and zero exact gameplay-signature groups.
-- Added route-identity checks for all three revisions. The newest combined run #599 is validating those tests; Root Labyrinth averages 6.40 obstacles per level.
+- Audit script: added to CI; runs #579, #597, and #599 passed.
+- Latest map revisions: `root_037`, `root_041`, and `root_053`; run #599 passed the route-identity tests and the campaign-wide audit. Result: **0 repeated geometry groups and 0 exact gameplay-signature groups** across 100 levels.
+- Root Labyrinth averages 6.40 obstacles per level; this is a descriptive metric, not a difficulty rating.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
