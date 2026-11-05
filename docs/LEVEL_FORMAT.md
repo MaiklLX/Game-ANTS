@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 35 authored levels across two chapter packs: Meadow 001–030 and Root Labyrinth 031–035. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
+The current campaign contains 55 authored levels across two chapter packs: Meadow 001–030 and Root Labyrinth 031–055. The architecture has no five-level or 300-level cap: the 300-level target is a content-production goal, not a hard-coded engine limit.
 
 ### Adding a future chapter
 
