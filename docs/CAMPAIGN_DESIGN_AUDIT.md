@@ -6,7 +6,7 @@ This audit is a repeatable screening tool for the 100-level launch campaign. It 
 
 A matching signature is a review signal, not an automatic design defect. Different resource colors, squad capacities, deployment-slot limits, route order, and intended teaching goals can make similar geometry play differently. Conversely, different geometry can still produce the same decision. Automated solvability remains necessary but does not prove puzzle quality, strategic variety, difficulty, or phone readability.
 
-The audit runs in Godot CI through `tests/audit_campaign_design.gd`.
+The audit runs in Godot CI through `tests/audit_campaign_design.gd`. It uses the production board pathfinder for shortest nest-to-resource route measurements.
 
 ## First 100-level baseline
 
@@ -20,6 +20,22 @@ The first full audit reported:
 | The Colony Heart: First Dawn | 10 | 4.80 | 4.30 | 3.10 | 2.00 | 3 |
 
 These are content-shape indicators only. They are not a difficulty score. In particular, the lower obstacle average in the final chapter does not imply easier puzzles; resource density, squad capacity, slots, route structure, and decision order also matter.
+
+## Latest shortest-route snapshot
+
+The audit now measures the shortest path from the nest to each resource independently, using the production board pathfinder.
+
+| Chapter | Avg. route to a resource (steps) | Avg. extra detour steps | Longest resource route (steps) |
+|---|---:|---:|---:|
+| The Living Meadow | 6.10 | 0.77 | 11 |
+| The Root Labyrinth | 7.10 | 1.17 | 15 |
+| The Amber Orchard | 5.87 | 0.79 | 13 |
+| The Colony Heart: First Dawn | 5.56 | 0.46 | 11 |
+
+The route length excludes the starting cell. Extra detour steps are the shortest route length minus Manhattan distance. Averages are weighted by individual resource samples, not by level.
+
+This snapshot confirms that Root Labyrinth has the longest average and maximum individual resource routes. The final 10-level chapter is more compact by this metric, despite carrying more resources on average and using a slightly higher average slot count. That is a useful pacing question for the next review, not proof that the finale is too easy: this metric does not model sequential pickup routes, returns to the nest, squad capacity, simultaneous deployment, or player choice among alternatives.
+
 
 ## Initial repeated-geometry findings
 
@@ -50,7 +66,7 @@ The first redesign pass removed the exact duplicate, and CI #584 passed that int
 
 - Campaign content: 100/100 authored.
 - Root Labyrinth content: 30/30 authored; design sign-off remains open.
-- Audit script: added to CI; runs #579, #597, and #599 passed.
+- Audit script: added to CI; runs #579, #597, #599, and #605 passed. PR validation run #606 passed too.
 - Latest map revisions: `root_037`, `root_041`, and `root_053`; run #599 passed the route-identity tests and the campaign-wide audit. Result: **0 repeated geometry groups and 0 exact gameplay-signature groups** across 100 levels.
-- Root Labyrinth averages 6.40 obstacles per level; this is a descriptive metric, not a difficulty rating.
+- Latest route snapshot: Root Labyrinth has the longest average shortest path to a resource (7.10 steps; max 15); the final chapter is shortest (5.56; max 11). These figures do not account for expedition sequencing, returns, or slot/capacity interactions.
 - PR #9 remains Draft and unmerged. No merge to `main` without explicit owner approval.
