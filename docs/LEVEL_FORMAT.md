@@ -112,3 +112,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_043.json](../levels/level_043.json) — The Upper and Lower Roots: two horizontal channels around a root barrier.
 - [level_044.json](../levels/level_044.json) — The Root Divide: upper and lower entries through a central wall.
 - [level_045.json](../levels/level_045.json) — The Hollow Crown: four colors around a heartwood mass with upper and lower lanes.
+- [level_046.json](../levels/level_046.json) — The Stair of Roots: two staggered crossings make an upper-then-lower route.
+- [level_047.json](../levels/level_047.json) — Crossed Passages: three colors distributed around two aligned corridor gates.
+- [level_048.json](../levels/level_048.json) — The Hidden Pocket: one seed sits in a side pocket with a single entrance.
+- [level_049.json](../levels/level_049.json) — The Deep Turn: a central detour divides upper and lower chambers.
+- [level_050.json](../levels/level_050.json) — The Labyrinth Heart: four-color checkpoint around two winding passages.
