@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "root_053",
   "title": "The Turning Fork",
-  "objective": "Two staggered barriers force the route to change sides between the first and second chamber.",
+  "objective": "A violet cache waits between two staggered roots; collect it before taking the upper exit to the far pair.",
   "width": 6,
   "height": 5,
   "start": [
@@ -46,7 +46,7 @@
     },
     {
       "x": 3,
-      "y": 0,
+      "y": 4,
       "type": "resource",
       "color": "violet"
     },
