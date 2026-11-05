@@ -35,6 +35,7 @@ var _selected_squad_id: String = ""
 var _status: String = "Choose a squad to begin."
 var _last_path: Array[Vector2i] = []
 var _last_target: Vector2i = Vector2i(-1, -1)
+var _last_path_start: Vector2i = Vector2i(-1, -1)
 var _ant_progress: float = 0.0
 var _is_animating: bool = false
 var _returning_to_nest: bool = false
@@ -158,7 +159,7 @@ func _draw_board(font: Font) -> void:
 				draw_string(font, rect.position + Vector2(0, rect.size.y - 7), _symbol_for(resource_color), HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 13, COLOR_BG)
 
 	if not _last_path.is_empty():
-		var previous := _board.start
+		var previous := _last_path_start if _board.is_inside(_last_path_start) else _board.start
 		for step in _last_path:
 			draw_line(_cell_rect(previous).get_center(), _cell_rect(step).get_center(), COLOR_GOLD, 4.0)
 			previous = step
@@ -250,6 +251,7 @@ func _load_level(index: int) -> void:
 	_selected_squad_id = ""
 	_last_path.clear()
 	_last_target = Vector2i(-1, -1)
+	_last_path_start = _board.start
 	_status = "Choose a squad to begin." if result["valid"] else str(result["errors"])
 	queue_redraw()
 
@@ -281,14 +283,16 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 		_status = "Deploy the selected squad first."
 		queue_redraw()
 		return
-	var result: Dictionary = TurnResolverScript.apply_collection(
-		_colony, _board, _selected_squad_id, _board.start, cell
+	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
+	_last_path_start = squad_position if _board.is_inside(squad_position) else _board.start
+	var preview: Dictionary = TurnResolverScript.preview_collection(
+		_colony, _board, _selected_squad_id, _last_path_start, cell
 	)
-	if not result["valid"]:
-		_status = String(result["errors"][0])
+	if not preview["valid"]:
+		_status = String(preview["errors"][0])
 		queue_redraw()
 		return
-	_last_path = result["path"]
+	_last_path = preview["path"]
 	_last_target = cell
 	_ant_progress = 0.0
 	_returning_to_nest = false
@@ -308,13 +312,18 @@ func _return_selected_squad() -> void:
 		_status = "No selected squad is on the ground."
 		queue_redraw()
 		return
+	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
+	_last_path_start = squad_position if _board.is_inside(squad_position) else _board.start
+	_last_path = _board.find_path(_last_path_start, _board.start)
+	_last_target = _board.start
+	_ant_progress = 0.0
 	if _last_path.is_empty():
 		_finish_squad_return()
 		return
 	_returning_to_nest = true
 	_is_animating = true
 	_status = "Workers are following the trail home..."
-	_start_path_animation(0.0, true)
+	_start_path_animation(1.0, true)
 	queue_redraw()
 
 
@@ -334,11 +343,18 @@ func _on_path_animation_finished(returning: bool) -> void:
 	if returning:
 		_finish_squad_return()
 	else:
-		var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-		if squad.get("carried", 0) >= squad.get("capacity", 1):
-			_status = "Load full. Tap the nest to deliver and free the slot."
+		var result: Dictionary = TurnResolverScript.apply_collection(
+			_colony, _board, _selected_squad_id, _last_path_start, _last_target
+		)
+		if not result["valid"]:
+			_status = String(result["errors"][0])
+			_last_path.clear()
 		else:
-			_status = "Seed collected. Tap another matching seed or return to the nest."
+			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
+			if squad.get("carried", 0) >= squad.get("capacity", 1):
+				_status = "Load full. Tap the nest to deliver and free the slot."
+			else:
+				_status = "Seed collected. Tap another matching seed or return to the nest."
 		_check_terminal_state()
 	queue_redraw()
 
@@ -364,7 +380,8 @@ func _position_along_last_path(progress: float) -> Vector2:
 	var distance := clamped_progress * _last_path.size()
 	var segment_index := mini(floori(distance), _last_path.size() - 1)
 	var segment_progress := distance - segment_index
-	var from_position := _cell_rect(_board.start if segment_index == 0 else _last_path[segment_index - 1]).get_center()
+	var path_start := _last_path_start if _board.is_inside(_last_path_start) else _board.start
+	var from_position := _cell_rect(path_start if segment_index == 0 else _last_path[segment_index - 1]).get_center()
 	var to_position := _cell_rect(_last_path[segment_index]).get_center()
 	return from_position.lerp(to_position, clampf(segment_progress, 0.0, 1.0))
 
