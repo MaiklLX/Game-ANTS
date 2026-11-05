@@ -5,6 +5,17 @@ extends RefCounted
 const BASE_SIZE := Vector2(720.0, 1280.0)
 
 
+static func safe_viewport_rect(viewport_size: Vector2, safe_area: Rect2i, screen_size: Vector2i) -> Rect2:
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0 or screen_size.x <= 0 or screen_size.y <= 0:
+		return Rect2(Vector2.ZERO, viewport_size)
+	var screen_rect := Rect2i(Vector2i.ZERO, screen_size)
+	var clipped_safe_area := safe_area.intersection(screen_rect)
+	if clipped_safe_area.size.x <= 0 or clipped_safe_area.size.y <= 0:
+		return Rect2(Vector2.ZERO, viewport_size)
+	var screen_scale := viewport_size / Vector2(screen_size)
+	return Rect2(Vector2(clipped_safe_area.position) * screen_scale, Vector2(clipped_safe_area.size) * screen_scale)
+
+
 static func calculate(viewport_size: Vector2) -> Dictionary:
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
 		return {
