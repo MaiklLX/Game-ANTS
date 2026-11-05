@@ -299,7 +299,7 @@ func _draw_board(font: Font) -> void:
 
 	var board_label_y := _board_origin.y - 22.0
 	draw_string(font, Vector2(44, board_label_y), "ПОЛЕ СБОРА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	var resource_label := "ОСТАЛОСЬ СЕМЯН: %d" % [_board.remaining_resources, "" if _board.remaining_resources == 1 else "S"]
+	var resource_label := "ОСТАЛОСЬ СЕМЯН: %d" % _board.remaining_resources
 	draw_string(font, Vector2(498, board_label_y), resource_label, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
@@ -803,13 +803,13 @@ func _color_for(color_name: String) -> Color:
 func _symbol_for(color_name: String) -> String:
 	match color_name:
 		"amber":
-			return "A"
+			return "Я"
 		"teal":
-			return "T"
+			return "Б"
 		"coral":
-			return "C"
+			return "К"
 		"violet":
-			return "V"
+			return "Ф"
 	return "?"
 
 
