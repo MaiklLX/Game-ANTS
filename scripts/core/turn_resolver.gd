@@ -24,7 +24,9 @@ static func preview_collection(
 	if resource_color != squad["color"]:
 		return _failure("Resource color does not match the squad.")
 
-	var path: Array[Vector2i] = board.find_path(from_cell, target_cell)
+	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
+	var route_start := squad_position if board.is_inside(squad_position) else from_cell
+	var path: Array[Vector2i] = board.find_path(route_start, target_cell)
 	if path.is_empty():
 		return _failure("Target resource is not reachable.")
 

@@ -295,3 +295,175 @@
 **Updated checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-004 TURN RESOLVER GREEN. Continue from feat/kt-004-squad-rules and draft PR #7, based on feat/kt-003-level-data-schema (PR #6 dependency). Resource colors are explicit: amber, teal, coral, violet. BoardModel tracks resources and routes; ColonyModel provides squad roster, limited deployment slots, carrying capacity, matching-color reachable collection, partial-load return/delivery, and slot release. TurnResolver now provides non-mutating collection previews, validated apply_collection(), victory only after every resource is delivered and all squads return, and blocked detection when no deployed squad can return and no idle squad can reach a matching resource. Test runners accumulate failures and exit nonzero. GitHub Actions run #86 passed with explicit BoardModel, LevelDefinition, ColonyModel, and TurnResolver test success, Godot 4.7.2 import, and headless main-scene launch. Next: add level-authored squad rosters and three sequencing puzzles, then create a thin portrait graybox UI using the tested models. No visual ant movement or UI yet. PR #4/#5/#6 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-005 — First playable campaign graybox (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`  
+**Draft PR:** [#8 — build the first playable ANTWORKS campaign graybox](https://github.com/MaiklLX/Game-ANTS/pull/8)  
+**Verified code head:** `1797f3234fade93971752186ed0eb8a92c1c2847`
+
+**Completed**
+- Extended schema v1 with player-facing `title` and `objective`, validated `deployment_slots` (1–4), and a validated roster of 1–8 uniquely identified squads with supported colors and capacity 1–9.
+- Added `LevelLoader` to validate and load the board and colony roster together.
+- Authored three meadow campaign levels:
+  - `meadow_001`: learn deploy → collect → return.
+  - `meadow_002`: choose the correct color squad with only one deployment slot.
+  - `meadow_003`: collect two amber seeds with one two-capacity trip, then deliver one teal seed with a second trip.
+- Replaced the foundation placeholder main scene with a portrait-first, touch/mouse graybox: visible deployment slots, squad cards, resource board, matching-color collection, nest return, delivery counter, retry, and level selection.
+- Added a campaign test that loads all three level files through `LevelLoader` and solves each using the production `TurnResolver` and `ColonyModel` rules.
+- Kept the game rules independent from the presentation layer. The UI draws the path/result; it does not own the rules.
+
+**CI correction**
+- Initial PR run #102 correctly caught that the legacy BoardModel tests expect `goal` to remain the authored target cell, not the nest.
+- Restored each level's goal to its first authored target resource; the nest remains the return point represented by `start`.
+- This preserves the existing BoardModel contract and keeps the new return interaction separate from the level goal field.
+
+**Verification: PASS**
+- GitHub Actions run **#107** passed: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42013559717).
+- Logs explicitly confirm `BoardModel tests passed.`, `LevelDefinition tests passed.`, `ColonyModel tests passed.`, `TurnResolver tests passed.`, and `Campaign level tests passed.`.
+- Godot 4.7.2 download/version, project import, all five test scripts, and headless main-scene launch passed.
+- This is a headless CI validation. The scene has not yet been visually inspected in the Godot editor or on a physical Android device; no APK or public web build is claimed.
+
+**Next**
+1. Review the first playable screen at real phone aspect ratios and correct any layout/touch issues found in an actual editor/device run.
+2. Improve the interaction feel: visible ant movement along the verified path, collection feedback, return-to-nest movement, and a clear blocked/retry state.
+3. Add undo/state reset only after the action history can be tested deterministically.
+4. Expand the first chapter beyond three levels once the basic loop feels good.
+5. Web/PWA export remains a later parallel delivery target after the mobile game loop is stable; do not compromise Godot/mobile quality to accelerate it.
+
+**Updated checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-005 FIRST PLAYABLE GRAYBOX GREEN. Continue from feat/kt-005-first-playable-levels and draft PR #8, based on feat/kt-004-squad-rules (PR #7 dependency). Godot 4.7.2-stable remains pinned. Level schema v1 now validates deployment_slots and squad rosters; LevelLoader loads board + colony from authored data. Three meadow levels exist: meadow_001 (basic collect/return), meadow_002 (two colors, one slot), meadow_003 (amber capacity-two trip plus teal trip). Main scene now uses scripts/ui/game_screen.gd for a portrait touch/mouse graybox with squad cards, slots, board, collection, nest return, delivery feedback, retry, and level picker. Campaign tests solve all three levels through production core models. GitHub Actions run #107 passed: BoardModel, LevelDefinition, ColonyModel, TurnResolver, Campaign level tests, Godot 4.7.2 project import, and headless main-scene launch. Initial run #102 caught a goal-field regression; goal coordinates were restored to authored target resources before the green run. No visual editor/device inspection, APK, or web deployment has been performed. Next: actual visual/device QA, then ant movement/collection/return feedback and improved game feel. Keep PRs stacked and draft; no merge to main without owner approval. GitHub Issues only; no external agents.`
+
+
+### KT-005.1 — Continuous squad routes and visible ant movement (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`  
+**Draft PR:** [#8](https://github.com/MaiklLX/Game-ANTS/pull/8)  
+**Verified implementation commit:** `bf411206372e771855c160ceeacddb5237d8c129`
+
+**Completed**
+- ColonyModel now stores each squad's current grid position, initializes it at the nest, advances it to each collected resource, and restores it to the nest on return.
+- TurnResolver previews routes from the squad's actual current position, not always from the nest.
+- The campaign solution test verifies that the second amber pickup in meadow_003 is reached by a one-cell continuation from the first pickup, and that each squad returns to the nest position.
+- The graybox now animates a small ant marker along the validated outbound route; collection is applied only after the ant reaches the resource.
+- Tapping the nest calculates and animates the return route from the squad's current position; delivery and slot release happen when the return animation completes.
+- Input is locked during route animation to prevent overlapping actions.
+
+**Verification: PASS**
+- GitHub Actions run **#121** passed: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42013999272).
+- Logs explicitly confirm BoardModel, LevelDefinition, ColonyModel, TurnResolver, and Campaign level tests passed; Godot 4.7.2 import and headless main-scene launch passed.
+- Visual frame-by-frame inspection and physical-device touch testing remain outstanding.
+
+**Next**
+1. Validate the graybox visually in a real Godot editor/device run, especially the 720×1280 layout scaling and touch coordinates.
+2. Improve ant animation with a small group of ants, pickup/drop feedback, and a short nest delivery effect.
+3. Add a player-visible retry/blocked modal and clear feedback when a different squad must be chosen.
+4. Add undo only after action history and animation interruption are deterministic.
+
+**Updated checkpoint phrase:**
+
+`GAME-ANTS — KT-005.1 SQUAD MOVEMENT GREEN. Continue from feat/kt-005-first-playable-levels, draft PR #8. Level schema and LevelLoader provide authored squads/slots; three meadow levels are playable in the portrait graybox. ColonyModel now tracks each squad's current cell, so consecutive pickups route from the previous resource instead of teleporting back to the nest. The UI previews the route, animates the ant marker outbound, applies collection at arrival, then animates the return route when the nest is tapped; delivery/slot release occurs after arrival. Input is locked during animation. Campaign tests verify the one-cell second amber pickup in meadow_003 and nest-position restoration. GitHub Actions run #121 passed all five test suites plus Godot 4.7.2 import and headless main-scene launch. Visual editor/device QA remains outstanding; no APK or public web build. Next: improve ant group/collection/return effects and blocked/retry feedback, then perform real phone visual/touch QA. Keep PRs stacked and draft; never merge to main without owner approval. GitHub Issues only; no external agents.`
+
+
+### KT-005.2 — Squad presentation and interaction feedback (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`  
+**Draft PR:** [#8](https://github.com/MaiklLX/Game-ANTS/pull/8)  
+**Implementation commit:** `9ea2648f59e857524247f9390d9d8f294ded58fc`  
+**Checkpoint commit:** `cffbb1d728fa04942a466c529260d1d444501550`  
+**Follow-up cleanup commit:** `efd6739ae21b2fc5a86e729c12ab7a99c378a3be`
+
+**Implemented**
+- Replaced the single moving cursor-like marker with a compact three-ant formation that follows the same validated route.
+- Added a short expanding ring at the collected resource and at the nest after delivery.
+- Added explicit `FIELD CLEARED` and `FIELD BLOCKED` status treatments with distinct panel/accent colors.
+- Terminal fields now ignore gameplay taps; only retry or selecting another level remains available.
+- Added continuous redraw requests while route and feedback tweens are active, so tweened drawing properties are actually presented frame by frame.
+
+**Verification: PASS**
+- GitHub Actions run **#125** passed on the UI implementation commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016724874
+- GitHub Actions run **#127** passed on the checkpoint commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42016772487
+- Follow-up cleanup resets an in-flight feedback pulse when retrying or switching levels; GitHub Actions run **#131** passed on that latest code commit: https://github.com/MaiklLX/Game-ANTS/actions/runs/42017082813
+- Godot 4.7.2 version check and project import passed.
+- BoardModel, LevelDefinition, ColonyModel, TurnResolver, and Campaign level tests all passed.
+- Main scene launched successfully in headless mode.
+- This is still a graybox silhouette, not final pixel art.
+- No Godot editor visual inspection, Android APK export, or physical-device touch QA is claimed.
+
+**Next**
+1. Run CI and fix any parser or regression failures.
+2. Inspect the 720×1280 layout and touch mapping in Godot at representative phone aspect ratios.
+3. Improve nest/resource art and add carrying visuals after the basic movement/feedback pass is stable.
+4. Keep the campaign deterministic and expand only after the first three levels feel clear.
+
+**Checkpoint phrase:**
+
+`GAME-ANTS — KT-005.2 SQUAD FEEDBACK IMPLEMENTED, CI PENDING. Continue from feat/kt-005-first-playable-levels and draft PR #8. Commit 9ea2648f59e857524247f9390d9d8f294ded58fc changes the graybox UI: three ants travel as a small formation along the validated route; collection and nest delivery trigger expanding feedback rings; completed and blocked fields have distinct status panels; terminal input is limited to retry/level selection. A process redraw loop now keeps tween-driven movement and pulses visible. This remains graybox presentation, not final pixel art. GitHub Actions runs #125 and #127 passed for the UI and checkpoint commits. No editor visual QA, Android APK, or physical-device testing has been performed. Next: verify CI, then inspect phone scaling/touch coordinates and refine nest/resource/carrying visuals. Keep PR #8 draft and stacked; never merge to main without owner approval. Godot 4.7.2-stable remains pinned; GitHub Issues only; no external agents.`
+
+
+### KT-005.3 — Meadow board visual pass (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Implementation commit:** `419e884953bc054eb0affd4204fb867f4f72044d`
+
+**Implemented**
+- Added a framed meadow board with alternating ground tones and inset tile surfaces.
+- Replaced the flat nest marker with a layered earthen nest entrance.
+- Replaced flat resource marks with seed-like bodies, highlights, leaves, and retained color initials for readability.
+- Replaced plain blocked tiles with clustered stone silhouettes.
+- Core rules, level data, movement paths, and touch coordinate conversion were not changed.
+
+**Verification:** GitHub Actions run **#141** passed on checkpoint commit `3f819a8fa000e8e1bf784fa949b826fbab34c0c6`: Godot 4.7.2 project import, all five test suites, and headless main-scene launch succeeded. This run predates the subsequent carried-seed/ground-texture edits, so those latest edits still require their own CI confirmation. Visual editor/device inspection remains pending.
+
+**Next**
+1. Verify the new drawing helpers compile and all five test suites pass.
+2. Inspect the board at narrow and tall portrait aspect ratios; tune visual spacing if needed.
+3. Add carried-seed feedback and improve squad-card/slot presentation.
+4. Keep PR #8 draft and do not merge to `main` without owner approval.
+
+
+### KT-005.3 — carried-seed and squad feedback extension (2026-11-05)
+**Implementation commit:** `68347580bbc8fa1c1232d4becd8d0941d3dd10e7`
+
+- Added a small carried-seed visual beside the lead ant when the selected squad has collected resources.
+- Added a capacity meter to squad cards, showing carried resources relative to carrying capacity.
+- No core rules, level definitions, pathfinding, or input mapping changed.
+- GitHub Actions run #141 passed on the subsequent roadmap checkpoint `3f819a8fa000e8e1bf784fa949b826fbab34c0c6`, confirming the carried-seed and capacity-meter changes plus all five test suites and headless launch.
+
+
+### KT-005.3 — meadow texture refinement (2026-11-05)
+**Implementation commit:** `a9873b15f9cf76c4801382609b9ae963491cd7c5`
+
+- Added restrained, deterministic grass/ground details to meadow tiles, behind gameplay objects. The details vary by cell and stay low-contrast so seeds, nest, rocks, and route markers remain dominant.
+- No gameplay rules, level data, pathfinding, animation timing, or touch mapping changed.
+- GitHub Actions run **#143** passed on this gameplay commit: Godot 4.7.2 version check, project import, all five test suites, and headless main-scene launch succeeded. Visual editor/device inspection remains outstanding.
+
+
+### KT-005.4 — first concurrent-squad campaign puzzle (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Latest gameplay/UI commit:** `afd74716a8b3e830f4d1e977a9921284300940b4`
+
+- Added `meadow_004`, a four-way campaign step with two resource colors, two simultaneous deployment slots, and a narrow shared passage through a stone barrier.
+- Added the fourth field to the campaign selector and updated the level counter.
+- Reworked level-picker sizing so all four level buttons and Retry are laid out as one centered group without overlap.
+- Added a deterministic integration test that deploys both squads at once, collects their separate matching-color seeds while both slots are occupied, returns both squads, and verifies victory.
+- Updated the level format guide with the new field.
+- GitHub Actions run **#157** passed on gameplay/UI commit `afd74716a8b3e830f4d1e977a9921284300940b4`; run **#159** also passed on the latest roadmap checkpoint. Both completed Godot 4.7.2 import, all five test suites (including the concurrent-squad integration case), and headless main-scene launch. Editor/device visual QA remains outstanding.
+- PR #8 remains Draft and stacked on `feat/kt-004-squad-rules`; no merge to `main`.
+
+
+### KT-005.5 — three-color slot-pressure puzzle (2026-11-05)
+**Branch:** `feat/kt-005-first-playable-levels`
+**Status:** Implementation committed; CI verification pending.
+
+- Added `meadow_005`, "The Busy Nest": three squad colors (amber, teal, coral), two deployment slots, and four seeds.
+- Amber has capacity two and can bring home both upper seeds in one trip; teal and coral each have a single matching seed.
+- The level teaches slot scheduling: the third squad cannot deploy until one of the first two returns.
+- Added a deterministic integration test that verifies the slot limit, blocked third deployment, slot release after return, and eventual victory.
+- Added level 005 to the picker and made the displayed level count derive from the campaign list rather than a hard-coded value.
+- No merge to main. Visual editor/device QA remains outstanding.
+
+**Verification: PASS**
+- GitHub Actions run **#163** passed on checkpoint commit `b0020306646605ee9d67643dd04305c72e2c53e4`: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42023024966).
+- Godot 4.7.2 version check, project import, all five test suites (including the new three-squad slot-pressure integration case), and headless main-scene launch passed.
+- This remains headless validation only; editor/device visual QA is not claimed.
+
+**Next:** move into KT-006 interaction clarity and a stronger first-session tutorial.

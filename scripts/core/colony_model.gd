@@ -6,11 +6,13 @@ const VALID_COLORS := ["amber", "teal", "coral", "violet"]
 
 var slot_capacity: int = 0
 var delivered_resources: int = 0
+var nest_position: Vector2i = Vector2i(-1, -1)
 var _squads: Dictionary = {}
 
 
-func configure(max_slots: int) -> void:
+func configure(max_slots: int, nest_cell: Vector2i = Vector2i(-1, -1)) -> void:
 	slot_capacity = maxi(0, max_slots)
+	nest_position = nest_cell
 	delivered_resources = 0
 	_squads.clear()
 
@@ -32,6 +34,7 @@ func register_squad(squad_id: String, color: String, carry_capacity: int) -> Dic
 		"carried": 0,
 		"deployed": false,
 		"slot_index": -1,
+		"position": nest_position,
 	}
 	return _success()
 
@@ -55,6 +58,8 @@ func deploy_squad(squad_id: String) -> Dictionary:
 		squad["deployed"] = true
 		squad["slot_index"] = slot_index
 		squad["carried"] = 0
+		if nest_position.x >= 0 and nest_position.y >= 0:
+			squad["position"] = nest_position
 		_squads[squad_id] = squad
 		return {
 			"valid": true,
@@ -78,13 +83,16 @@ func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector
 		return _failure("No resource is available at the target cell.")
 	if board.resource_color_at(target_cell) != squad["color"]:
 		return _failure("Resource color does not match the squad.")
-	if board.find_path(from_cell, target_cell).is_empty():
+	var squad_position: Vector2i = squad["position"]
+	var route_start := squad_position if board.is_inside(squad_position) else from_cell
+	if board.find_path(route_start, target_cell).is_empty():
 		return _failure("Target resource is not reachable.")
 
 	if not board.collect_resource(target_cell, squad["color"]):
 		return _failure("Resource could not be collected.")
 
 	squad["carried"] += 1
+	squad["position"] = target_cell
 	_squads[squad_id] = squad
 	return {
 		"valid": true,
@@ -107,6 +115,7 @@ func return_squad(squad_id: String) -> Dictionary:
 	squad["carried"] = 0
 	squad["deployed"] = false
 	squad["slot_index"] = -1
+	squad["position"] = nest_position
 	_squads[squad_id] = squad
 	return {
 		"valid": true,

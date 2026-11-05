@@ -51,5 +51,8 @@ jobs:
       - name: Run turn resolver tests
         run: timeout 60s godot --headless --path . --script res://tests/test_turn_resolver.gd
 
+      - name: Run campaign level tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_campaign_levels.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
