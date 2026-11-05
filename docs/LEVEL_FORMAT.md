@@ -102,3 +102,8 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - [level_033.json](../levels/level_033.json) — The S-Bend: staggered walls create a forced two-stage corridor.
 - [level_034.json](../levels/level_034.json) — The Root Weave: upper and lower branches are split by a central root.
 - [level_035.json](../levels/level_035.json) — The Buried Junction: four harvest points are arranged beyond two narrow entrances.
+- [level_036.json](../levels/level_036.json) — The Root Ladder: capacity-two harvest along a narrow upper corridor.
+- [level_037.json](../levels/level_037.json) — Forked Roots: three colors beyond a forked passage.
+- [level_038.json](../levels/level_038.json) — Parallel Tunnels: two teams can use separated openings while a third waits.
+- [level_039.json](../levels/level_039.json) — The Narrow Seam: one crossing through a horizontal root wall.
+- [level_040.json](../levels/level_040.json) — The Root Crown: four harvest points around a central heartwood mass.
