@@ -7,7 +7,7 @@
   "goal": [4, 2],
   "tiles": [
     { "x": 0, "y": 2, "type": "nest" },
-    { "x": 4, "y": 2, "type": "resource" },
+    { "x": 4, "y": 2, "type": "resource", "color": "amber" },
     { "x": 2, "y": 1, "type": "obstacle" },
     { "x": 2, "y": 3, "type": "obstacle" }
   ]
