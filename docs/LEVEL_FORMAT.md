@@ -10,7 +10,7 @@ Campaign levels are stored as UTF-8 JSON files and discovered through a manifest
 - `CampaignCatalog` expands the manifest chain, validates each pack and level, rejects duplicate chapter IDs, level IDs, and file references, and returns a flat ordered catalogue to the game.
 - The UI shows five levels at a time and pages through the catalogue. The game no longer has a hard-coded list of level paths.
 
-The current campaign contains 90 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–090. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
+The current campaign contains 100 authored levels across three chapter packs: Meadow 001–030, Root Labyrinth 031–060, and Amber Orchard 061–090 and Colony Heart 091–100. The architecture has no five-level or 100-level cap: the 100-level version 1.0 target and 300+ long-term vision are content milestones, not hard-coded engine limits.
 
 ### Adding a future chapter
 
@@ -179,3 +179,20 @@ Unknown schema versions fail explicitly. The format is intentionally small; new 
 - level_088.json — The Three Canopies: three paired harvests must be completed with two deployment slots.
 - level_089.json — The Orchard's Long Walk: four colors sit behind a staggered root maze and require slot rotation.
 - level_090.json — The Heart of Amber: chapter finale combining two full loads, three single seeds, and three deployment slots.
+
+
+## Colony Heart finale — levels 091–100
+The fourth pack, `campaign/packs/colony_heart/pack.json`, is appended after Amber Orchard in the root manifest. It contains ten schema-v1 levels using existing mechanics only:
+
+- 091 First Light at the Nest
+- 092 The First Ring
+- 093 Three Seeds, Three Paths
+- 094 The Four Fires
+- 095 The Shared Passage
+- 096 The Rooted Crown
+- 097 The Long Return
+- 098 Four Branches, One Nest
+- 099 The Last Crossing
+- 100 The Colony Heart
+
+The chapter title is provisional pending final content/presentation review. The catalog is now expected to expose 100 ordered levels with level 100 at global index 99.
