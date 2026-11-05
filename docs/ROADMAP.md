@@ -260,3 +260,38 @@
 **Checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-004 SQUAD CORE GREEN. Continue from feat/kt-004-squad-rules and draft PR #7, based on feat/kt-003-level-data-schema (PR #6 dependency). Resource tiles now require one of amber/teal/coral/violet. BoardModel tracks resource colors and supports color-aware collection. ColonyModel provides squad registration, two-or-more configurable deployment slots, capacity limits, reachable matching-color collection, partial-load delivery on return, and slot release. Strict test runners accumulate failures and exit nonzero; run #65 was a false-positive due to the old quit(1)/quit(0) pattern, corrected before verification. GitHub Actions run #74 passed with explicit BoardModel, LevelDefinition, and ColonyModel test success, Godot 4.7.2 import, and headless main-scene launch. Next: implement deterministic action/turn resolution plus explicit blocked/victory outcomes, then graybox UI. No animations/UI yet. PR #4/#5/#6 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-004 — Previewable turn resolution and terminal-state checks (2026-11-05)
+**Branch:** `feat/kt-004-squad-rules`  
+**Draft PR:** [#7 — prototype ant squad slots and collection rules](https://github.com/MaiklLX/Game-ANTS/pull/7)  
+**Verified commit:** `bfe25c2cc5e573c467dbae127dc0d275e37874b5`
+
+**Completed**
+- Added `BoardModel.total_resources` and deterministic `get_resource_cells()` ordering.
+- Added stable `ColonyModel.get_squad_ids()` for deterministic roster traversal.
+- Added `TurnResolver.preview_collection()`: validates deployed state, capacity, target existence, color match, and reachability; returns the route and projected load without mutating game state.
+- Added `TurnResolver.apply_collection()` to apply only a valid previewed collection.
+- Added explicit terminal checks:
+  - victory only after all resources have been collected, delivered to the nest, and all squads have returned;
+  - blocked state when resources remain, no squad is deployed, and no idle squad can reach a matching resource.
+- Added headless tests for preview immutability, deterministic route output, apply behavior, waiting-for-return victory, wrong-color blocked state, and unreachable-resource blocked state.
+
+**Verification: PASS**
+- GitHub Actions run **#86** passed: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42001237606).
+- Logs explicitly confirm `BoardModel tests passed.`, `LevelDefinition tests passed.`, `ColonyModel tests passed.`, and `TurnResolver tests passed.`.
+- Godot 4.7.2 download/version, project import, all four test scripts, and headless main-scene launch passed.
+- No local editor, Android export, or physical-device testing is claimed.
+
+**Remaining**
+- The model is still headless core logic. There is no gameplay scene, visible slot UI, touch selection, ant movement animation, undo, or three authored sequencing levels.
+- Blocked-state logic currently treats any deployed squad as still having a return action; UI must expose that action clearly.
+
+**Next**
+1. Add level-authored squad rosters and at least three tiny sequencing puzzles.
+2. Implement a thin portrait graybox scene that renders the board and slots while delegating all outcomes to the tested core models.
+3. Keep PRs stacked and draft until reviewed; do not merge to `main`.
+
+**Updated checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-004 TURN RESOLVER GREEN. Continue from feat/kt-004-squad-rules and draft PR #7, based on feat/kt-003-level-data-schema (PR #6 dependency). Resource colors are explicit: amber, teal, coral, violet. BoardModel tracks resources and routes; ColonyModel provides squad roster, limited deployment slots, carrying capacity, matching-color reachable collection, partial-load return/delivery, and slot release. TurnResolver now provides non-mutating collection previews, validated apply_collection(), victory only after every resource is delivered and all squads return, and blocked detection when no deployed squad can return and no idle squad can reach a matching resource. Test runners accumulate failures and exit nonzero. GitHub Actions run #86 passed with explicit BoardModel, LevelDefinition, ColonyModel, and TurnResolver test success, Godot 4.7.2 import, and headless main-scene launch. Next: add level-authored squad rosters and three sequencing puzzles, then create a thin portrait graybox UI using the tested models. No visual ant movement or UI yet. PR #4/#5/#6 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
