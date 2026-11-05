@@ -35,6 +35,7 @@ func _initialize() -> void:
 	print("CAMPAIGN DESIGN AUDIT — %d levels across %d chapters" % [levels.size(), chapter_stats.size()])
 	_print_chapter_stats(chapter_stats)
 	_print_top_workloads(level_workloads, 10)
+	_print_progression_bands(level_workloads)
 	_print_chapter_workloads(level_workloads, "colony_heart")
 	_print_duplicate_groups("Repeated board geometry (review candidates)", geometry_groups)
 	_print_duplicate_groups("Exact gameplay signatures (high-priority review)", gameplay_groups)
@@ -264,6 +265,36 @@ func _print_top_workloads(records: Array[Dictionary], limit: int) -> void:
 			String(record["chapter_id"]),
 			int(record["steps"]),
 			int(record["trips"]),
+		])
+
+
+func _print_progression_bands(records: Array[Dictionary]) -> void:
+	var bands: Dictionary = {}
+	for record in records:
+		var level_number := int(String(record["id"]).get_slice("_", 1))
+		var band_start := int((level_number - 1) / 5) * 5 + 1
+		var key := "%s|%03d" % [String(record["chapter_id"]), band_start]
+		if not bands.has(key):
+			bands[key] = {"levels": 0, "steps": 0, "trips": 0, "max_steps": 0}
+		var band: Dictionary = bands[key]
+		band["levels"] += 1
+		band["steps"] += int(record["steps"])
+		band["trips"] += int(record["trips"])
+		band["max_steps"] = maxi(int(band["max_steps"]), int(record["steps"]))
+	var keys: Array = bands.keys()
+	keys.sort()
+	print("FIVE-LEVEL WORKLOAD BANDS:")
+	for key in keys:
+		var band: Dictionary = bands[key]
+		var count := int(band["levels"])
+		var first_level := int(String(key).get_slice("|", 1))
+		print("  - %s %03d-%03d: avg_steps=%.2f avg_trips=%.2f max_steps=%d" % [
+			String(key).get_slice("|", 0),
+			first_level,
+			mini(first_level + 4, 100),
+			float(band["steps"]) / count,
+			float(band["trips"]) / count,
+			int(band["max_steps"]),
 		])
 
 
