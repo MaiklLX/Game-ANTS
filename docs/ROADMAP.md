@@ -729,3 +729,13 @@
 - **Amber Orchard complete: 30/30. Version 1.0 campaign progress: 90/100; 10 levels remain.**
 - CI #529 passed on the 90-level code checkpoint `5fdaab407b2f7c7ccbafac307ed30947708c91a2`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42043542765. All 90 campaign levels, catalogue validation, and headless main-scene launch passed. CI #533 and #534 also passed on the latest documentation head `588d7818f1e633106914f1b29f283cc96163e038`. Previous 85-level code and documentation checks passed.
 - Next: design and implement the compact v1 finale 091–100. Do not introduce new mechanics without a prototype.
+
+
+### KT-008.8 — Version 1.0 campaign content authored (091–100, 2026-11-05)
+- Added the fourth chapter pack `colony_heart`, provisionally titled **The Colony Heart: First Dawn**, and appended it after Amber Orchard in the root campaign manifest.
+- Authored all ten finale levels: First Light at the Nest, The First Ring, Three Seeds, Three Paths, The Four Fires, The Shared Passage, The Rooted Crown, The Long Return, Four Branches, One Nest, The Last Crossing, and The Colony Heart.
+- No new mechanics were introduced. The finale recombines schema-v1 squads, carrying capacities, deployment slots, and obstacle routing.
+- Campaign level tests now include all 100 level files; catalogue tests assert 100 ordered entries, fourth-chapter identity, and global index 99.
+- **Version 1.0 content target reached: 100/100.** The 300+ level long-term vision remains unchanged.
+- CI for the complete 100-level branch is pending. Reaching 100 authored levels does not equal release sign-off; variety/balance, onboarding, save/progress, portrait mobile QA, performance, and device testing remain open.
+- Next phase: audit chapter-to-chapter difficulty and map variety, prioritize the Root Labyrinth duplication findings, then perform visual/device QA and release-readiness work.
