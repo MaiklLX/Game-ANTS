@@ -43,6 +43,26 @@
     {
       "id": "root_040",
       "file": "res://levels/level_040.json"
+    },
+    {
+      "id": "root_041",
+      "file": "res://levels/level_041.json"
+    },
+    {
+      "id": "root_042",
+      "file": "res://levels/level_042.json"
+    },
+    {
+      "id": "root_043",
+      "file": "res://levels/level_043.json"
+    },
+    {
+      "id": "root_044",
+      "file": "res://levels/level_044.json"
+    },
+    {
+      "id": "root_045",
+      "file": "res://levels/level_045.json"
     }
   ]
 }
