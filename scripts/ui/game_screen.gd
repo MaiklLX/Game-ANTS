@@ -263,6 +263,10 @@ func _handle_tap(point: Vector2) -> void:
 func _load_level(index: int) -> void:
 	if _animation_tween != null and _animation_tween.is_running():
 		_animation_tween.kill()
+	if _feedback_tween != null and _feedback_tween.is_running():
+		_feedback_tween.kill()
+	_feedback_progress = 1.0
+	_feedback_cell = Vector2i(-1, -1)
 	_is_animating = false
 	_returning_to_nest = false
 	_ant_progress = 0.0
