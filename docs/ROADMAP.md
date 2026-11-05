@@ -125,3 +125,20 @@
 - Still not covered: visual inspection in the editor, Android export, and physical-device testing.
 
 **Next implementation step:** continue Issue #2 on a separate stacked feature branch for versioned level data and tile validation. Keep PR #5 as the engine/bootstrap dependency until reviewed.
+
+
+### KT-003 — Versioned level data started (2026-11-05)
+**Branch:** `feat/kt-003-level-data-schema`  
+**Stacked on:** `feat/kt-002-godot-bootstrap`
+
+- Added schema-v1 JSON level validation with board bounds, typed tiles, unique coordinates, valid start/goal, and resource counting.
+- Added sample level `levels/level_001.json`.
+- Added `docs/LEVEL_FORMAT.md` with field definitions and constraints.
+- Added headless tests for valid sample data, duplicate coordinates, out-of-bounds goal, and unsupported schema version.
+- Expanded CI to run level-data tests and include PRs based on `feat/**`.
+
+**Verification:** pending GitHub Actions run for this branch. Do not call Issue #2 complete until CI passes and the remaining resource/board integration is reviewed.
+
+**Checkpoint phrase:**
+
+`GAME-ANTS — KT-003 LEVEL DATA IN PROGRESS. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap and PR #5. Added LevelDefinition schema-v1 validation, sample level JSON, format documentation, and headless tests; CI is pending. Preserve Godot 4.7.2 baseline and deterministic BoardModel. Verify CI before expanding resource collection and board integration. PR #4 and PR #5 remain dependencies. GitHub Issues only, no external agents, never merge to main without owner approval.`
