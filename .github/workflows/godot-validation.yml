@@ -38,5 +38,8 @@ jobs:
       - name: Import and parse project
         run: godot --headless --editor --path . --quit
 
+      - name: Run deterministic core tests
+        run: godot --headless --path . --script res://tests/test_board_model.gd
+
       - name: Launch main scene headlessly
         run: godot --headless --path . --quit
