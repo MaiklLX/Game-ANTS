@@ -100,3 +100,12 @@ Build the first complete 30-level Meadow chapter in reviewed batches, not one hu
 - 049 The Deep Turn reinforces central detours and upper/lower chamber access.
 - 050 The Labyrinth Heart is the 20-level checkpoint, combining four colors and two winding passages.
 - All levels use schema v1 and are solved through the production campaign integration test.
+
+
+### Root Labyrinth production batch 051–055
+- 051 The Bent Gate makes a low crossing mandatory before an upper-corner harvest.
+- 052 Twin Root Mouths separates access to upper and lower chambers into distinct entrances.
+- 053 The Turning Fork alternates the side of travel across two staggered barriers.
+- 054 The Middle Passage combines three resource colors behind one crossing and two deployment slots.
+- 055 The Root Labyrinth Trial is the 25-level checkpoint, combining four colors, slot pressure, and alternating openings.
+- All five levels use schema v1 and are covered by the deterministic campaign solver; no new mechanic is introduced.
