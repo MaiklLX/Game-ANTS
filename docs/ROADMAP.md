@@ -193,3 +193,31 @@
 **Checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-003 LEVEL DATA CI GREEN. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. Fix commit a170734a6c0d6b4ad4e465b74724addbaa8aff35 converts the validation error array to str() before GDScript string formatting; this fixed the actual test failure (the 60-second timeout was only a symptom). GitHub Actions run #43 passed: Godot 4.7.2 download/version, project import, BoardModel tests, LevelDefinition tests, and headless main-scene launch. Next: integrate level data with BoardModel, then build deterministic resource collection with tests. Preserve Godot 4.7.2; keep PR #4/#5 dependencies; GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-003 — Level-to-board integration and resource state (2026-11-05)
+**Branch:** `feat/kt-003-level-data-schema`  
+**Implementation commits:** `c891c170b347b596bbac85bff5b90885cfdcaf71`, `b803aba5590cee634feed2fbdde406b4fde635f1`, `afa36a18df95fa73f01e78915e5016a0bdea0c40`
+
+**Completed**
+- Added transactional `BoardModel.load_level()`: validates the complete level before changing the current board.
+- Loads dimensions, level ID, start/goal coordinates, obstacles, and resource cells from the versioned JSON data.
+- Added deterministic resource-state queries and one-time collection with a remaining-resource counter.
+- Added tests for level loading, obstacle application, shortest path on the loaded sample, resource collection exactly once, out-of-bounds collection, and preservation of the prior board after an invalid load.
+
+**Verification: PASS**
+- GitHub Actions run **#51** passed on the integration test commit: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42000064076).
+- Project import, BoardModel tests, LevelDefinition tests, and headless main-scene launch all passed on Godot 4.7.2.
+
+**Not yet implemented**
+- Ant squads, slot/capacity rules, animated movement, carrying visuals, and player-facing win/loss flow.
+- Resource collection is currently a deterministic core-state operation, not yet connected to ant movement or UI.
+
+**Next**
+1. Define and test squad selection and limited-slot rules independently of rendering.
+2. Connect a squad's route to BoardModel pathfinding and resource collection.
+3. Keep PRs stacked and draft until reviewed; do not merge to `main`.
+
+**Checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-003 LEVEL-TO-BOARD INTEGRATION GREEN. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. BoardModel.load_level() now validates before mutation and loads level ID, dimensions, start/goal, obstacles, and resource cells. Resource state supports has_resource(), collect_resource() exactly once, and remaining_resources. Tests cover sample level loading, obstacles, shortest path, resource collection, out-of-bounds collection, and invalid-load state preservation. GitHub Actions run #51 passed on commit afa36a18df95fa73f01e78915e5016a0bdea0c40 with Godot 4.7.2, import, both core test scripts, and headless main-scene launch. Next: design/test ant squad selection and limited slots, then connect squad routes to collection. This is core logic only; no ant visuals or gameplay UI yet. PR #4/#5 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
