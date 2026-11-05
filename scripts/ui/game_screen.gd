@@ -404,8 +404,10 @@ func _draw_board(font: Font) -> void:
 				continue
 			var route: Array = order.get("path", [])
 			var previous: Vector2i = squad.get("position", _board.start)
+			var is_return_route := String(order.get("kind", "")) == "return"
+			var route_tint := _color_for(String(squad.get("color", "amber"))).lightened(0.25)
 			for route_cell in route:
-				draw_line(_cell_rect(previous).get_center(), _cell_rect(route_cell).get_center(), _color_for(String(squad.get("color", "amber"))).lightened(0.25), 3.0)
+				_draw_route_segment(_cell_rect(previous).get_center(), _cell_rect(route_cell).get_center(), route_tint, is_return_route)
 				previous = route_cell
 			if not route.is_empty():
 				draw_circle(_cell_rect(route.back()).get_center(), 5.0, _color_for(String(squad.get("color", "amber"))))
@@ -420,9 +422,9 @@ func _draw_board(font: Font) -> void:
 				var to_pos: Vector2 = _cell_rect(move["to"]).get_center()
 				ant_position = from_pos.lerp(to_pos, _turn_animation_progress)
 			_draw_ant(ant_position, _color_for(String(squad.get("color", "amber"))), 0.95)
-			if int(squad.get("carried", 0)) > 0:
-				var seed_tint := _color_for(String(squad.get("color", "amber")))
-				draw_circle(ant_position + Vector2(18, -14), 6.0, seed_tint)
+			var carried := int(squad.get("carried", 0))
+			if carried > 0:
+				_draw_carried_load(ant_position, _color_for(String(squad.get("color", "amber"))), carried)
 	# Strategic squads and routes are rendered from active turn orders above.
 
 	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
@@ -824,6 +826,34 @@ func _position_along_last_path(progress: float) -> Vector2:
 	var from_position := _cell_rect(path_start if segment_index == 0 else _last_path[segment_index - 1]).get_center()
 	var to_position := _cell_rect(_last_path[segment_index]).get_center()
 	return from_position.lerp(to_position, clampf(segment_progress, 0.0, 1.0))
+
+
+func _draw_route_segment(from_point: Vector2, to_point: Vector2, tint: Color, is_return_route: bool) -> void:
+	if not is_return_route:
+		draw_line(from_point, to_point, tint, 3.0)
+		return
+	# Return routes use a dashed trail so the player can read the expedition phase at a glance.
+	var delta := to_point - from_point
+	var distance := delta.length()
+	if distance <= 0.1:
+		return
+	var direction := delta / distance
+	var cursor := 0.0
+	while cursor < distance:
+		var dash_end := minf(cursor + 9.0, distance)
+		draw_line(from_point + direction * cursor, from_point + direction * dash_end, tint.lightened(0.18), 3.5)
+		cursor += 15.0
+
+
+func _draw_carried_load(center: Vector2, tint: Color, carried: int) -> void:
+	# Each seed is a distinct little payload rather than an abstract counter dot.
+	for index in range(carried):
+		var bob := sin(_ant_wiggle * 1.35 + float(index) * 0.8) * 1.8 if _is_animating else 0.0
+		var seed_center := center + Vector2(13.0 + float(index) * 10.0, -14.0 + bob)
+		draw_circle(seed_center + Vector2(1.0, 2.0), 6.0, Color("#101812", 0.7))
+		draw_circle(seed_center, 5.2, tint.lightened(0.12))
+		draw_arc(seed_center + Vector2(-0.5, -0.5), 3.8, PI * 1.08, PI * 1.82, 10, Color("#fff1c9", 0.85), 1.1)
+		draw_line(seed_center + Vector2(1.0, -4.0), seed_center + Vector2(4.0, -8.0), Color("#9bc88b"), 1.5)
 
 
 func _draw_ant(center: Vector2, tint: Color, scale: float = 1.0) -> void:
