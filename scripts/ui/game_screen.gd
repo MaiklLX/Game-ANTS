@@ -169,8 +169,8 @@ func _draw_squads(font: Font) -> void:
 	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
-	var card_width := 196.0
-	var gap := 14.0
+	var card_width := ResponsiveLayoutScript.squad_card_width(ids.size())
+	var gap := ResponsiveLayoutScript.squad_card_gap(ids.size())
 	var total_width := ids.size() * card_width + maxi(0, ids.size() - 1) * gap
 	var start_x := (720.0 - total_width) * 0.5
 	for index in range(ids.size()):
@@ -188,8 +188,9 @@ func _draw_squads(font: Font) -> void:
 		var state := "ON FIELD" if squad["deployed"] else "READY"
 		var carried := int(squad["carried"])
 		var capacity := int(squad["capacity"])
-		var load_text := "%d / %d carried" % [carried, capacity]
-		draw_string(font, rect.position + Vector2(18, 68), state + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, 12, COLOR_MUTED)
+		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d carried" % [carried, capacity]
+		var state_label := "FIELD" if squad["deployed"] else "READY" if ids.size() >= 4 else state
+		draw_string(font, rect.position + Vector2(18, 68), state_label + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, 12, COLOR_MUTED)
 		var meter := Rect2(rect.position + Vector2(18, 79), Vector2(card_width - 36, 4))
 		draw_rect(meter, Color("#17231d"))
 		if carried > 0 and capacity > 0:
