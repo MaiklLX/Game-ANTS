@@ -568,3 +568,10 @@
 - All resources are reachable using existing deterministic pathfinding; no new movement or terrain mechanic was introduced.
 - Next: run full CI, then continue 041–045 if the batch passes.
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+### KT-007 verification — Root Labyrinth 031–040 (2026-11-05)
+- GitHub Actions run #324 passed on `a1e1754a44b3e3f5d5aa932be61c35ea5bc3f563`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42034463578.
+- Godot 4.7.2 import, core and schema tests, colony/squad rules, turn resolver, all 40 campaign level solutions, catalog ordering, route-shape regressions, and headless main-scene launch passed.
+- Root Labyrinth progress: 10/30; total campaign catalogue: 40 authored levels across two packs.
+- Next batch: levels 041–045.
