@@ -119,6 +119,7 @@ func _initialize() -> void:
 	_test_two_squad_deployment()
 	_test_three_squad_slot_pressure()
 	_test_root_labyrinth_route_shapes()
+	_test_colony_heart_finale()
 
 	if _failures.is_empty():
 		print("Campaign level tests passed.")
@@ -344,3 +345,34 @@ func _test_root_labyrinth_route_shapes() -> void:
 			var far_path: Array[Vector2i] = turning_board.find_path(turning_board.start, Vector2i(5, 0))
 			_check(not intermediate_path.is_empty() and intermediate_path.has(Vector2i(2, 4)), "The Turning Fork violet cache should be reached through the lower first gate")
 			_check(not far_path.is_empty() and far_path.has(Vector2i(4, 0)), "The Turning Fork far harvest should require the upper second gate")
+
+
+
+func _test_colony_heart_finale() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://levels/level_100.json"))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_check(false, "The Colony Heart should parse for final-gate regression test")
+		return
+	var board = BoardModelScript.new()
+	var loaded: Dictionary = board.load_level(parsed)
+	_check(loaded["valid"], "The Colony Heart should load for final-gate regression test")
+	if not loaded["valid"]:
+		return
+
+	_check(board.get_resource_cells().size() == 8, "The Colony Heart should contain all eight final seeds")
+	for color in ["amber", "teal", "coral", "violet"]:
+		var left_count := 0
+		var right_count := 0
+		for cell in board.get_resource_cells():
+			if board.resource_color_at(cell) != color:
+				continue
+			if cell.x == 1:
+				left_count += 1
+			elif cell.x == 5:
+				right_count += 1
+		_check(left_count == 1 and right_count == 1, "Each final carrier should have one matching seed on either side of the shared gate")
+
+	for target in [Vector2i(5, 0), Vector2i(5, 1), Vector2i(5, 3), Vector2i(5, 4)]:
+		var far_route: Array[Vector2i] = board.find_path(board.start, target)
+		_check(not far_route.is_empty(), "Every far-side final seed should remain reachable")
+		_check(far_route.has(Vector2i(3, 2)), "Every far-side final route should pass through the single central root gate")
