@@ -461,4 +461,9 @@
 - Added level 005 to the picker and made the displayed level count derive from the campaign list rather than a hard-coded value.
 - No merge to main. Visual editor/device QA remains outstanding.
 
-**Next:** verify the new campaign test and Godot import in CI, then move into KT-006 interaction clarity and a stronger first-session tutorial.
+**Verification: PASS**
+- GitHub Actions run **#163** passed on checkpoint commit `b0020306646605ee9d67643dd04305c72e2c53e4`: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42023024966).
+- Godot 4.7.2 version check, project import, all five test suites (including the new three-squad slot-pressure integration case), and headless main-scene launch passed.
+- This remains headless validation only; editor/device visual QA is not claimed.
+
+**Next:** move into KT-006 interaction clarity and a stronger first-session tutorial.
