@@ -711,3 +711,12 @@
 - Campaign progress: **80/100 authored; 20 remain**. Amber Orchard: 20/30.
 - CI #490 passed on the 80-level code checkpoint `feef50dae867270b62fe8481aa267c07c7f03bb5`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042680599. Godot 4.7.2 import, all 80 campaign level tests, catalogue validation, and headless main-scene launch passed. CI #495 also passed on the latest documentation head `907da8b322ed51b1feb29c92c1198e00f1e9078a`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42042754078. A separate earlier CI attempt failed only because the Godot download endpoint returned HTTP 504; the subsequent full run passed. No Editor/device visual QA or APK is claimed.
 - Next: Amber Orchard 081–085. Root Labyrinth design revisions remain separate.
+
+
+### KT-008.6 — Amber Orchard batch 081–085 (2026-11-05)
+- Added The Bent Orchard (081), The Canopy Steps (082), The Hidden Sun (083), The Compass Branches (084), and The Orchard Keeper's Trial (085).
+- All five use existing schema-v1 mechanics. Static checks passed for coordinate uniqueness, resource reachability, and matching squad colors.
+- Registered all five in the Amber Orchard pack. Campaign integration tests now include 85 level files; catalogue tests assert 85 entries and stable global index 84.
+- Campaign progress: **85/100 authored; 15 remain**. Amber Orchard: 25/30.
+- CI is pending for this batch. No Editor/device visual QA or APK is claimed.
+- Next: Amber Orchard 086–090, completing chapter three. Then design the 10-level v1 finale 091–100.
