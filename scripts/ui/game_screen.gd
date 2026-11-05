@@ -742,6 +742,8 @@ func _advance_strategic_turn() -> void:
 	else:
 		_is_animating = false
 		_turn_animation_moves.clear()
+	if _tutorial_active and not result.get("delivered", []).is_empty():
+		_complete_tutorial()
 	if result.get("outcome", "playing") == "won":
 		_status = "Победа! Все семена доставлены домой."
 		_mark_level_completed()
