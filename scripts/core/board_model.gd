@@ -16,6 +16,7 @@ var height: int = 0
 var level_id: String = ""
 var start: Vector2i = Vector2i(-1, -1)
 var goal: Vector2i = Vector2i(-1, -1)
+var total_resources: int = 0
 var remaining_resources: int = 0
 var _blocked: Dictionary = {}
 var _resources: Dictionary = {}
@@ -27,6 +28,7 @@ func configure(board_width: int, board_height: int) -> void:
 	level_id = ""
 	start = Vector2i(-1, -1)
 	goal = Vector2i(-1, -1)
+	total_resources = 0
 	remaining_resources = 0
 	_blocked.clear()
 	_resources.clear()
@@ -55,7 +57,8 @@ func load_level(data: Dictionary) -> Dictionary:
 			"resource":
 				_resources[cell] = tile["color"]
 
-	remaining_resources = _resources.size()
+	total_resources = _resources.size()
+	remaining_resources = total_resources
 	return {
 		"valid": true,
 		"errors": [],
@@ -79,6 +82,20 @@ func is_walkable(cell: Vector2i) -> bool:
 
 func has_resource(cell: Vector2i) -> bool:
 	return _resources.has(cell)
+
+
+func get_resource_cells() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for cell in _resources.keys():
+		cells.append(cell)
+	cells.sort_custom(_sort_cells)
+	return cells
+
+
+func _sort_cells(a: Vector2i, b: Vector2i) -> bool:
+	if a.y == b.y:
+		return a.x < b.x
+	return a.y < b.y
 
 
 func resource_color_at(cell: Vector2i) -> String:
