@@ -91,8 +91,8 @@ The revised Root Labyrinth maps and final-level redesign have targeted route reg
 
 ## Next review sequence
 
-1. Review the route-profile similarity groups below. These are not map duplicates: they share shortest-route lengths, squad profiles, and slot counts, but may have different geometry and decision structure.
-2. Review the related barrier motifs across levels 047, 057, and 059, plus the crown/finale family (035, 040, 045, 050, 055, 060), for genuinely different route decisions.
+1. Audit the level-by-level learning and workload progression inside each chapter, looking for sudden difficulty spikes or long flat stretches.
+2. Review the crown/finale family (035, 040, 045, 050, 055, 060) at player-decision level, not only by route length.
 3. Compare resource distribution, capacity, slot pressure, and concurrent deployment choices at level granularity; the deterministic solver is not an optimal player strategy.
 4. Keep manual Godot Editor portrait review and real-device playtesting as separate release gates. Headless CI is not visual QA.
 
@@ -110,6 +110,22 @@ The audit's route-profile signature compares deployment slots, the multiset of s
 - Amber Orchard 069 / Colony Heart 094
 
 For example, Root Labyrinth 034, 038, 043, and 059 have different obstacle layouts and corridor topologies despite similar resource-distance and squad profiles. They should be judged by the decisions they ask the player to make, not by this signature alone. The Meadow 005/011 and 013/018 route-profile matches were removed by targeted redesigns. The Amber Orchard 078/083/084 variants also no longer share a profile; the remaining orchard match (069/Colony Heart 094) is a deliberate cross-chapter reprise of four-color corner dispatch with different obstacle topology.
+
+### Human review of remaining route-profile groups
+
+Reviewed against the current level JSON and obstacle topology on 2026-11-05. These groups share a coarse distance/squad profile, but their board structures are materially different:
+
+| Group | Distinguishing structure | Review |
+|---|---|---|
+| Meadow 008 / Root 032 / Root 047 | Extra side gate; single two-opening wall; two successive walls | Different crossing count and corridor layout |
+| Meadow 016 / Meadow 021 | Two staggered barriers; one low-only barrier | Deliberate gate-complexity variation |
+| Root 031 / Root 051 | One low gate; offset second barrier that lengthens the upper harvest | Intentional escalation |
+| Root 034 / 038 / 043 / 059 | Staggered interior weave; parallel tunnels; horizontal upper/lower channels; double bend | Four distinct corridor topologies |
+| Root 040 / Root 050 | Central crown corridors; winding twin passages | Related crown theme, different route shape |
+| Root 041 / Root 052 | One shared gate feeding a far-side branch; separate upper/lower entrances | Different bottleneck logic |
+| Orchard 069 / Colony Heart 094 | Cross-shaped central screen; single central vertical gate | Retained as a deliberate cross-chapter four-color dispatch reprise |
+
+This is a data-level review only. It does not replace visual inspection or player testing. No further map changes are required solely to eliminate these route-profile matches.
 
 ## Current status
 
