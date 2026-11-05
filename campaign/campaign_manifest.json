@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "campaign_id": "antworks_main",
+  "title": "ANTWORKS — The Living Meadow",
+  "packs": [
+    { "file": "res://campaign/packs/meadow/pack.json" }
+  ]
+}
