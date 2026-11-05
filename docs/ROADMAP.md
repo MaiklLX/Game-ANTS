@@ -524,3 +524,15 @@
 - All levels use existing schema-v1 mechanics; no unprototyped mechanics were introduced.
 - Next: complete levels 026–030 as the Meadow chapter exam, then review the chapter curve before moving to Root Labyrinth.
 - No merge to main; PR #9 remains Draft and stacked on PR #8. Headless CI is the verification gate; editor/device QA remains outstanding.
+
+
+### KT-006.2 — Meadow chapter complete, levels 001–030 (2026-11-05)
+**Branch:** `feat/kt-006-scalable-campaign-catalog`
+**Status:** All 30 level files and catalogue/test/documentation updates committed; CI verification pending.
+
+- Completed the first full chapter, The Living Meadow, with 30 authored levels.
+- Added 026 Two-Way Detour, 027 Capacity Deadline, 028 Four Openings, 029 The Last Seed Home, and 030 The Meadow Crown.
+- Extended the pack manifest and deterministic campaign integration suite through level 030; catalog tests now assert 30 ordered levels and final global index 29.
+- The chapter exam uses only existing schema-v1 mechanics. No unimplemented mechanic is assumed.
+- Next: run the full Godot 4.7.2 CI suite, review the chapter's difficulty progression, then begin chapter 2 (The Root Labyrinth) with a clear mechanic/level design gate.
+- PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
