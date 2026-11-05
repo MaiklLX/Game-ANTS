@@ -14,6 +14,8 @@ func _initialize() -> void:
 	_check_viewport(Vector2(480, 800), 0.625, 0.0, "short portrait viewport")
 
 	var compact_scale := float(LayoutScript.calculate(Vector2(360, 800))["scale"])
+	_check(LayoutScript.squad_row_width(4) <= 720.0, "four squad cards must fit the reference portrait width")
+	_check(LayoutScript.is_touch_target_usable(Vector2(LayoutScript.squad_card_width(4), 96), compact_scale), "four-squad cards must retain a usable mobile hit area")
 	_check(LayoutScript.is_touch_target_usable(Vector2(196, 96), compact_scale), "squad cards must remain at least 44 px tall on compact phones")
 	_check(LayoutScript.is_touch_target_usable(Vector2(106, 88), compact_scale), "tutorial skip must remain at least 44 px tall on compact phones")
 	_check(LayoutScript.is_touch_target_usable(Vector2(88, 88), compact_scale), "level buttons must meet the 44 px target on compact phones")
