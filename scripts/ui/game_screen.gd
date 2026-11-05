@@ -39,7 +39,7 @@ var _tutorial_active: bool = false
 var _tutorial_step: int = -1
 var _tutorial_skip_rect := Rect2()
 var _selected_squad_id: String = ""
-var _status: String = "Choose a squad to begin."
+var _status: String = "Выберите отряд, чтобы начать."
 var _last_path: Array[Vector2i] = []
 var _last_target: Vector2i = Vector2i(-1, -1)
 var _last_path_start: Vector2i = Vector2i(-1, -1)
@@ -69,7 +69,7 @@ func _ready() -> void:
 	_colony = ColonyModelScript.new()
 	var catalog_result: Dictionary = CampaignCatalogScript.load_catalog(CAMPAIGN_MANIFEST_PATH)
 	if not catalog_result["valid"]:
-		_status = "Campaign data error: " + "; ".join(catalog_result["errors"])
+		_status = "Ошибка данных кампании: " + "; ".join(catalog_result["errors"])
 		push_error(_status)
 		queue_redraw()
 		return
@@ -80,7 +80,7 @@ func _ready() -> void:
 	_progress_store = ProgressStoreScript.new()
 	var progress_result: Dictionary = _progress_store.load_progress(level_ids)
 	if not progress_result.get("valid", false):
-		_progress_warning = String(progress_result.get("warning", "Progress data could not be loaded."))
+		_progress_warning = String(progress_result.get("warning", "Не удалось загрузить прогресс."))
 	else:
 		_progress_warning = String(progress_result.get("warning", ""))
 	var initial_index := 0
@@ -126,12 +126,12 @@ func _draw() -> void:
 
 
 func _draw_header(font: Font) -> void:
-	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
-	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "CAMPAIGN")) if not _campaign_levels.is_empty() else "CAMPAIGN DATA"
-	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  " + chapter_title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(42, 62), "МУРАВЕЙНИК", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
+	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
+	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	draw_string(font, Vector2(560, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 
-	var title := String(_level_data.get("title", "New field"))
+	var title := String(_level_data.get("title", "Новое поле"))
 	var objective := _objective_for_display(String(_level_data.get("objective", "")))
 	draw_string(font, Vector2(42, 155), title, HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_TEXT)
 	draw_string(font, Vector2(44, 190), objective, HORIZONTAL_ALIGNMENT_LEFT, 632, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_MUTED)
@@ -141,6 +141,22 @@ func _draw_header(font: Font) -> void:
 		draw_line(Vector2(42, 236), Vector2(678, 236), COLOR_GRID, 2.0)
 	else:
 		draw_line(Vector2(42, 216), Vector2(678, 216), COLOR_GRID, 2.0)
+
+
+
+func _chapter_title_ru(value: String) -> String:
+	match value:
+		"The Living Meadow":
+			return "ЖИВОЙ ЛУГ"
+		"The Root Labyrinth":
+			return "ЛАБИРИНТ КОРНЕЙ"
+		"The Amber Orchard":
+			return "ЯНТАРНЫЙ САД"
+		"The Colony Heart: First Dawn":
+			return "СЕРДЦЕ КОЛОНИИ: ПЕРВЫЙ РАССВЕТ"
+		"CAMPAIGN":
+			return "КАМПАНИЯ"
+	return value
 
 
 func _objective_for_display(objective: String) -> String:
@@ -165,7 +181,7 @@ func _contextual_hint() -> String:
 
 
 func _draw_slots(font: Font) -> void:
-	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "DEPLOYMENT SLOTS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(44, 258 + _layout_extra * 0.08), "МЕСТА ДЛЯ ОТРЯДОВ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_slot_rects.clear()
 	var slot_count: int = _colony.slot_capacity
 	var slot_gap := 8.0 if slot_count >= 3 else 14.0
@@ -178,12 +194,12 @@ func _draw_slots(font: Font) -> void:
 		draw_rect(rect, COLOR_PANEL_LIGHT if _slot_is_occupied(index) else COLOR_PANEL)
 		draw_rect(Rect2(rect.position, Vector2(4, rect.size.y)), COLOR_GOLD if _slot_is_occupied(index) else COLOR_GRID)
 		var occupant := _slot_occupant(index)
-		draw_string(font, rect.position + Vector2(20, 28), "SLOT %02d" % (index + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
-		draw_string(font, rect.position + Vector2(20, 53), occupant if not occupant.is_empty() else "AVAILABLE", HORIZONTAL_ALIGNMENT_LEFT, slot_width - 35, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT if not occupant.is_empty() else COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(20, 28), "МЕСТО %02d" % (index + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(20, 53), occupant if not occupant.is_empty() else "СВОБОДНО", HORIZONTAL_ALIGNMENT_LEFT, slot_width - 35, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT if not occupant.is_empty() else COLOR_MUTED)
 
 
 func _draw_squads(font: Font) -> void:
-	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "WORKER SQUADS  ·  TAP TO DEPLOY", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(44, 392 + _layout_extra * 0.18), "ОТРЯДЫ РАБОЧИХ  ·  НАЖМИТЕ ДЛЯ ВЫХОДА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	_squad_rects.clear()
 	var ids := _colony.get_squad_ids()
 	var card_width := ResponsiveLayoutScript.squad_card_width(ids.size())
@@ -202,13 +218,13 @@ func _draw_squads(font: Font) -> void:
 		var squad_color: Color = _color_for(String(squad["color"]))
 		_draw_color_mark(rect.position + Vector2(30, 35), String(squad["color"]), 13.0)
 		draw_string(font, rect.position + Vector2(54, 34), String(squad["color"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), squad_color)
-		var state := "ON FIELD" if squad["deployed"] else "READY"
-		var carried := int(squad["carried"])
+		var state := "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
+		var carried := int(squad["несут"])
 		var capacity := int(squad["capacity"])
 		var load_text := "%d/%d" % [carried, capacity] if ids.size() >= 4 else "%d / %d carried" % [carried, capacity]
 		var state_label := state
 		if ids.size() >= 4:
-			state_label = "FIELD" if squad["deployed"] else "READY"
+			state_label = "В ПОЛЕ" if squad["deployed"] else "ГОТОВ"
 		draw_string(font, rect.position + Vector2(18, 68), state_label + "  ·  " + load_text, HORIZONTAL_ALIGNMENT_LEFT, card_width - 28, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 		var meter := Rect2(rect.position + Vector2(18, 79), Vector2(card_width - 36, 4))
 		draw_rect(meter, Color("#17231d"))
@@ -224,8 +240,8 @@ func _draw_board(font: Font) -> void:
 	_board_gap = CELL_GAP
 
 	var board_label_y := _board_origin.y - 22.0
-	draw_string(font, Vector2(44, board_label_y), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	var resource_label := "%d SEED%s LEFT" % [_board.remaining_resources, "" if _board.remaining_resources == 1 else "S"]
+	draw_string(font, Vector2(44, board_label_y), "ПОЛЕ СБОРА", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	var resource_label := "ОСТАЛОСЬ СЕМЯН: %d" % [_board.remaining_resources, "" if _board.remaining_resources == 1 else "S"]
 	draw_string(font, Vector2(498, board_label_y), resource_label, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
@@ -266,7 +282,7 @@ func _draw_board(font: Font) -> void:
 			_draw_ant(ant_position, _selected_squad_color(), 1.0 - float(ant_index) * 0.06)
 		# Show a carried seed beside the lead worker after pickup and on the return trip.
 		var selected_squad := _colony.get_squad(_selected_squad_id) if not _selected_squad_id.is_empty() else {}
-		if not selected_squad.is_empty() and int(selected_squad.get("carried", 0)) > 0:
+		if not selected_squad.is_empty() and int(selected_squad.get("несут", 0)) > 0:
 			var lead_position := _position_along_last_path(clampf(_ant_progress, 0.0, 1.0))
 			var seed_tint := _color_for(String(selected_squad.get("color", "amber")))
 			draw_circle(lead_position + Vector2(19, -15), 7.0, Color("#18231c"))
@@ -288,7 +304,7 @@ func _draw_status(font: Font) -> void:
 	draw_rect(panel, panel_color)
 	draw_rect(Rect2(panel.position, Vector2(4, panel.size.y)), accent_color)
 
-	var heading := "FIELD CLEARED" if completed else "FIELD BLOCKED" if blocked else "FIRST EXPEDITION" if _tutorial_active else "COLONY LOG"
+	var heading := "ПОЛЕ ЗАЧИЩЕНО" if completed else "ПУТЬ ЗАБЛОКИРОВАН" if blocked else "ПЕРВАЯ ЭКСПЕДИЦИЯ" if _tutorial_active else "ЖУРНАЛ КОЛОНИИ"
 	draw_string(font, Vector2(64, 1035 + _layout_extra * 0.68), heading, HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(13, _ui_scale), accent_color if not _tutorial_active else COLOR_GOLD)
 	var action_width := ResponsiveLayoutScript.status_action_width(_ui_scale)
 	var action_height := ResponsiveLayoutScript.status_action_height(_ui_scale)
@@ -296,15 +312,15 @@ func _draw_status(font: Font) -> void:
 	if _tutorial_active:
 		_tutorial_skip_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
+		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "ПРОПУСТИТЬ", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
+		draw_string(font, _restart_rect.position + Vector2(0, 56), "ЗАНОВО", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
-	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _draw_level_picker(font: Font) -> void:
@@ -313,7 +329,7 @@ func _draw_level_picker(font: Font) -> void:
 	var completed_count: int = 0
 	if _progress_store != null:
 		completed_count = int(_progress_store.get_completed_count())
-	draw_string(font, Vector2(44, 1148 + _layout_extra * 0.86), "LEVELS  ·  PAGE %02d / %02d  ·  CLEARED %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(44, 1148 + _layout_extra * 0.86), "УРОВНИ  ·  СТР. %02d / %02d  ·  ПРОЙДЕНО %02d / %03d" % [page_number, page_count, completed_count, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 	_level_rects.clear()
 
 	var button_width := _level_button_size()
@@ -347,7 +363,7 @@ func _draw_level_picker(font: Font) -> void:
 	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, ResponsiveLayoutScript.font_size(20, _ui_scale), COLOR_TEXT if has_next_page else COLOR_GRID)
 
 	if ResponsiveLayoutScript.show_footer(_ui_scale):
-		draw_string(font, Vector2(0, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+		draw_string(font, Vector2(0, 1264 + _layout_extra * 0.95), "ОДНА КОЛОНИЯ  ·  МНОЖЕСТВО РЕШЕНИЙ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _levels_per_page() -> int:
@@ -425,7 +441,7 @@ func _load_level(index: int) -> void:
 	_returning_to_nest = false
 	_ant_progress = 0.0
 	if _campaign_levels.is_empty():
-		_status = "No playable levels are available."
+		_status = "Нет доступных уровней."
 		queue_redraw()
 		return
 	_level_index = clampi(index, 0, _campaign_levels.size() - 1)
@@ -438,13 +454,13 @@ func _load_level(index: int) -> void:
 	_last_path.clear()
 	_last_target = Vector2i(-1, -1)
 	_last_path_start = _board.start
-	_status = "Choose a squad to begin." if result["valid"] else str(result["errors"])
+	_status = "Выберите отряд, чтобы начать." if result["valid"] else str(result["errors"])
 	if result["valid"] and _progress_store != null:
 		var save_result: Dictionary = _progress_store.set_last_selected_level(String(_campaign_levels[_level_index]["id"]))
 		if not save_result.get("valid", false):
-			_progress_warning = String(save_result.get("warning", "Progress could not be saved."))
+			_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
 	if result["valid"] and not _progress_warning.is_empty():
-		_status = "Progress note: " + _progress_warning
+		_status = "Примечание к прогрессу: " + _progress_warning
 	queue_redraw()
 
 
@@ -469,12 +485,12 @@ func _select_or_deploy(squad_id: String) -> void:
 
 func _collect_selected_squad(cell: Vector2i) -> void:
 	if _selected_squad_id.is_empty():
-		_status = "Choose a worker squad first."
+		_status = "Сначала выберите отряд рабочих."
 		queue_redraw()
 		return
 	var squad: Dictionary = _colony.get_squad(_selected_squad_id)
 	if squad.is_empty() or not squad["deployed"]:
-		_status = "Deploy the selected squad first."
+		_status = "Сначала отправьте выбранный отряд в поле."
 		queue_redraw()
 		return
 	var squad_position: Vector2i = squad.get("position", Vector2i(-1, -1))
@@ -491,7 +507,7 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 	_ant_progress = 0.0
 	_returning_to_nest = false
 	_is_animating = true
-	_status = "Workers are following the trail..."
+	_status = "Рабочие идут по тропе…"
 	_start_path_animation(1.0, false)
 	queue_redraw()
 
@@ -516,7 +532,7 @@ func _return_selected_squad() -> void:
 		return
 	_returning_to_nest = true
 	_is_animating = true
-	_status = "Workers are following the trail home..."
+	_status = "Рабочие возвращаются домой…"
 	_start_path_animation(1.0, true)
 	queue_redraw()
 
@@ -548,10 +564,10 @@ func _on_path_animation_finished(returning: bool) -> void:
 			if _tutorial_active and _tutorial_step == 1 and _last_target == Vector2i(4, 2):
 				_tutorial_step = 2
 			var squad: Dictionary = _colony.get_squad(_selected_squad_id)
-			if squad.get("carried", 0) >= squad.get("capacity", 1):
-				_status = "Load full. Tap the nest to deliver and free the slot."
+			if squad.get("несут", 0) >= squad.get("capacity", 1):
+				_status = "Отряд загружен. Нажмите на муравейник, чтобы доставить груз."
 			else:
-				_status = "Seed collected. Tap another matching seed or return to the nest."
+				_status = "Семя собрано. Найдите ещё одно подходящего цвета или возвращайтесь домой."
 		_check_terminal_state()
 	queue_redraw()
 
@@ -624,23 +640,23 @@ func _check_terminal_state() -> void:
 		if _progress_store != null and not _progress_store.is_level_completed(level_id):
 			var save_result: Dictionary = _progress_store.mark_level_completed(level_id)
 			if not save_result.get("valid", false):
-				_progress_warning = String(save_result.get("warning", "Progress could not be saved."))
-		_status = "Field cleared! Every seed is safely home."
+				_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
+		_status = "Победа! Все семена доставлены домой."
 		if not _progress_warning.is_empty():
 			_status += "  " + _progress_warning
 	elif TurnResolverScript.is_level_blocked(_board, _colony):
-		_status = "No available squad can reach the remaining seeds. Retry this field."
+		_status = "Ни один отряд не может добраться до оставшихся семян. Попробуйте снова."
 
 
 func _tutorial_instruction() -> String:
 	match _tutorial_step:
 		0:
-			return "1 / 3  Tap the amber worker card to deploy your squad."
+			return "1 / 3  Нажмите на карточку янтарного отряда, чтобы отправить его в поле."
 		1:
-			return "2 / 3  Tap the amber seed on the far side of the field."
+			return "2 / 3  Нажмите на янтарное семя на дальней стороне поля."
 		2:
-			return "3 / 3  Tap the nest to bring the seed home."
-	return "Follow the steps to complete your first expedition."
+			return "3 / 3  Нажмите на муравейник, чтобы доставить семя домой."
+	return "Выполните шаги, чтобы завершить первую экспедицию."
 
 
 func _tutorial_instruction_for_display() -> String:
@@ -648,27 +664,27 @@ func _tutorial_instruction_for_display() -> String:
 		return _tutorial_instruction()
 	match _tutorial_step:
 		0:
-			return "1 / 3  Tap AMBER to deploy."
+			return "1 / 3  Отправьте ЯНТАРНЫЙ отряд."
 		1:
-			return "2 / 3  Tap the amber seed."
+			return "2 / 3  Соберите янтарное семя."
 		2:
-			return "3 / 3  Tap the nest to return."
-	return "Follow the steps to finish."
+			return "3 / 3  Вернитесь в муравейник."
+	return "Выполните все шаги."
 
 
 func _status_for_display() -> String:
 	if _ui_scale >= 0.48:
 		return _status
 	if _status.begins_with("Load full."):
-		return "Load full. Tap nest to deliver."
+		return "Груз собран. Нажмите на муравейник."
 	if _status.begins_with("Seed collected."):
-		return "Seed collected. Continue or return."
+		return "Семя собрано. Продолжайте сбор или возвращайтесь."
 	if _status.contains("delivered. Deployment slot is free."):
 		return _status.replace("Deployment slot is free.", "Slot free.")
 	if _status.begins_with("Field cleared!"):
-		return "Field cleared! All seeds home."
+		return "Победа! Все семена дома."
 	if _status.begins_with("No available squad"):
-		return "No route left. Retry field."
+		return "Пути нет. Начните заново."
 	if _status.length() > 38:
 		return _status.left(35).strip_edges() + "…"
 	return _status
@@ -682,10 +698,10 @@ func _complete_tutorial() -> void:
 	if _progress_store != null:
 		var save_result: Dictionary = _progress_store.mark_tutorial_completed()
 		if not save_result.get("valid", false):
-			_progress_warning = String(save_result.get("warning", "Tutorial completion could not be saved."))
+			_progress_warning = String(save_result.get("warning", "Не удалось сохранить завершение обучения."))
 			_status = _progress_warning
 		else:
-			_status = "First expedition complete. The colony is ready."
+			_status = "Первая экспедиция завершена. Колония готова!"
 	queue_redraw()
 
 func _cell_at(point: Vector2) -> Vector2i:
@@ -771,21 +787,28 @@ func _draw_rock(center: Vector2) -> void:
 func _draw_ground_detail(rect: Rect2, cell: Vector2i) -> void:
 	# Quiet, deterministic meadow marks add texture without competing with game pieces.
 	var base := rect.position
-	var variant := posmod(cell.x * 3 + cell.y * 5, 3)
-	var tint := Color("#38513b")
+	var variant := posmod(cell.x * 7 + cell.y * 11, 5)
+	var tint := Color("#456247")
+	var glint := Color("#78906a")
+	# Layered soil grain and tiny clover/root marks give every tile its own surface.
+	draw_circle(base + Vector2(10 + variant * 7, 13 + posmod(cell.y, 3) * 8), 1.6, Color("#17291f", 0.55))
+	draw_circle(base + Vector2(49 - variant * 4, 48 - posmod(cell.x, 3) * 7), 1.2, Color("#81916a", 0.45))
 	if variant == 0:
 		var root := base + Vector2(12, 53)
-		draw_line(root, root + Vector2(-3, -6), tint, 1.5)
-		draw_line(root, root + Vector2(2, -8), tint, 1.5)
-		draw_line(root, root + Vector2(6, -5), tint, 1.5)
+		draw_line(root, root + Vector2(-3, -7), tint, 2.0)
+		draw_line(root, root + Vector2(2, -10), tint, 2.0)
+		draw_line(root, root + Vector2(7, -6), tint, 2.0)
+		draw_circle(root + Vector2(2, -10), 1.7, glint)
 	elif variant == 1:
 		var root := base + Vector2(54, 14)
-		draw_line(root, root + Vector2(-4, -5), tint, 1.5)
-		draw_line(root, root + Vector2(1, -8), tint, 1.5)
-		draw_line(root, root + Vector2(5, -4), tint, 1.5)
+		draw_line(root, root + Vector2(-5, -6), tint, 2.0)
+		draw_line(root, root + Vector2(1, -9), tint, 2.0)
+		draw_line(root, root + Vector2(6, -5), tint, 2.0)
+	elif variant == 2:
+		draw_arc(base + Vector2(34, 36), 8.0, 0.2, 2.5, 12, Color("#58734f", 0.65), 1.4)
 	else:
-		draw_circle(base + Vector2(53, 53), 1.5, tint)
-		draw_circle(base + Vector2(58, 48), 1.0, tint)
+		draw_circle(base + Vector2(53, 53), 2.0, glint)
+		draw_circle(base + Vector2(58, 48), 1.2, tint)
 
 
 func _draw_color_mark(center: Vector2, color_name: String, radius: float) -> void:
