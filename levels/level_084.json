@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "orchard_084",
   "title": "The Compass Branches",
-  "objective": "Two separated openings in the central trunk connect four outer pockets; choose which side to clear before changing lanes.",
+  "objective": "Two separated openings connect four outer pockets; with one field slot, alternate upper and lower branches without leaving the colony stranded.",
   "width": 6,
   "height": 5,
   "start": [
@@ -13,7 +13,7 @@
     5,
     0
   ],
-  "deployment_slots": 2,
+  "deployment_slots": 1,
   "squads": [
     {
       "id": "amber_scouts",
