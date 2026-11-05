@@ -221,3 +221,42 @@
 **Checkpoint phrase for a new chat:**
 
 `GAME-ANTS — KT-003 LEVEL-TO-BOARD INTEGRATION GREEN. Continue from feat/kt-003-level-data-schema, stacked on feat/kt-002-godot-bootstrap. BoardModel.load_level() now validates before mutation and loads level ID, dimensions, start/goal, obstacles, and resource cells. Resource state supports has_resource(), collect_resource() exactly once, and remaining_resources. Tests cover sample level loading, obstacles, shortest path, resource collection, out-of-bounds collection, and invalid-load state preservation. GitHub Actions run #51 passed on commit afa36a18df95fa73f01e78915e5016a0bdea0c40 with Godot 4.7.2, import, both core test scripts, and headless main-scene launch. Next: design/test ant squad selection and limited slots, then connect squad routes to collection. This is core logic only; no ant visuals or gameplay UI yet. PR #4/#5 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
+
+
+### KT-004 — Deterministic squad slots and color-matched collection (2026-11-05)
+**Branch:** `feat/kt-004-squad-rules`  
+**Draft PR:** [#7 — prototype ant squad slots and collection rules](https://github.com/MaiklLX/Game-ANTS/pull/7)  
+**Verified implementation commit:** `f2bc95c4e5afde3fc133133a9b8ed6d3f162785c`
+
+**Completed**
+- Added explicit resource colors to schema-v1 resource tiles: `amber`, `teal`, `coral`, and `violet`.
+- BoardModel now retains resource colors and rejects collection by a mismatched color when one is supplied.
+- Added `ColonyModel` for deterministic squad registration, validation, limited deployment slots, carrying capacity, reachable matching-resource collection, and return/delivery.
+- A deployed squad occupies its slot until it returns; partial loads are delivered on return, and the slot is then released.
+- Added tests for invalid squad definitions, duplicate IDs, slot exhaustion/release, wrong-color targets, empty targets, unreachable resources, carrying capacity, and partial delivery.
+- Updated the level format documentation and CI workflow to run ColonyModel tests.
+
+**Test-harness correction**
+- An earlier run (#65) reported success despite assertion errors because the test helpers called `quit(1)` and then the script continued to a final `quit(0)`.
+- Test helpers now accumulate failures and choose the process exit code only once at the end.
+- Level validation now accepts integral JSON numeric values whether Godot represents them as integers or floats, while rejecting fractional values.
+
+**Verification: PASS**
+- GitHub Actions run **#74** passed: [open run](https://github.com/MaiklLX/Game-ANTS/actions/runs/42000863450).
+- Log output explicitly confirms: `BoardModel tests passed.`, `LevelDefinition tests passed.`, and `ColonyModel tests passed.`.
+- Godot 4.7.2 download/version, project import, all three test scripts, and headless main-scene launch passed.
+- No local editor, Android export, or physical-device testing is claimed.
+
+**Remaining**
+- Squad rules are currently core simulation only. No ant movement animation, visual slots, UI selection, preview panel, undo, or win/loss flow is implemented yet.
+- The exact squad/slot values remain level-configurable; the tests use two deployment slots and small capacities as prototype values, not final balance.
+
+**Next**
+1. Add a deterministic action/turn resolver that previews and applies a squad deployment/return action without animation dependencies.
+2. Define explicit blocked and victory outcomes and cover them with tests.
+3. Build the first graybox gameplay presentation only after the core action loop is stable.
+4. Keep PRs stacked and draft until reviewed; do not merge to `main`.
+
+**Checkpoint phrase for a new chat:**
+
+`GAME-ANTS — KT-004 SQUAD CORE GREEN. Continue from feat/kt-004-squad-rules and draft PR #7, based on feat/kt-003-level-data-schema (PR #6 dependency). Resource tiles now require one of amber/teal/coral/violet. BoardModel tracks resource colors and supports color-aware collection. ColonyModel provides squad registration, two-or-more configurable deployment slots, capacity limits, reachable matching-color collection, partial-load delivery on return, and slot release. Strict test runners accumulate failures and exit nonzero; run #65 was a false-positive due to the old quit(1)/quit(0) pattern, corrected before verification. GitHub Actions run #74 passed with explicit BoardModel, LevelDefinition, and ColonyModel test success, Godot 4.7.2 import, and headless main-scene launch. Next: implement deterministic action/turn resolution plus explicit blocked/victory outcomes, then graybox UI. No animations/UI yet. PR #4/#5/#6 dependencies remain; GitHub Issues only; no external agents; never merge to main without owner approval.`
