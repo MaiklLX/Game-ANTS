@@ -5,7 +5,7 @@
 - **Version 1.0 launch campaign:** 100 hand-authored, quality-checked levels.
 - **Version 1.0 structure:** three full chapters of 30 levels (001–090), followed by a 10-level concluding chapter (091–100).
 - **Long-term campaign vision:** 300+ levels, expanded gradually through later updates. The original ten-chapter/300-level ambition remains the long-term roadmap, not a blocker for version 1.0.
-- **Current reality:** 75 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–075 (15/30). **25 levels remain** to reach the version 1.0 content target.
+- **Current reality:** 80 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–080 (20/30). **20 levels remain** to reach the version 1.0 content target.
 - **Release principle:** reaching 100 is a content milestone, not automatic release approval. The launch gate also includes level variety and balance review, onboarding, readable portrait UI, save/progress reliability, performance, and mobile playtesting.
 
 ## Chapter rhythm
@@ -173,3 +173,13 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 - 075 The Golden Canopy Trial: two paired harvests and two lone seeds are coordinated across three deployment slots.
 - All five use schema-v1 rules only. Campaign integration tests validate each resource pickup and delivery with the authored roster.
 - Amber Orchard progress: 15/30. Total catalogue: 75/100 for version 1.0; 25 levels remain.
+
+
+### Amber Orchard production batch 076–080
+- 076 The Bramble Window: a low opening and a second offset root wall turn a paired amber harvest into a long return loop.
+- 077 The Falling Leaves: a descending line of roots divides two paired harvests for capacity-two carriers.
+- 078 The Four Hidden Boughs: four colors sit behind an L-shaped root screen; two field slots require careful squad rotation.
+- 079 The Golden Switchback: a capacity-three amber squad follows a staggered route around a root shelf, with a separate teal pickup.
+- 080 The Orchard Crossroads: two paired loads and two single seeds converge around a central crossing with three deployment slots.
+- All five use schema-v1 rules. Static checks confirm unique tile coordinates, reachable resources, and matching squad colors; campaign integration tests verify collection and return.
+- Amber Orchard progress: 20/30. Total catalogue: 80/100 for version 1.0; 20 levels remain.
