@@ -5,7 +5,7 @@
 - **Version 1.0 launch campaign:** 100 hand-authored, quality-checked levels.
 - **Version 1.0 structure:** three full chapters of 30 levels (001–090), followed by a 10-level concluding chapter (091–100).
 - **Long-term campaign vision:** 300+ levels, expanded gradually through later updates. The original ten-chapter/300-level ambition remains the long-term roadmap, not a blocker for version 1.0.
-- **Current reality:** 85 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–085 (25/30). **15 levels remain** to reach the version 1.0 content target.
+- **Current reality:** 90 of the 100 launch levels are authored: The Living Meadow 001–030 (30/30), The Root Labyrinth 031–060 (30/30; design revisions remain open), and The Amber Orchard 061–090 (30/30). **10 levels remain** to reach the version 1.0 content target.
 - **Release principle:** reaching 100 is a content milestone, not automatic release approval. The launch gate also includes level variety and balance review, onboarding, readable portrait UI, save/progress reliability, performance, and mobile playtesting.
 
 ## Chapter rhythm
@@ -193,3 +193,13 @@ The approved first-release target is **100 quality-checked levels**, not 300. Th
 - 085 The Orchard Keeper's Trial: a capacity-three amber branch, paired teal load, and two lone seeds test all four squad roles across three slots.
 - All five use schema-v1 rules. Static checks confirm unique tile coordinates, reachable resources, and matching squad colors; campaign integration tests verify collection and return.
 - Amber Orchard progress: 25/30. Total catalogue: 85/100 for version 1.0; 15 levels remain.
+
+
+### Amber Orchard production batch 086–090 — chapter complete
+- 086 The Amber Gatehouse: a narrow upper gate separates the amber pair from two near-side single seeds.
+- 087 The Orchard's Last Shade: a capacity-three violet expedition follows an outer branch, with a separate teal pickup.
+- 088 The Three Canopies: three paired harvests must be completed with two deployment slots.
+- 089 The Orchard's Long Walk: four colors sit behind a staggered root maze and require slot rotation.
+- 090 The Heart of Amber: chapter finale combining two full loads, three single seeds, and three deployment slots.
+- All five use schema-v1 rules. Static checks confirm unique tile coordinates, reachable resources, and matching squad colors; campaign integration tests verify collection and return.
+- Amber Orchard is now complete: 30/30. Total catalogue: 90/100 for version 1.0; 10 levels remain for the compact launch finale.
