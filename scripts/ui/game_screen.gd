@@ -62,7 +62,9 @@ const HINT_TRANSLATIONS := {
   "Load aboard. Return a team to rotate in the third color.": "Груз собран. Верните отряд, чтобы отправить третий цвет.",
   "Seed aboard. Use the free slot for another color before rotating the third.": "Семя собрано. Используйте свободное место для другого цвета, прежде чем менять третий.",
   "Both slots are occupied. Return a team before deploying the third color.": "Оба места заняты. Верните отряд, прежде чем отправлять третий цвет.",
-  "One slot is free. Deploy another color; the third team waits for a return.": "Одно место свободно. Отправьте другой цвет, третий отряд дождётся возвращения."
+  "One slot is free. Deploy another color; the third team waits for a return.": "Одно место свободно. Отправьте другой цвет, третий отряд дождётся возвращения.",
+  "Seed aboard. Both slots are in use; return this team to free one.": "Семя собрано. Оба места заняты — верните этот отряд, чтобы освободить одно.",
+  "Seed secured. The second slot is free—deploy the other color before returning.": "Семя собрано. Второе место свободно — отправьте отряд другого цвета до возвращения."
 }
 
 func _hint_ru(value: String) -> String:
