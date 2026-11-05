@@ -418,3 +418,12 @@
 2. Inspect the board at narrow and tall portrait aspect ratios; tune visual spacing if needed.
 3. Add carried-seed feedback and improve squad-card/slot presentation.
 4. Keep PR #8 draft and do not merge to `main` without owner approval.
+
+
+### KT-005.3 — carried-seed and squad feedback extension (2026-11-05)
+**Implementation commit:** `68347580bbc8fa1c1232d4becd8d0941d3dd10e7`
+
+- Added a small carried-seed visual beside the lead ant when the selected squad has collected resources.
+- Added a capacity meter to squad cards, showing carried resources relative to carrying capacity.
+- No core rules, level definitions, pathfinding, or input mapping changed.
+- CI status endpoints currently return no checks for this commit; verification remains pending. Do not mark this checkpoint green until a matching Actions run is confirmed.
