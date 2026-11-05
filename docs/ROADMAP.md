@@ -689,4 +689,4 @@
 - Automated CI is pending for the 70-level batch. No editor/device visual QA or APK is claimed.
 - Root Labyrinth design revisions remain a separate open task. PR #9 remains Draft, stacked, and unmerged.
 
-- Follow-up after KT-008.2: Amber Orchard batch 066–070 is now authored and registered. Current campaign content is 70/100; 30 levels remain. CI run #444 is in progress after correcting zero-padded manifest paths.
+- Follow-up after KT-008.2: Amber Orchard batch 066–070 is now authored and registered. Current campaign content is 70/100; 30 levels remain. CI run #444 passed on corrected code head `cb0033dce2644d3e7623f1d606f5f54cef32fc14`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42040921577. Godot 4.7.2 import, all core/schema/colony/turn tests, all 70 campaign level tests, and campaign catalogue tests passed. Documentation-only CI #449 is in progress on the latest head.
