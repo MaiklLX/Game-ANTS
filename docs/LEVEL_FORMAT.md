@@ -4,7 +4,7 @@ Campaign levels are stored as UTF-8 JSON files under `levels/`. The file is data
 
 ## Example
 
-See [level_001.json](../levels/level_001.json).
+See [level_001.json](../levels/level_001.json), [level_002.json](../levels/level_002.json), and [level_003.json](../levels/level_003.json).
 
 ## Fields
 
@@ -14,7 +14,7 @@ See [level_001.json](../levels/level_001.json).
 | `id` | string | Required, non-empty stable identifier |
 | `width`, `height` | integer | Each from 1 to 32 |
 | `start`, `goal` | integer pair | `[x, y]`, inside board bounds |
-| `tiles` | array | Optional tile overrides; coordinates must be unique and in bounds |
+| `deployment_slots` | integer | Required for playable campaign levels; 1–4 active squad slots |\n| `squads` | array | Required for playable campaign levels; 1–8 `{ id, color, capacity }` definitions |\n| `tiles` | array | Optional tile overrides; coordinates must be unique and in bounds |
 
 Allowed tile types:
 
@@ -23,7 +23,7 @@ Allowed tile types:
 - `obstacle` — impassable cell.
 - `nest` — colony entrance / starting point.
 
-Cells omitted from `tiles` are ordinary empty ground. Resource colors are part of the game rules, not presentation metadata: a squad may collect only a matching color. At most one tile definition may occupy a coordinate. The start and goal cannot be obstacles.
+Cells omitted from `tiles` are ordinary empty ground. Resource colors are part of the game rules, not presentation metadata: a squad may collect only a matching color. At most one tile definition may occupy a coordinate. The start and goal cannot be obstacles.\n\n## Playable colony roster\n\nPlayable levels define `deployment_slots` and `squads`. A squad has a stable unique `id`, a `color` matching one of the four resource colors, and a `capacity` from 1 to 9. The number of deployment slots is from 1 to 4. The roster is validated as part of schema v1 and loaded by `LevelLoader`; malformed level data is rejected before it can be played.
 
 ## Validation
 
