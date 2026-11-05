@@ -129,7 +129,7 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "ANTWORKS", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "CAMPAIGN")) if not _campaign_levels.is_empty() else "CAMPAIGN DATA"
 	draw_string(font, Vector2(44, 91), "FIELD NOTES  /  " + chapter_title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(678, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	draw_string(font, Vector2(560, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 
 	var title := String(_level_data.get("title", "New field"))
 	var objective := String(_level_data.get("objective", ""))
@@ -215,7 +215,7 @@ func _draw_board(font: Font) -> void:
 
 	var board_label_y := _board_origin.y - 22.0
 	draw_string(font, Vector2(44, board_label_y), "FORAGING GROUND", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(676, board_label_y), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, -1, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(498, board_label_y), "%d SEEDS LEFT" % _board.remaining_resources, HORIZONTAL_ALIGNMENT_RIGHT, 180, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_GOLD)
 
 	var board_frame := Rect2(_board_origin - Vector2(14, 14), Vector2(board_width, board_height) + Vector2(28, 28))
 	draw_rect(board_frame, Color("#182820"))
@@ -286,12 +286,12 @@ func _draw_status(font: Font) -> void:
 		_tutorial_skip_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_tutorial_skip_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _tutorial_skip_rect.position + Vector2(0, 58), "SKIP", HORIZONTAL_ALIGNMENT_CENTER, _tutorial_skip_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
-		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, _restart_rect.position + Vector2(0, 56), "RETRY", HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
-		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status, HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
+		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "DELIVERED  %d / %d" % [delivered, _board.total_resources], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
@@ -336,7 +336,7 @@ func _draw_level_picker(font: Font) -> void:
 	draw_string(font, _next_page_rect.position + Vector2(0, 56), ">", HORIZONTAL_ALIGNMENT_CENTER, arrow_width, ResponsiveLayoutScript.font_size(20, _ui_scale), COLOR_TEXT if has_next_page else COLOR_GRID)
 
 	if ResponsiveLayoutScript.show_footer(_ui_scale):
-		draw_string(font, Vector2(360, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+		draw_string(font, Vector2(0, 1264 + _layout_extra * 0.95), "ONE COLONY  ·  MANY SMALL DECISIONS", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
 
 
 func _levels_per_page() -> int:
@@ -630,6 +630,37 @@ func _tutorial_instruction() -> String:
 		2:
 			return "3 / 3  Tap the nest to bring the seed home."
 	return "Follow the steps to complete your first expedition."
+
+
+func _tutorial_instruction_for_display() -> String:
+	if _ui_scale >= 0.48:
+		return _tutorial_instruction()
+	match _tutorial_step:
+		0:
+			return "1 / 3  Tap AMBER to deploy."
+		1:
+			return "2 / 3  Tap the amber seed."
+		2:
+			return "3 / 3  Tap the nest to return."
+	return "Follow the steps to finish."
+
+
+func _status_for_display() -> String:
+	if _ui_scale >= 0.48:
+		return _status
+	if _status.begins_with("Load full."):
+		return "Load full. Tap nest to deliver."
+	if _status.begins_with("Seed collected."):
+		return "Seed collected. Continue or return."
+	if _status.contains("delivered. Deployment slot is free."):
+		return _status.replace("Deployment slot is free.", "Slot free.")
+	if _status.begins_with("Field cleared!"):
+		return "Field cleared! All seeds home."
+	if _status.begins_with("No available squad"):
+		return "No route left. Retry field."
+	if _status.length() > 38:
+		return _status.left(35).strip_edges() + "…"
+	return _status
 
 
 func _complete_tutorial() -> void:
