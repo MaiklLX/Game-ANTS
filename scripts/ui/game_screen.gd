@@ -169,6 +169,7 @@ func _draw_board(font: Font) -> void:
 			draw_rect(rect, Color("#17251e"))
 			draw_rect(inset, fill)
 			draw_rect(inset, Color("#3b5141"), false, 1.0)
+			_draw_ground_detail(rect, cell)
 			if cell == _board.start:
 				_draw_nest(rect.get_center())
 			elif _board.has_resource(cell):
@@ -553,6 +554,26 @@ func _draw_rock(center: Vector2) -> void:
 	draw_circle(center + Vector2(7, -4), 14.0, Color("#788474"))
 	draw_circle(center + Vector2(0, -12), 9.0, Color("#8b9684"))
 	draw_line(center + Vector2(-8, -4), center + Vector2(-2, -10), Color("#aab39f"), 2.0)
+
+
+func _draw_ground_detail(rect: Rect2, cell: Vector2i) -> void:
+	# Quiet, deterministic meadow marks add texture without competing with game pieces.
+	var base := rect.position
+	var variant := posmod(cell.x * 3 + cell.y * 5, 3)
+	var tint := Color("#38513b")
+	if variant == 0:
+		var root := base + Vector2(12, 53)
+		draw_line(root, root + Vector2(-3, -6), tint, 1.5)
+		draw_line(root, root + Vector2(2, -8), tint, 1.5)
+		draw_line(root, root + Vector2(6, -5), tint, 1.5)
+	elif variant == 1:
+		var root := base + Vector2(54, 14)
+		draw_line(root, root + Vector2(-4, -5), tint, 1.5)
+		draw_line(root, root + Vector2(1, -8), tint, 1.5)
+		draw_line(root, root + Vector2(5, -4), tint, 1.5)
+	else:
+		draw_circle(base + Vector2(53, 53), 1.5, tint)
+		draw_circle(base + Vector2(58, 48), 1.0, tint)
 
 
 func _draw_color_mark(center: Vector2, color_name: String, radius: float) -> void:
