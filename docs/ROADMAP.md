@@ -645,3 +645,14 @@
 - All five levels use schema v1 and existing production mechanics only.
 - Next: full CI and a chapter-level content review, then begin The Amber Orchard (061–090).
 - PR #9 remains Draft and stacked on PR #8; no merge to main. Editor/device visual QA remains outstanding.
+
+
+
+### KT-008 — Root Labyrinth design audit (2026-11-05)
+- Reviewed all 30 chapter level files, pack manifest, BoardModel/TurnResolver behavior, campaign integration solver, and route-shape regression coverage.
+- Confirmed production-rule solvability coverage for all 60 authored levels; CI run #406 passed on head `b9b10645b56f3ad29162d674b8af4e632b16ea4f`: https://github.com/MaiklLX/Game-ANTS/actions/runs/42037763989.
+- Design audit found a repeated obstacle/resource footprint across levels 037, 038, and 041, plus related barrier-layout families around 047/057/059 and four-resource crown/finale layouts.
+- Current campaign solver proves deterministic collection/return and reachability, not strategic variety, route-order decisions, difficulty balance, or mobile readability.
+- Chapter 2 is **30/30 authored and automated-validation passed**, but **not yet design-signed-off**. Targeted geometry revision, map-signature regression tests, and manual portrait Editor QA remain open.
+- Full audit: `docs/ROOT_LABYRINTH_AUDIT.md`. Chapter 3 may proceed in reviewed five-level batches; retain a separate revision task for the Root Labyrinth duplication cluster.
+- PR #9 remains Draft and stacked on PR #8. No merge to main. No editor/device QA, APK, or public web build is claimed.
