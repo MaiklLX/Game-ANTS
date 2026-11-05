@@ -81,6 +81,7 @@ Related motifs across levels 047, 057, and 059 and the repeated crown/finale fam
 - `root_037` — replaced the repeated single-wall footprint with a central heartwood island and upper/lower branch routes. The resource layout now asks the player to choose which side of the fork to clear first.
 - `root_041` — replaced the duplicate of `root_038` with a single-cell bottleneck that feeds a three-way harvest junction; all far branches must pass through the same gate.
 - `root_053` — moved the violet cache to the lower intermediate segment between two staggered gates, creating a distinct route-order decision from `root_056`.
+- `root_045` — moved the coral cache into a central hollow accessible only through the upper notch and reduced deployment slots from three to two; regression coverage locks the single-entry route.
 - `colony_100` — rebuilt the finale around eight seeds in four paired colors, with each pair split across a single central root gate. Every far-side resource route must pass through that gate; each carrier uses its capacity-two load.
 - Stable level IDs and campaign order are preserved. No new mechanics or schema changes were introduced.
 
