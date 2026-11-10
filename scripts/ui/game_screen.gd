@@ -658,20 +658,20 @@ func _draw_board(font: Font) -> void:
 				_draw_carried_load(ant_position, _color_for(String(squad.get("color", "amber"))), carried)
 	# Strategic squads and routes are rendered from active turn orders above.
 
-\tif _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
-\t\tvar pulse_color := COLOR_GOLD
-\t\tpulse_color.a = 1.0 - _feedback_progress
-\t\tvar feedback_center := _cell_rect(_feedback_cell).get_center()
-\t\tif _feedback_kind == "delivery":
-\t\t\tdraw_arc(feedback_center, 18.0 + _feedback_progress * 34.0, 0.0, TAU, 36, pulse_color, 3.5)
-\t\t\tdraw_arc(feedback_center, 10.0 + _feedback_progress * 20.0, 0.0, TAU, 28, pulse_color.lightened(0.25), 2.0)
-\t\telse:
-\t\t\tdraw_arc(feedback_center, 14.0 + _feedback_progress * 22.0, 0.0, TAU, 32, pulse_color, 3.0)
-\t\t\tfor particle_index in range(6):
-\t\t\t\tvar angle := TAU * float(particle_index) / 6.0
-\t\t\t\tvar particle_distance := 7.0 + _feedback_progress * 27.0
-\t\t\t\tvar particle := feedback_center + Vector2.RIGHT.rotated(angle) * particle_distance
-\t\t\t\tdraw_circle(particle, 2.8 * (1.0 - _feedback_progress * 0.65), pulse_color)
+	if _board.is_inside(_feedback_cell) and _feedback_progress < 1.0:
+		var pulse_color := COLOR_GOLD
+		pulse_color.a = 1.0 - _feedback_progress
+		var feedback_center := _cell_rect(_feedback_cell).get_center()
+		if _feedback_kind == "delivery":
+			draw_arc(feedback_center, 18.0 + _feedback_progress * 34.0, 0.0, TAU, 36, pulse_color, 3.5)
+			draw_arc(feedback_center, 10.0 + _feedback_progress * 20.0, 0.0, TAU, 28, pulse_color.lightened(0.25), 2.0)
+		else:
+			draw_arc(feedback_center, 14.0 + _feedback_progress * 22.0, 0.0, TAU, 32, pulse_color, 3.0)
+			for particle_index in range(6):
+				var angle := TAU * float(particle_index) / 6.0
+				var particle_distance := 7.0 + _feedback_progress * 27.0
+				var particle := feedback_center + Vector2.RIGHT.rotated(angle) * particle_distance
+				draw_circle(particle, 2.8 * (1.0 - _feedback_progress * 0.65), pulse_color)
 
 
 func _draw_status(font: Font) -> void:
