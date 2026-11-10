@@ -507,7 +507,8 @@ func _draw_header(font: Font) -> void:
 	var chapter_label := _chapter_title_ru(chapter_title)
 	if _ui_scale < 0.48 and chapter_label == "Сердце колонии: первый рассвет":
 		chapter_label = "Сердце колонии"
-	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + chapter_label, HORIZONTAL_ALIGNMENT_LEFT, 420, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	var chapter_subtitle := chapter_label if _ui_scale < 0.48 else "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + chapter_label
+	draw_string(font, Vector2(44, 91), chapter_subtitle, HORIZONTAL_ALIGNMENT_LEFT, 420, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var control_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
 	_undo_rect = Rect2(720.0 - control_size * 2.0 - 30.0, 18.0, control_size, control_size)
 	_pause_rect = Rect2(720.0 - control_size - 16.0, 18.0, control_size, control_size)
@@ -786,7 +787,7 @@ func _draw_status(font: Font) -> void:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		_tutorial_skip_rect = _restart_rect
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		var tutorial_action := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else ("ПРОПУСК" if _ui_scale < 0.48 else "ПРОПУСТИТЬ")
+		var tutorial_action := ("ПАУЗА" if _auto_run_active else ("СТАРТ" if _ui_scale < 0.48 else "ЗАПУСК")) if _has_active_orders() else ("ПРОПУСК" if _ui_scale < 0.48 else "ПРОПУСТИТЬ")
 		draw_string(font, _restart_rect.position + Vector2(0, 58), tutorial_action, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
@@ -794,6 +795,12 @@ func _draw_status(font: Font) -> void:
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _status_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
 		var action_label := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else "ПОВТОРИТЬ" if blocked else "ДАЛЬШЕ" if completed and _level_index + 1 < _campaign_levels.size() else "ГЛАВЫ" if completed else "ВЫБЕРИТЕ ОТРЯД"
+		if _ui_scale < 0.48:
+			match action_label:
+				"ЗАПУСК": action_label = "СТАРТ"
+				"ПОВТОРИТЬ": action_label = "ЗАНОВО"
+				"ДАЛЬШЕ": action_label = "ДАЛЕЕ"
+				"ВЫБЕРИТЕ ОТРЯД": action_label = "ОТРЯД"
 		draw_string(font, _restart_rect.position + Vector2(0, 56), action_label, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_TEXT)
 	var delivered := _colony.delivered_resources
 	draw_string(font, Vector2(64, 1110 + _layout_extra * 0.68), "ДОСТАВЛЕНО  %d / %d     ДЕНЬ  %d / %d" % [delivered, _board.total_resources, _strategic_engine.day_remaining, _strategic_engine.day_limit], HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
