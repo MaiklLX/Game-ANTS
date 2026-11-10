@@ -22,6 +22,38 @@ func configure(day_budget: int) -> void:
 	_outcome = "lost" if _finished else "playing"
 
 
+func create_snapshot(colony: ColonyModel, board: BoardModel) -> Dictionary:
+	return {
+		"day_limit": day_limit,
+		"day_remaining": day_remaining,
+		"turn_number": turn_number,
+		"orders": _orders.duplicate(true),
+		"finished": _finished,
+		"outcome": _outcome,
+		"board": board.create_snapshot(),
+		"colony": colony.create_snapshot(),
+	}
+
+
+func restore_snapshot(snapshot: Dictionary, colony: ColonyModel, board: BoardModel) -> Dictionary:
+	if typeof(snapshot.get("orders")) != TYPE_DICTIONARY or typeof(snapshot.get("board")) != TYPE_DICTIONARY or typeof(snapshot.get("colony")) != TYPE_DICTIONARY:
+		return _failure("Turn snapshot is incomplete.")
+	if int(snapshot.get("day_limit", -1)) != day_limit:
+		return _failure("Snapshot belongs to a different day budget.")
+	var board_result: Dictionary = board.restore_snapshot(snapshot["board"])
+	if not board_result.get("valid", false):
+		return board_result
+	var colony_result: Dictionary = colony.restore_snapshot(snapshot["colony"])
+	if not colony_result.get("valid", false):
+		return colony_result
+	day_remaining = int(snapshot.get("day_remaining", day_remaining))
+	turn_number = int(snapshot.get("turn_number", turn_number))
+	_orders = snapshot["orders"].duplicate(true)
+	_finished = bool(snapshot.get("finished", false))
+	_outcome = String(snapshot.get("outcome", "playing"))
+	return _success()
+
+
 func get_outcome() -> String:
 	return _outcome
 
