@@ -341,24 +341,22 @@ func _draw_pause_overlay(font: Font) -> void:
 func _draw_result_overlay(font: Font) -> void:
 	var won := _strategic_engine.get_outcome() == "won"
 	draw_rect(Rect2(Vector2.ZERO, size), Color("#07100d", 0.82))
-	draw_rect(Rect2(60, 280, 600, 720), COLOR_PANEL)
-	draw_rect(Rect2(60, 280, 6, 720), COLOR_GOLD if won else COLOR_CORAL)
+	draw_rect(Rect2(60, 220, 600, 860), COLOR_PANEL)
+	draw_rect(Rect2(60, 220, 6, 860), COLOR_GOLD if won else COLOR_CORAL)
 	if won:
-		draw_circle(Vector2(360, 420), 82.0, Color("#e3bd70", 0.12))
-		_draw_nest(Vector2(360, 420))
-		draw_string(font, Vector2(0, 540), "УРА! ВСЕ СЕМЕНА ДОМА", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(25, _ui_scale), COLOR_GOLD)
-		draw_string(font, Vector2(0, 580), "Колония справилась с экспедицией!", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+		draw_circle(Vector2(360, 340), 72.0, Color("#e3bd70", 0.12))
+		_draw_nest(Vector2(360, 340))
+		draw_string(font, Vector2(0, 460), "УРА! ВСЕ СЕМЕНА ДОМА", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(25, _ui_scale), COLOR_GOLD)
+		draw_string(font, Vector2(0, 500), "Колония справилась с экспедицией!", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 	else:
-		draw_string(font, Vector2(0, 460), "ДЕНЬ ЗАКОНЧИЛСЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(28, _ui_scale), COLOR_CORAL)
-		draw_string(font, Vector2(0, 502), "Попробуйте другой план экспедиции", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(0, 630), "ДОСТАВЛЕНО  %d / %d" % [_colony.delivered_resources, _board.total_resources], HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+		draw_string(font, Vector2(0, 450), "ДЕНЬ ЗАКОНЧИЛСЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(28, _ui_scale), COLOR_CORAL)
+		draw_string(font, Vector2(0, 492), "Попробуйте другой план экспедиции", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(0, 550), "ДОСТАВЛЕНО  %d / %d" % [_colony.delivered_resources, _board.total_resources], HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
 	if won:
-		draw_string(font, Vector2(0, 664), "ОСТАЛОСЬ ДНЕЙ  %d" % _strategic_engine.day_remaining, HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+		draw_string(font, Vector2(0, 582), "ОСТАЛОСЬ ДНЕЙ  %d" % _strategic_engine.day_remaining, HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var button_height := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0)
 	var button_gap := 8.0
-	var button_y := 590.0 if not _undo_snapshot.is_empty() else 700.0
-	if not won and _undo_snapshot.is_empty():
-		button_y = 620.0
+	var button_y := 630.0 if not _undo_snapshot.is_empty() else 660.0
 	_result_undo_rect = Rect2(140, button_y, 440, button_height) if not _undo_snapshot.is_empty() else Rect2()
 	_result_next_rect = Rect2(140, button_y + (button_height + button_gap if not _undo_snapshot.is_empty() else 0.0), 440, button_height)
 	_result_retry_rect = Rect2(140, _result_next_rect.position.y + button_height + button_gap, 440, button_height)
