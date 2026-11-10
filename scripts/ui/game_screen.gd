@@ -105,6 +105,9 @@ var _pause_continue_rect := Rect2()
 var _pause_restart_rect := Rect2()
 var _pause_settings_rect := Rect2()
 var _pause_menu_rect := Rect2()
+var _result_next_rect := Rect2()
+var _result_retry_rect := Rect2()
+var _result_menu_rect := Rect2()
 var _pause_rect := Rect2()
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
@@ -229,6 +232,8 @@ func _draw() -> void:
 		_draw_level_picker(font)
 		if _app_screen == "pause":
 			_draw_pause_overlay(font)
+		elif _app_screen == "result":
+			_draw_result_overlay(font)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
@@ -328,6 +333,51 @@ func _draw_pause_overlay(font: Font) -> void:
 	_draw_shell_button(font, _pause_restart_rect, "ПЕРЕЗАПУСТИТЬ УРОВЕНЬ")
 	_draw_shell_button(font, _pause_settings_rect, "НАСТРОЙКИ")
 	_draw_shell_button(font, _pause_menu_rect, "ГЛАВНОЕ МЕНЮ")
+
+
+func _draw_result_overlay(font: Font) -> void:
+	var won := _strategic_engine.get_outcome() == "won"
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#07100d", 0.82))
+	draw_rect(Rect2(60, 280, 600, 720), COLOR_PANEL)
+	draw_rect(Rect2(60, 280, 6, 720), COLOR_GOLD if won else COLOR_CORAL)
+	if won:
+		draw_circle(Vector2(360, 420), 82.0, Color("#e3bd70", 0.12))
+		_draw_nest(Vector2(360, 420))
+		draw_string(font, Vector2(0, 540), "УРА! ВСЕ СЕМЕНА ДОМА", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(25, _ui_scale), COLOR_GOLD)
+		draw_string(font, Vector2(0, 580), "Колония справилась с экспедицией!", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	else:
+		draw_string(font, Vector2(0, 460), "ДЕНЬ ЗАКОНЧИЛСЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(28, _ui_scale), COLOR_CORAL)
+		draw_string(font, Vector2(0, 502), "Попробуйте другой план экспедиции", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(0, 630), "ДОСТАВЛЕНО  %d / %d" % [_colony.delivered_resources, _board.total_resources], HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	if won:
+		draw_string(font, Vector2(0, 664), "ОСТАЛОСЬ ДНЕЙ  %d" % _strategic_engine.day_remaining, HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	var button_height := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0)
+	var button_gap := 12.0
+	var button_y := 720.0 if won else 650.0
+	_result_next_rect = Rect2(140, button_y, 440, button_height)
+	_result_retry_rect = Rect2(140, button_y + button_height + button_gap, 440, button_height)
+	_result_menu_rect = Rect2(140, button_y + (button_height + button_gap) * 2.0, 440, button_height)
+	var next_label := "СЛЕДУЮЩИЙ УРОВЕНЬ" if _level_index + 1 < _campaign_levels.size() else "ВЫБРАТЬ ГЛАВУ"
+	if not won:
+		next_label = "ВЫБРАТЬ ДРУГОЙ УРОВЕНЬ"
+	_draw_shell_button(font, _result_next_rect, next_label, true)
+	_draw_shell_button(font, _result_retry_rect, "ПОВТОРИТЬ УРОВЕНЬ")
+	_draw_shell_button(font, _result_menu_rect, "ГЛАВНОЕ МЕНЮ")
+
+
+func _handle_result_tap(point: Vector2) -> void:
+	if _result_next_rect.has_point(point):
+		if _strategic_engine.get_outcome() == "won" and _level_index + 1 < _campaign_levels.size():
+			_load_level(_level_index + 1)
+			_app_screen = "game"
+		else:
+			_app_screen = "chapters"
+	elif _result_retry_rect.has_point(point):
+		_load_level(_level_index)
+		_app_screen = "game"
+	elif _result_menu_rect.has_point(point):
+		_app_screen = "menu"
+	queue_redraw()
 
 
 func _draw_shell_button(font: Font, rect: Rect2, label: String, primary: bool = false) -> void:
@@ -796,6 +846,9 @@ func _handle_tap(point: Vector2) -> void:
 	if _app_screen == "pause":
 		_handle_pause_tap(point)
 		return
+	if _app_screen == "result":
+		_handle_result_tap(point)
+		return
 	if _pause_rect.has_point(point):
 		_open_pause()
 		return
@@ -1065,8 +1118,10 @@ func _advance_strategic_turn() -> void:
 	if result.get("outcome", "playing") == "won":
 		_status = "Победа! Все семена доставлены домой."
 		_mark_level_completed()
+		_app_screen = "result"
 	elif result.get("outcome", "playing") == "lost":
 		_status = "День закончился. Не хватило ходов — попробуйте другой план."
+		_app_screen = "result"
 	elif not result.get("collected", []).is_empty():
 		_status = "Семя собрано. Отряд ждёт следующего приказа."
 	elif not result.get("delivered", []).is_empty():
