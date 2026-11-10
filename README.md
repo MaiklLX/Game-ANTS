@@ -1,44 +1,47 @@
-# Game-ANTS
+# Game-ANTS — Муравьишки
 
-A mobile-first ant-colony logic puzzle game.
+A portrait-first ant-colony strategy puzzle built with Godot 4.7.2.
 
-**Working title:** ANTWORKS  
-**Status:** Godot project bootstrap in progress  
-**Repository:** MaiklLX/Game-ANTS
+## Current direction
 
-## Vision
+The player directs a small colony: deploy squads, assign matching-color seed targets, coordinate simultaneous expeditions, and explicitly order each return to the nest. Ants execute committed orders; they never autonomously choose a new target or return.
 
-Build an original, polished mobile puzzle game inspired by the broad gameplay space of ant-colony pixel puzzles. The project may learn from color-group selection, constrained queues, pixel-art boards, and satisfying swarm movement, but must develop its own rules, presentation, progression, and identity.
+The experience is designed to be friendly, calm, tactile, and readable on mobile — strategic without tedious per-cell micromanagement.
 
-## Core pillars
+## Current foundation
 
-1. **Readable strategy:** one-finger controls, clear rules, meaningful move order.
-2. **Living colony:** ants visibly travel, gather, cooperate, and react to the board.
-3. **Spatial logic:** routes, tunnel access, obstacles, and colony logistics create depth.
-4. **Rewarding reveals:** each solved level delivers a strong visual payoff.
-5. **Mobile quality:** responsive portrait-first UI, smooth performance, offline-capable core play.
+- 100 authored levels across four chapter packs.
+- Deterministic turn engine with one shared day budget.
+- Multiple active squads move simultaneously on committed turns.
+- Explicit collection and return orders; no automatic dispatch.
+- Route previews, carrying capacity, deployment slots, win/loss states.
+- Persistent campaign progress by stable level IDs.
+- Main menu, chapter selection, settings, gameplay, pause, and victory/retry result screens.
+- One-turn undo that restores board, colony, active orders, and shared day budget.
+- Reduced-motion and haptic-feedback preferences.
+- Next-level continuation is saved after victory; undo restores the current level as the continue target.
+- Responsive portrait layout and software-rendered mobile QA workflow.
+- Offline campaign; no accounts or network dependency.
 
-## Project rules
+## Repository
 
-- GitHub Issues are the single source of tasks and decisions.
-- Agents work on isolated branches and submit pull requests.
-- No agent may merge directly into `main`.
-- Preserve checkpoints: every meaningful milestone gets a dated project note and a checkpoint phrase in the documentation.
-- Do not copy another game's art, levels, text, branding, or exact implementation.
-- Do not add monetization or analytics to the prototype until the core loop is validated.
+- Repository: MaiklLX/Game-ANTS
+- Working branch: feat/kt-015-strategic-puzzle
+- Pull request: #12 (Draft; unmerged)
+- main remains untouched.
 
-## Current milestone
+## Development rules
 
-**KT-002 — Godot bootstrap and graybox foundation**
+- Keep changes on feature branches and preserve checkpoints.
+- Do not merge or publish to main without explicit owner approval.
+- Do not claim physical-device testing from headless CI.
+- Keep game rules independent from animation and presentation.
+- No monetization, ads, analytics, or online services until the core game is validated.
 
-The project baseline is pinned to **Godot 4.7.2-stable (Standard)**. See [Local Setup](docs/SETUP.md) for installation and validation instructions.
+## Documentation
 
-See:
-- [Game Design](docs/GAME_DESIGN.md)
-- [Technical Plan](docs/TECHNICAL_PLAN.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Agent Rules](AGENTS.md)
-
-## Current status
-
-The Godot project skeleton and launch placeholder are being developed on a feature branch. An internal Android Debug export preset and CI APK workflow are now configured; the first successful export and physical-device validation are still pending. The current launch scene remains a technical placeholder, not the finished game.
+- Game Design: docs/GAME_DESIGN.md
+- Technical Plan: docs/TECHNICAL_PLAN.md
+- Roadmap: docs/ROADMAP.md
+- KT-015 Strategic Puzzle: docs/KT_015_STRATEGIC_PUZZLE.md
+- Local Setup: docs/SETUP.md

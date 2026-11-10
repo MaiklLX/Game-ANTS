@@ -17,6 +17,32 @@ func configure(max_slots: int, nest_cell: Vector2i = Vector2i(-1, -1)) -> void:
 	_squads.clear()
 
 
+func create_snapshot() -> Dictionary:
+	return {
+		"slot_capacity": slot_capacity,
+		"delivered_resources": delivered_resources,
+		"nest_position": nest_position,
+		"squads": _squads.duplicate(true),
+	}
+
+
+func restore_snapshot(snapshot: Dictionary) -> Dictionary:
+	if int(snapshot.get("slot_capacity", -1)) != slot_capacity:
+		return _failure("Snapshot colony capacity does not match.")
+	if typeof(snapshot.get("squads")) != TYPE_DICTIONARY:
+		return _failure("Snapshot squad data is invalid.")
+	var restored_squads: Dictionary = snapshot["squads"]
+	if restored_squads.size() != _squads.size():
+		return _failure("Snapshot squad roster does not match.")
+	for squad_id in _squads:
+		if not restored_squads.has(squad_id):
+			return _failure("Snapshot is missing squad: %s." % String(squad_id))
+	_squads = restored_squads.duplicate(true)
+	delivered_resources = int(snapshot.get("delivered_resources", delivered_resources))
+	nest_position = snapshot.get("nest_position", nest_position)
+	return _success()
+
+
 func register_squad(squad_id: String, color: String, carry_capacity: int) -> Dictionary:
 	if squad_id.strip_edges().is_empty():
 		return _failure("squad_id must not be empty.")
@@ -85,7 +111,7 @@ func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector
 		return _failure("Resource color does not match the squad.")
 	var squad_position: Vector2i = squad["position"]
 	var route_start := squad_position if board.is_inside(squad_position) else from_cell
-	if board.find_path(route_start, target_cell).is_empty():
+	if route_start != target_cell and board.find_path(route_start, target_cell).is_empty():
 		return _failure("Target resource is not reachable.")
 
 	if not board.collect_resource(target_cell, squad["color"]):
@@ -100,6 +126,22 @@ func collect_resource(squad_id: String, from_cell: Vector2i, target_cell: Vector
 		"carried": squad["carried"],
 		"remaining_capacity": squad["capacity"] - squad["carried"],
 	}
+
+
+func move_squad(squad_id: String, target_cell: Vector2i, board: BoardModel) -> Dictionary:
+	if not _squads.has(squad_id):
+		return _failure("Unknown squad: %s." % squad_id)
+	var squad: Dictionary = _squads[squad_id]
+	if not squad.get("deployed", false):
+		return _failure("Squad must be deployed before moving.")
+	var current: Vector2i = squad.get("position", nest_position)
+	if not board.is_walkable(target_cell):
+		return _failure("Target cell is not walkable.")
+	if absi(target_cell.x - current.x) + absi(target_cell.y - current.y) != 1:
+		return _failure("Squad movement must advance exactly one adjacent cell.")
+	squad["position"] = target_cell
+	_squads[squad_id] = squad
+	return _success()
 
 
 func return_squad(squad_id: String) -> Dictionary:

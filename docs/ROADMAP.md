@@ -825,3 +825,26 @@
 - CI #794 and #795 passed the screenshot pipeline and full Godot validation. The #795 visual artifact was manually inspected at all five resolutions; the initial tutorial layout, board, squad card, status panel, and level selector remain within the captured frame.
 - Expanded the screenshot harness to include level 100 at 320×568 and 360×800 so the four-squad/finale layout is reviewed separately. The first expanded frames exposed three deployment-slot cards overflowing the design width and a long finale objective clipping on compact phones; slot widths now adapt to the number of slots and the narrow-screen objective uses concise copy. CI #800 passed, and the corrected level-100 frames were manually reviewed at both sizes: all three slots, four squad cards, board, status panel, and selected level 100 fit within the viewport.
 - Screenshots are software-rendered desktop viewport captures, not device screenshots. Android/iOS safe-area behavior and real touch input still require exported builds and physical-device QA. PR #9 remains Draft; main untouched.
+
+
+## KT-016 — Application foundation and player journey
+
+**Checkpoint: 10 Nov 2026 — first app shell pass**
+
+- [x] Main menu with continue, new game, chapter selection, and settings entry.
+- [x] Four-chapter selection built from the campaign manifest, preserving chapter order.
+- [x] Pause overlay with resume, restart, settings, and main-menu navigation.
+- [x] Pause expedition playback when the app loses focus or is backgrounded.
+- [x] Versioned settings persistence for reduced motion and haptic feedback.
+- [x] Apply reduced-motion preference to committed squad movement.
+- [x] Apply optional haptics to deployment, order assignment, harvest, and delivery.
+- [x] Add next-level progression after a win; the final campaign level returns to chapter selection.
+- [x] Extend rendered portrait QA to capture menu, chapter, settings, pause, gameplay, and level-100 screens.
+- [x] Update product and technical documentation to match the strategic game direction.
+- [ ] Review all shell screens at 320×568, 360×800, 390×844, 412×915, and 720×1280 after the latest UI pass.
+- [ ] Complete Android debug export and inspect the resulting APK artifact.
+- [ ] Physical Android test: system bars, safe areas, back navigation, vibration, app background/resume, and touch target comfort.
+- [ ] Split the monolithic game screen controller into smaller presentation/navigation components without changing the game rules.
+
+**Checkpoint phrase:**  
+«Муравьишки — KT-016: базовый путь игрока готов — главное меню, главы, настройки, пауза, победа/повтор, отмена последнего хода и продолжение кампании. Все 12 программных портретных снимков прошли Godot CI. Проверить актуальный Android APK и затем продолжить декомпозицию интерфейса и системный фундамент. Main не трогать без отдельного разрешения».

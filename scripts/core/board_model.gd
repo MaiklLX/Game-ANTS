@@ -65,6 +65,36 @@ func load_level(data: Dictionary) -> Dictionary:
 	}
 
 
+func create_snapshot() -> Dictionary:
+	return {
+		"level_id": level_id,
+		"width": width,
+		"height": height,
+		"start": start,
+		"goal": goal,
+		"total_resources": total_resources,
+		"remaining_resources": remaining_resources,
+		"blocked": _blocked.duplicate(true),
+		"resources": _resources.duplicate(true),
+	}
+
+
+func restore_snapshot(snapshot: Dictionary) -> Dictionary:
+	if String(snapshot.get("level_id", "")) != level_id:
+		return _failure("Snapshot belongs to a different level.")
+	if int(snapshot.get("width", -1)) != width or int(snapshot.get("height", -1)) != height:
+		return _failure("Snapshot board dimensions do not match.")
+	if typeof(snapshot.get("blocked")) != TYPE_DICTIONARY or typeof(snapshot.get("resources")) != TYPE_DICTIONARY:
+		return _failure("Snapshot board data is invalid.")
+	_blocked = snapshot["blocked"].duplicate(true)
+	_resources = snapshot["resources"].duplicate(true)
+	start = snapshot.get("start", start)
+	goal = snapshot.get("goal", goal)
+	total_resources = int(snapshot.get("total_resources", total_resources))
+	remaining_resources = int(snapshot.get("remaining_resources", _resources.size()))
+	return {"valid": true, "errors": []}
+
+
 func set_blocked_cells(cells: Array[Vector2i]) -> void:
 	_blocked.clear()
 	for cell in cells:
@@ -148,3 +178,7 @@ func find_path(start_cell: Vector2i, goal_cell: Vector2i) -> Array[Vector2i]:
 		path.push_front(cursor)
 		cursor = came_from[cursor]
 	return path
+
+
+func _failure(message: String) -> Dictionary:
+	return {"valid": false, "errors": [message]}
