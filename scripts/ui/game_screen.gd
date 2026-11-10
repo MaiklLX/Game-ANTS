@@ -287,9 +287,12 @@ func _draw_chapters_screen(font: Font) -> void:
 				"title": String(record.get("chapter_title", chapter_id)),
 				"first": int(record.get("global_index", 0)),
 				"count": 1,
+				"completed": 1 if _progress_store != null and _progress_store.is_level_completed(String(record.get("id", ""))) else 0,
 			})
 		else:
 			_chapter_records[chapter_index]["count"] = int(_chapter_records[chapter_index]["count"]) + 1
+			if _progress_store != null and _progress_store.is_level_completed(String(record.get("id", ""))):
+				_chapter_records[chapter_index]["completed"] = int(_chapter_records[chapter_index]["completed"]) + 1
 	var y := 220.0
 	for chapter in _chapter_records:
 		var rect := Rect2(44, y, 632, 170)
@@ -297,8 +300,14 @@ func _draw_chapters_screen(font: Font) -> void:
 		draw_rect(rect, COLOR_PANEL)
 		draw_rect(Rect2(rect.position, Vector2(6, rect.size.y)), _chapter_color(_chapter_rects.size() - 1))
 		draw_string(font, rect.position + Vector2(28, 48), _chapter_title_ru(String(chapter["title"])), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
-		draw_string(font, rect.position + Vector2(28, 84), "%d УРОВНЕЙ  ·  НАЧАТЬ С %03d" % [int(chapter["count"]), int(chapter["first"]) + 1], HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-		draw_string(font, rect.position + Vector2(28, 132), "ОТКРЫТЬ ГЛАВУ  →", HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_GOLD)
+		var chapter_count := int(chapter["count"])
+		var chapter_completed := int(chapter.get("completed", 0))
+		draw_string(font, rect.position + Vector2(28, 84), "%d УРОВНЕЙ  ·  ПРОЙДЕНО %d / %d" % [chapter_count, chapter_completed, chapter_count], HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(28, 132), "НАЧАТЬ С %03d  ·  ОТКРЫТЬ ГЛАВУ  →" % (int(chapter["first"]) + 1), HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_GOLD)
+		var progress_track := Rect2(rect.position + Vector2(28, 150), Vector2(560, 4))
+		draw_rect(progress_track, Color("#14221a"))
+		if chapter_completed > 0:
+			draw_rect(Rect2(progress_track.position, Vector2(progress_track.size.x * float(chapter_completed) / float(chapter_count), progress_track.size.y)), _chapter_color(_chapter_rects.size() - 1))
 		y += 190.0
 	_chapters_back_rect = Rect2(44, 1120, 260, ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0))
 	_draw_shell_button(font, _chapters_back_rect, "НАЗАД")
