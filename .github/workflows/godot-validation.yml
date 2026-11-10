@@ -62,6 +62,9 @@ jobs:
 
       - name: Run local progress persistence tests
         run: timeout 60s godot --headless --path . --script res://tests/test_progress_store.gd
+ 
+      - name: Run accessibility settings persistence tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_settings_store.gd
 
       - name: Run first-session onboarding contract tests
         run: timeout 60s godot --headless --path . --script res://tests/test_onboarding_contract.gd
