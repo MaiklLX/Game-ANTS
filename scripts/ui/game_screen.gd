@@ -192,7 +192,7 @@ func _notification(what: int) -> void:
 
 
 func _process(delta: float) -> void:
-	if _is_animating or _turn_animation_progress < 1.0:
+	if (_is_animating or _turn_animation_progress < 1.0) and not bool(_settings.get("reduced_motion", false)):
 		_ant_wiggle += delta * 13.0
 	if _is_animating or _turn_animation_progress < 1.0 or _feedback_progress < 1.0:
 		queue_redraw()
@@ -1165,7 +1165,8 @@ func _trigger_feedback(cell: Vector2i, kind: String = "harvest") -> void:
 	_feedback_tween = create_tween()
 	_feedback_tween.set_trans(Tween.TRANS_CUBIC)
 	_feedback_tween.set_ease(Tween.EASE_OUT)
-	_feedback_tween.tween_property(self, "_feedback_progress", 1.0, 0.46)
+	var feedback_duration := 0.24 if bool(_settings.get("reduced_motion", false)) else 0.46
+	_feedback_tween.tween_property(self, "_feedback_progress", 1.0, feedback_duration)
 
 
 func _selected_squad_color() -> Color:
