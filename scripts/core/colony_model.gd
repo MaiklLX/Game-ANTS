@@ -17,6 +17,32 @@ func configure(max_slots: int, nest_cell: Vector2i = Vector2i(-1, -1)) -> void:
 	_squads.clear()
 
 
+func create_snapshot() -> Dictionary:
+	return {
+		"slot_capacity": slot_capacity,
+		"delivered_resources": delivered_resources,
+		"nest_position": nest_position,
+		"squads": _squads.duplicate(true),
+	}
+
+
+func restore_snapshot(snapshot: Dictionary) -> Dictionary:
+	if int(snapshot.get("slot_capacity", -1)) != slot_capacity:
+		return _failure("Snapshot colony capacity does not match.")
+	if typeof(snapshot.get("squads")) != TYPE_DICTIONARY:
+		return _failure("Snapshot squad data is invalid.")
+	var restored_squads: Dictionary = snapshot["squads"]
+	if restored_squads.size() != _squads.size():
+		return _failure("Snapshot squad roster does not match.")
+	for squad_id in _squads:
+		if not restored_squads.has(squad_id):
+			return _failure("Snapshot is missing squad: %s." % String(squad_id))
+	_squads = restored_squads.duplicate(true)
+	delivered_resources = int(snapshot.get("delivered_resources", delivered_resources))
+	nest_position = snapshot.get("nest_position", nest_position)
+	return _success()
+
+
 func register_squad(squad_id: String, color: String, carry_capacity: int) -> Dictionary:
 	if squad_id.strip_edges().is_empty():
 		return _failure("squad_id must not be empty.")
