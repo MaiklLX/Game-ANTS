@@ -245,9 +245,12 @@ func _draw_main_menu(font: Font) -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BG)
 	draw_circle(Vector2(360, 330), 190.0, Color("#1b3027"))
 	draw_circle(Vector2(360, 330), 148.0, Color("#263d2f"))
-	_draw_nest(Vector2(360, 330))
-	_draw_ant(Vector2(300, 300), COLOR_AMBER, 1.2)
-	_draw_ant(Vector2(418, 360), COLOR_TEAL, 1.0)
+	var menu_art_scale := _ui_scale * 2.5
+	draw_set_transform(_ui_offset + Vector2(360, 330) * _ui_scale, 0.0, Vector2(menu_art_scale, menu_art_scale))
+	_draw_nest(Vector2.ZERO)
+	_draw_ant(Vector2(-48, -18), COLOR_AMBER, 1.2)
+	_draw_ant(Vector2(54, 24), COLOR_TEAL, 1.0)
+	draw_set_transform(_ui_offset, 0.0, Vector2(_ui_scale, _ui_scale))
 	draw_string(font, Vector2(0, 590), "МУРАВЬИШКИ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(46, _ui_scale), COLOR_GOLD)
 	draw_string(font, Vector2(0, 634), "МАЛЕНЬКАЯ КОЛОНИЯ  ·  БОЛЬШИЕ ПРИКЛЮЧЕНИЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var button_width := 440.0
@@ -1314,6 +1317,18 @@ func _tutorial_instruction_for_display() -> String:
 func _status_for_display() -> String:
 	if _ui_scale >= 0.48:
 		return _status
+	if _status.begins_with("Выберите отряд, затем семя"):
+		return "Выберите отряд и семя."
+	if _status.begins_with("Выберите отряд в поле"):
+		return "Выберите отряд для возвращения."
+	if _status.begins_with("Отряд выбран"):
+		return "Выберите семя своего цвета."
+	if _status.begins_with("Маршрут назначен"):
+		return "Маршрут готов. Запустите ход."
+	if _status.begins_with("Последний ход отменён"):
+		return "Ход отменён. Измените приказ."
+	if _status.begins_with("Экспедиция в пути"):
+		return "Экспедиция идёт. Пауза — справа."
 	if _status.begins_with("Груз собран"):
 		return "Груз собран. Нажмите на муравейник."
 	if _status.begins_with("Семя собрано"):
