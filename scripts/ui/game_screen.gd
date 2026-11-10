@@ -100,6 +100,7 @@ var _menu_settings_rect := Rect2()
 var _settings_motion_rect := Rect2()
 var _settings_haptics_rect := Rect2()
 var _settings_back_rect := Rect2()
+var _chapters_back_rect := Rect2()
 var _pause_continue_rect := Rect2()
 var _pause_restart_rect := Rect2()
 var _pause_settings_rect := Rect2()
@@ -242,11 +243,14 @@ func _draw_main_menu(font: Font) -> void:
 	draw_string(font, Vector2(0, 590), "МУРАВЬИШКИ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(46, _ui_scale), COLOR_GOLD)
 	draw_string(font, Vector2(0, 634), "МАЛЕНЬКАЯ КОЛОНИЯ  ·  БОЛЬШИЕ ПРИКЛЮЧЕНИЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var button_width := 440.0
+	var button_height := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0)
+	var button_gap := 14.0
 	var button_x := (720.0 - button_width) * 0.5
-	_menu_continue_rect = Rect2(button_x, 720, button_width, 82)
-	_menu_new_rect = Rect2(button_x, 820, button_width, 76)
-	_menu_chapters_rect = Rect2(button_x, 916, button_width, 76)
-	_menu_settings_rect = Rect2(button_x, 1012, button_width, 76)
+	var button_y := 700.0
+	_menu_continue_rect = Rect2(button_x, button_y, button_width, button_height)
+	_menu_new_rect = Rect2(button_x, button_y + button_height + button_gap, button_width, button_height)
+	_menu_chapters_rect = Rect2(button_x, button_y + (button_height + button_gap) * 2.0, button_width, button_height)
+	_menu_settings_rect = Rect2(button_x, button_y + (button_height + button_gap) * 3.0, button_width, button_height)
 	_draw_shell_button(font, _menu_continue_rect, "ПРОДОЛЖИТЬ", true)
 	_draw_shell_button(font, _menu_new_rect, "НОВАЯ ИГРА")
 	_draw_shell_button(font, _menu_chapters_rect, "ГЛАВЫ КАМПАНИИ")
@@ -285,7 +289,8 @@ func _draw_chapters_screen(font: Font) -> void:
 		draw_string(font, rect.position + Vector2(28, 84), "%d УРОВНЕЙ  ·  НАЧАТЬ С %03d" % [int(chapter["count"]), int(chapter["first"]) + 1], HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
 		draw_string(font, rect.position + Vector2(28, 132), "ОТКРЫТЬ ГЛАВУ  →", HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_GOLD)
 		y += 190.0
-	_draw_shell_button(font, Rect2(44, 1120, 220, 76), "НАЗАД")
+	_chapters_back_rect = Rect2(44, 1120, 260, ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0))
+	_draw_shell_button(font, _chapters_back_rect, "НАЗАД")
 
 
 func _draw_settings_screen(font: Font) -> void:
@@ -303,7 +308,7 @@ func _draw_settings_screen(font: Font) -> void:
 	draw_string(font, Vector2(610, 454), "ВКЛ" if bool(_settings.get("haptics_enabled", true)) else "ВЫКЛ", HORIZONTAL_ALIGNMENT_RIGHT, 44, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_GOLD)
 	if not _settings_warning.is_empty():
 		draw_string(font, Vector2(48, 560), _settings_warning, HORIZONTAL_ALIGNMENT_LEFT, 620, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_CORAL)
-	_settings_back_rect = Rect2(44, 1120, 220, 76)
+	_settings_back_rect = Rect2(44, 1120, 260, ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0))
 	_draw_shell_button(font, _settings_back_rect, "НАЗАД")
 
 
@@ -312,10 +317,13 @@ func _draw_pause_overlay(font: Font) -> void:
 	draw_rect(Rect2(76, 330, 568, 620), COLOR_PANEL)
 	draw_string(font, Vector2(0, 420), "ЭКСПЕДИЦИЯ НА ПАУЗЕ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(27, _ui_scale), COLOR_GOLD)
 	draw_string(font, Vector2(0, 466), "Муравьишки ждут ваших приказов", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
-	_pause_continue_rect = Rect2(140, 540, 440, 76)
-	_pause_restart_rect = Rect2(140, 636, 440, 76)
-	_pause_settings_rect = Rect2(140, 732, 440, 76)
-	_pause_menu_rect = Rect2(140, 828, 440, 76)
+	var pause_button_height := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0)
+	var pause_button_gap := 12.0
+	var pause_button_y := 510.0
+	_pause_continue_rect = Rect2(140, pause_button_y, 440, pause_button_height)
+	_pause_restart_rect = Rect2(140, pause_button_y + pause_button_height + pause_button_gap, 440, pause_button_height)
+	_pause_settings_rect = Rect2(140, pause_button_y + (pause_button_height + pause_button_gap) * 2.0, 440, pause_button_height)
+	_pause_menu_rect = Rect2(140, pause_button_y + (pause_button_height + pause_button_gap) * 3.0, 440, pause_button_height)
 	_draw_shell_button(font, _pause_continue_rect, "ПРОДОЛЖИТЬ", true)
 	_draw_shell_button(font, _pause_restart_rect, "ПЕРЕЗАПУСТИТЬ УРОВЕНЬ")
 	_draw_shell_button(font, _pause_settings_rect, "НАСТРОЙКИ")
@@ -351,7 +359,7 @@ func _handle_menu_tap(point: Vector2) -> void:
 
 
 func _handle_chapters_tap(point: Vector2) -> void:
-	if Rect2(44, 1120, 220, 76).has_point(point):
+	if _chapters_back_rect.has_point(point):
 		_app_screen = "menu"
 		queue_redraw()
 		return
@@ -409,10 +417,11 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "МУРАВЕЙНИК", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
 	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(474, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
-	_pause_rect = Rect2(620, 28, 58, 58)
+	draw_string(font, Vector2(448, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 138, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
+	var pause_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
+	_pause_rect = Rect2(720.0 - pause_size - 16.0, 18.0, pause_size, pause_size)
 	draw_rect(_pause_rect, COLOR_PANEL_LIGHT)
-	draw_string(font, _pause_rect.position + Vector2(0, 39), "Ⅱ", HORIZONTAL_ALIGNMENT_CENTER, _pause_rect.size.x, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
+	draw_string(font, _pause_rect.position + Vector2(0, pause_size * 0.65), "Ⅱ", HORIZONTAL_ALIGNMENT_CENTER, _pause_rect.size.x, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
 
 	var level_id := String(_campaign_levels[_level_index].get("id", "")) if not _campaign_levels.is_empty() else ""
 	var translated_level: Dictionary = _ru_localization.get("levels", {}).get(level_id, {})
