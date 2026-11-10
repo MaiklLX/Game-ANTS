@@ -504,7 +504,10 @@ func _trigger_haptic(duration_ms: int) -> void:
 func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "МУРАВЬИШКИ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
-	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 420, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	var chapter_label := _chapter_title_ru(chapter_title)
+	if _ui_scale < 0.48 and chapter_label == "Сердце колонии: первый рассвет":
+		chapter_label = "Сердце колонии"
+	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + chapter_label, HORIZONTAL_ALIGNMENT_LEFT, 420, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var control_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
 	_undo_rect = Rect2(720.0 - control_size * 2.0 - 30.0, 18.0, control_size, control_size)
 	_pause_rect = Rect2(720.0 - control_size - 16.0, 18.0, control_size, control_size)
@@ -783,7 +786,7 @@ func _draw_status(font: Font) -> void:
 		_restart_rect = Rect2(action_x, panel.position.y + 12, action_width, action_height)
 		_tutorial_skip_rect = _restart_rect
 		draw_rect(_restart_rect, COLOR_PANEL_LIGHT)
-		var tutorial_action := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else "ПРОПУСТИТЬ"
+		var tutorial_action := ("ПАУЗА" if _auto_run_active else "ЗАПУСК") if _has_active_orders() else ("ПРОПУСК" if _ui_scale < 0.48 else "ПРОПУСТИТЬ")
 		draw_string(font, _restart_rect.position + Vector2(0, 58), tutorial_action, HORIZONTAL_ALIGNMENT_CENTER, _restart_rect.size.x, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_TEXT)
 		draw_string(font, Vector2(64, 1070 + _layout_extra * 0.68), _tutorial_instruction_for_display(), HORIZONTAL_ALIGNMENT_LEFT, 460, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_TEXT)
 	else:
