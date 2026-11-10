@@ -10,6 +10,7 @@ const LevelGuidanceScript = preload("res://scripts/ui/level_guidance.gd")
 const ResponsiveLayoutScript = preload("res://scripts/ui/responsive_layout.gd")
 const TurnResolverScript = preload("res://scripts/core/turn_resolver.gd")
 const StrategicTurnEngineScript = preload("res://scripts/core/strategic_turn_engine.gd")
+const SettingsStoreScript = preload("res://scripts/core/settings_store.gd")
 
 const CAMPAIGN_MANIFEST_PATH := "res://campaign/campaign_manifest.json"
 const VIRTUAL_SIZE := Vector2(720.0, 1280.0)
@@ -85,6 +86,24 @@ var _level_page_start: int = 0
 var _campaign_levels: Array[Dictionary] = []
 var _ru_localization: Dictionary = {}
 var _progress_store
+var _settings_store
+var _settings: Dictionary = {"reduced_motion": false, "haptics_enabled": true}
+var _settings_warning: String = ""
+var _app_screen: String = "menu"
+var _settings_return_screen: String = "menu"
+var _chapter_rects: Array[Rect2] = []
+var _menu_continue_rect := Rect2()
+var _menu_new_rect := Rect2()
+var _menu_chapters_rect := Rect2()
+var _menu_settings_rect := Rect2()
+var _settings_motion_rect := Rect2()
+var _settings_haptics_rect := Rect2()
+var _settings_back_rect := Rect2()
+var _pause_continue_rect := Rect2()
+var _pause_restart_rect := Rect2()
+var _pause_settings_rect := Rect2()
+var _pause_menu_rect := Rect2()
+var _pause_rect := Rect2()
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
 var _tutorial_step: int = -1
@@ -127,6 +146,10 @@ func _ready() -> void:
 	_auto_run_timer.timeout.connect(_on_auto_run_tick)
 	add_child(_auto_run_timer)
 	_load_ru_localization()
+	_settings_store = SettingsStoreScript.new()
+	var settings_result: Dictionary = _settings_store.load_settings()
+	_settings = _settings_store.get_settings()
+	_settings_warning = String(settings_result.get("warning", ""))
 	_board = BoardModelScript.new()
 	_colony = ColonyModelScript.new()
 	_strategic_engine = StrategicTurnEngineScript.new()
@@ -153,7 +176,17 @@ func _ready() -> void:
 			initial_index = index
 			break
 	_load_level(initial_index)
+	_app_screen = "menu"
 	queue_redraw()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+		if _app_screen == "game" and _has_active_orders():
+			_stop_auto_run()
+			_app_screen = "pause"
+			_status = "Экспедиция остановлена: приложение было свёрнуто."
+			queue_redraw()
 
 
 func _process(delta: float) -> void:
@@ -179,21 +212,212 @@ func _draw() -> void:
 	_layout_extra = float(layout["extra_height"])
 	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BG)
 	draw_set_transform(_ui_offset, 0.0, Vector2(_ui_scale, _ui_scale))
-	_draw_header(font)
-	_draw_slots(font)
-	_draw_squads(font)
-	_draw_board(font)
-	_draw_status(font)
-	_draw_level_picker(font)
+	if _app_screen == "menu":
+		_draw_main_menu(font)
+	elif _app_screen == "chapters":
+		_draw_chapters_screen(font)
+	elif _app_screen == "settings":
+		_draw_settings_screen(font)
+	else:
+		_draw_header(font)
+		_draw_slots(font)
+		_draw_squads(font)
+		_draw_board(font)
+		_draw_status(font)
+		_draw_level_picker(font)
+		if _app_screen == "pause":
+			_draw_pause_overlay(font)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _draw_main_menu(font: Font) -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), COLOR_BG)
+	draw_circle(Vector2(360, 330), 190.0, Color("#1b3027"))
+	draw_circle(Vector2(360, 330), 148.0, Color("#263d2f"))
+	_draw_nest(Vector2(360, 330))
+	_draw_ant(Vector2(300, 300), COLOR_AMBER, 1.2)
+	_draw_ant(Vector2(418, 360), COLOR_TEAL, 1.0)
+	draw_string(font, Vector2(0, 590), "МУРАВЬИШКИ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(46, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(0, 634), "МАЛЕНЬКАЯ КОЛОНИЯ  ·  БОЛЬШИЕ ПРИКЛЮЧЕНИЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	var button_width := 440.0
+	var button_x := (720.0 - button_width) * 0.5
+	_menu_continue_rect = Rect2(button_x, 720, button_width, 82)
+	_menu_new_rect = Rect2(button_x, 820, button_width, 76)
+	_menu_chapters_rect = Rect2(button_x, 916, button_width, 76)
+	_menu_settings_rect = Rect2(button_x, 1012, button_width, 76)
+	_draw_shell_button(font, _menu_continue_rect, "ПРОДОЛЖИТЬ", true)
+	_draw_shell_button(font, _menu_new_rect, "НОВАЯ ИГРА")
+	_draw_shell_button(font, _menu_chapters_rect, "ГЛАВЫ КАМПАНИИ")
+	_draw_shell_button(font, _menu_settings_rect, "НАСТРОЙКИ")
+	draw_string(font, Vector2(0, 1192), "ИГРА РАБОТАЕТ ОФЛАЙН  ·  ПРОГРЕСС СОХРАНЯЕТСЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
+
+
+func _draw_chapters_screen(font: Font) -> void:
+	draw_string(font, Vector2(44, 100), "ПУТЕШЕСТВИЕ КОЛОНИИ", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(44, 138), "Выберите место для следующей экспедиции", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_MUTED)
+	_chapter_rects.clear()
+	var chapter_map: Dictionary = {}
+	for record in _campaign_levels:
+		var chapter_id := String(record.get("chapter_id", ""))
+		if not chapter_map.has(chapter_id):
+			chapter_map[chapter_id] = {"title": String(record.get("chapter_title", chapter_id)), "first": int(record.get("global_index", 0)), "count": 0}
+		chapter_map[chapter_id]["count"] += 1
+	var y := 220.0
+	for chapter_id in chapter_map:
+		var chapter: Dictionary = chapter_map[chapter_id]
+		var rect := Rect2(44, y, 632, 170)
+		_chapter_rects.append(rect)
+		draw_rect(rect, COLOR_PANEL)
+		draw_rect(Rect2(rect.position, Vector2(6, rect.size.y)), _chapter_color(_chapter_rects.size() - 1))
+		draw_string(font, rect.position + Vector2(28, 48), _chapter_title_ru(String(chapter["title"])), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
+		draw_string(font, rect.position + Vector2(28, 84), "%d УРОВНЕЙ  ·  НАЧАТЬ С %03d" % [int(chapter["count"]), int(chapter["first"]) + 1], HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+		draw_string(font, rect.position + Vector2(28, 132), "ОТКРЫТЬ ГЛАВУ  →", HORIZONTAL_ALIGNMENT_LEFT, 560, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_GOLD)
+		y += 190.0
+	_draw_shell_button(font, Rect2(44, 1120, 220, 76), "НАЗАД")
+
+
+func _draw_settings_screen(font: Font) -> void:
+	draw_string(font, Vector2(44, 100), "НАСТРОЙКИ", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(34, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(44, 142), "Комфорт управления и движения", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_MUTED)
+	_settings_motion_rect = Rect2(44, 250, 632, 112)
+	_settings_haptics_rect = Rect2(44, 386, 632, 112)
+	draw_rect(_settings_motion_rect, COLOR_PANEL)
+	draw_rect(_settings_haptics_rect, COLOR_PANEL)
+	draw_string(font, Vector2(72, 294), "УМЕНЬШИТЬ АНИМАЦИЮ", HORIZONTAL_ALIGNMENT_LEFT, 430, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	draw_string(font, Vector2(72, 326), "Более короткие и спокойные переходы", HORIZONTAL_ALIGNMENT_LEFT, 450, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(610, 318), "ВКЛ" if bool(_settings.get("reduced_motion", false)) else "ВЫКЛ", HORIZONTAL_ALIGNMENT_RIGHT, 44, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(72, 430), "ТАКТИЛЬНЫЙ ОТКЛИК", HORIZONTAL_ALIGNMENT_LEFT, 430, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	draw_string(font, Vector2(72, 462), "Лёгкая вибрация при важных действиях", HORIZONTAL_ALIGNMENT_LEFT, 450, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
+	draw_string(font, Vector2(610, 454), "ВКЛ" if bool(_settings.get("haptics_enabled", true)) else "ВЫКЛ", HORIZONTAL_ALIGNMENT_RIGHT, 44, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_GOLD)
+	if not _settings_warning.is_empty():
+		draw_string(font, Vector2(48, 560), _settings_warning, HORIZONTAL_ALIGNMENT_LEFT, 620, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_CORAL)
+	_settings_back_rect = Rect2(44, 1120, 220, 76)
+	_draw_shell_button(font, _settings_back_rect, "НАЗАД")
+
+
+func _draw_pause_overlay(font: Font) -> void:
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#07100d", 0.78))
+	draw_rect(Rect2(76, 330, 568, 620), COLOR_PANEL)
+	draw_string(font, Vector2(0, 420), "ЭКСПЕДИЦИЯ НА ПАУЗЕ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(27, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(0, 466), "Муравьишки ждут ваших приказов", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(14, _ui_scale), COLOR_MUTED)
+	_pause_continue_rect = Rect2(140, 540, 440, 76)
+	_pause_restart_rect = Rect2(140, 636, 440, 76)
+	_pause_settings_rect = Rect2(140, 732, 440, 76)
+	_pause_menu_rect = Rect2(140, 828, 440, 76)
+	_draw_shell_button(font, _pause_continue_rect, "ПРОДОЛЖИТЬ", true)
+	_draw_shell_button(font, _pause_restart_rect, "ПЕРЕЗАПУСТИТЬ УРОВЕНЬ")
+	_draw_shell_button(font, _pause_settings_rect, "НАСТРОЙКИ")
+	_draw_shell_button(font, _pause_menu_rect, "ГЛАВНОЕ МЕНЮ")
+
+
+func _draw_shell_button(font: Font, rect: Rect2, label: String, primary: bool = false) -> void:
+	draw_rect(rect, COLOR_GOLD if primary else COLOR_PANEL_LIGHT)
+	draw_rect(Rect2(rect.position, Vector2(4, rect.size.y)), COLOR_AMBER if primary else COLOR_GRID)
+	draw_string(font, rect.position + Vector2(0, rect.size.y * 0.62), label, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, ResponsiveLayoutScript.font_size(16, _ui_scale), COLOR_BG if primary else COLOR_TEXT)
+
+
+func _chapter_color(index: int) -> Color:
+	match index:
+		0: return COLOR_TEAL
+		1: return COLOR_AMBER
+		2: return COLOR_CORAL
+		_: return COLOR_VIOLET
+
+
+func _handle_menu_tap(point: Vector2) -> void:
+	if _menu_continue_rect.has_point(point):
+		_app_screen = "game"
+	elif _menu_new_rect.has_point(point):
+		_load_level(0)
+		_app_screen = "game"
+	elif _menu_chapters_rect.has_point(point):
+		_app_screen = "chapters"
+	elif _menu_settings_rect.has_point(point):
+		_settings_return_screen = "menu"
+		_app_screen = "settings"
+	queue_redraw()
+
+
+func _handle_chapters_tap(point: Vector2) -> void:
+	if Rect2(44, 1120, 220, 76).has_point(point):
+		_app_screen = "menu"
+		queue_redraw()
+		return
+	for index in range(_chapter_rects.size()):
+		if _chapter_rects[index].has_point(point):
+			var chapter_index := 0
+			for record_index in range(_campaign_levels.size()):
+				if _campaign_levels[record_index].get("chapter_id", "") == _campaign_levels[_chapter_index_to_global(index)].get("chapter_id", ""):
+					chapter_index = record_index
+					break
+			_load_level(chapter_index)
+			_app_screen = "game"
+			queue_redraw()
+			return
+
+
+func _chapter_index_to_global(chapter_index: int) -> int:
+	var seen: Array[String] = []
+	for record_index in range(_campaign_levels.size()):
+		var chapter_id := String(_campaign_levels[record_index].get("chapter_id", ""))
+		if not seen.has(chapter_id):
+			seen.append(chapter_id)
+			if seen.size() - 1 == chapter_index:
+				return record_index
+	return 0
+
+
+func _handle_settings_tap(point: Vector2) -> void:
+	if _settings_motion_rect.has_point(point):
+		var result: Dictionary = _settings_store.set_setting("reduced_motion", not bool(_settings.get("reduced_motion", false)))
+		_settings = _settings_store.get_settings()
+		_settings_warning = String(result.get("warning", ""))
+	elif _settings_haptics_rect.has_point(point):
+		var result: Dictionary = _settings_store.set_setting("haptics_enabled", not bool(_settings.get("haptics_enabled", true)))
+		_settings = _settings_store.get_settings()
+		_settings_warning = String(result.get("warning", ""))
+	elif _settings_back_rect.has_point(point):
+		_app_screen = _settings_return_screen
+	queue_redraw()
+
+
+func _handle_pause_tap(point: Vector2) -> void:
+	if _pause_continue_rect.has_point(point):
+		_app_screen = "game"
+	elif _pause_restart_rect.has_point(point):
+		_load_level(_level_index)
+		_app_screen = "game"
+	elif _pause_settings_rect.has_point(point):
+		_settings_return_screen = "pause"
+		_app_screen = "settings"
+	elif _pause_menu_rect.has_point(point):
+		_stop_auto_run()
+		_app_screen = "menu"
+	queue_redraw()
+
+
+func _open_pause() -> void:
+	_stop_auto_run()
+	_app_screen = "pause"
+	queue_redraw()
+
+
+func _trigger_haptic(duration_ms: int) -> void:
+	if not bool(_settings.get("haptics_enabled", true)):
+		return
+	if OS.get_name() == "Android" or OS.get_name() == "iOS":
+		Input.vibrate_handheld(duration_ms)
 
 
 func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "МУРАВЕЙНИК", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
 	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(560, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	draw_string(font, Vector2(474, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 118, ResponsiveLayoutScript.font_size(18, _ui_scale), COLOR_TEXT)
+	_pause_rect = Rect2(620, 28, 58, 58)
+	draw_rect(_pause_rect, COLOR_PANEL_LIGHT)
+	draw_string(font, _pause_rect.position + Vector2(0, 39), "Ⅱ", HORIZONTAL_ALIGNMENT_CENTER, _pause_rect.size.x, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
 
 	var level_id := String(_campaign_levels[_level_index].get("id", "")) if not _campaign_levels.is_empty() else ""
 	var translated_level: Dictionary = _ru_localization.get("levels", {}).get(level_id, {})
@@ -529,6 +753,16 @@ func _level_button_size() -> float:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and (event.keycode == KEY_ESCAPE or event.keycode == KEY_BACK):
+		if _app_screen == "game":
+			_open_pause()
+			accept_event()
+			return
+		elif _app_screen == "pause":
+			_app_screen = "game"
+			queue_redraw()
+			accept_event()
+			return
 	var pressed := false
 	var point := Vector2.ZERO
 	if event is InputEventScreenTouch and event.pressed:
@@ -546,6 +780,21 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _handle_tap(point: Vector2) -> void:
+	if _app_screen == "menu":
+		_handle_menu_tap(point)
+		return
+	if _app_screen == "chapters":
+		_handle_chapters_tap(point)
+		return
+	if _app_screen == "settings":
+		_handle_settings_tap(point)
+		return
+	if _app_screen == "pause":
+		_handle_pause_tap(point)
+		return
+	if _pause_rect.has_point(point):
+		_open_pause()
+		return
 	if _auto_run_active and _restart_rect.has_point(point):
 		_stop_auto_run()
 		return
@@ -655,6 +904,7 @@ func _select_or_deploy(squad_id: String) -> void:
 			queue_redraw()
 			return
 		_status = "%s отряд готов. Выберите подходящее семя." % _color_name_ru(String(squad.get("color", "")))
+		_trigger_haptic(18)
 		if _tutorial_active and _tutorial_step == 0 and squad_id == "amber_workers":
 			_tutorial_step = 1
 	else:
@@ -685,6 +935,7 @@ func _collect_selected_squad(cell: Vector2i) -> void:
 	if not result.get("valid", false):
 		_status = _error_ru(String(result.get("errors", ["Нельзя назначить эту цель."])[0]))
 	else:
+		_trigger_haptic(12)
 		_last_path_start = squad.get("position", _board.start)
 		_last_target = cell
 		_last_path = result.get("path", [])
@@ -782,7 +1033,8 @@ func _advance_strategic_turn() -> void:
 		_turn_animation_tween = create_tween()
 		_turn_animation_tween.set_trans(Tween.TRANS_CUBIC)
 		_turn_animation_tween.set_ease(Tween.EASE_OUT)
-		_turn_animation_tween.tween_property(self, "_turn_animation_progress", 1.0, 0.34)
+		var movement_duration := 0.12 if bool(_settings.get("reduced_motion", false)) else 0.34
+		_turn_animation_tween.tween_property(self, "_turn_animation_progress", 1.0, movement_duration)
 		_turn_animation_tween.finished.connect(_on_turn_animation_finished)
 	else:
 		_is_animating = false
@@ -792,8 +1044,10 @@ func _advance_strategic_turn() -> void:
 		var collected_squad: Dictionary = _colony.get_squad(String(collected_id))
 		if not collected_squad.is_empty():
 			_trigger_feedback(collected_squad.get("position", _board.start), "harvest")
+			_trigger_haptic(24)
 	for delivered_id in result.get("delivered", []):
 		_trigger_feedback(_board.start, "delivery")
+		_trigger_haptic(36)
 	if _tutorial_active and not result.get("delivered", []).is_empty():
 		_complete_tutorial()
 	if result.get("outcome", "playing") != "playing" or not result.get("collected", []).is_empty() or not result.get("delivered", []).is_empty() or not result.get("blocked", []).is_empty():
