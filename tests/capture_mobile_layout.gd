@@ -58,6 +58,8 @@ func _capture_viewports() -> void:
 			var engine = scene.get("_strategic_engine")
 			var board = scene.get("_board")
 			var colony = scene.get("_colony")
+			var result_snapshot: Dictionary = engine.create_snapshot(colony, board)
+			scene.set("_undo_snapshot", result_snapshot)
 			engine.call("_finish", "won")
 			colony.set("delivered_resources", board.get("total_resources"))
 		if level_index >= 0:
