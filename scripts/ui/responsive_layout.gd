@@ -82,7 +82,7 @@ static func status_action_height(scale: float) -> float:
 
 
 static func status_action_width(scale: float) -> float:
-	return minimum_touch_extent(scale, 106.0)
+	return minimum_touch_extent(scale, 120.0)
 
 
 static func level_controls_width(scale: float) -> float:
