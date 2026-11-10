@@ -83,3 +83,19 @@ Create/adjust a small onboarding batch, validate solvability and meaningful choi
 - Easy to understand on a phone; hard to optimize perfectly.
 - The player plans; ants execute. Animation communicates state, not substitutes for decisions.
 - Preserve main, PR #9, and existing checkpoints. No merge without explicit approval.
+
+
+## Implementation checkpoint — 10 Nov 2026
+
+The strategic runtime is now connected to the player-facing game screen. A full two-squad expedition contract test covers simultaneous movement, collection, explicit waiting, explicit return orders, and delivery.
+
+The application foundation has also begun:
+- main menu, chapter selection, settings, gameplay, and pause states;
+- pause-on-background behavior for active expeditions;
+- persisted reduced-motion and haptic preferences;
+- next-level action after victory;
+- expanded rendered QA cases for the app shell.
+
+The original campaign remains intact at 100 levels. Chapter selection uses the manifest's order and enters at the first level in each pack. The five-level picker remains navigation only.
+
+Latest implementation is on the existing feature branch and PR #12 remains Draft. No merge to main is authorized. CI must pass on the final checkpoint before an APK is offered as a new test build; physical Android QA remains separate.
