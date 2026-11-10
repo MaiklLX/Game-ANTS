@@ -108,6 +108,9 @@ var _pause_menu_rect := Rect2()
 var _result_next_rect := Rect2()
 var _result_retry_rect := Rect2()
 var _result_menu_rect := Rect2()
+var _result_undo_rect := Rect2()
+var _undo_rect := Rect2()
+var _undo_snapshot: Dictionary = {}
 var _pause_rect := Rect2()
 var _progress_warning: String = ""
 var _tutorial_active: bool = false
@@ -352,20 +355,28 @@ func _draw_result_overlay(font: Font) -> void:
 	if won:
 		draw_string(font, Vector2(0, 664), "ОСТАЛОСЬ ДНЕЙ  %d" % _strategic_engine.day_remaining, HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var button_height := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 88.0)
-	var button_gap := 12.0
-	var button_y := 720.0 if won else 650.0
-	_result_next_rect = Rect2(140, button_y, 440, button_height)
-	_result_retry_rect = Rect2(140, button_y + button_height + button_gap, 440, button_height)
-	_result_menu_rect = Rect2(140, button_y + (button_height + button_gap) * 2.0, 440, button_height)
+	var button_gap := 8.0
+	var button_y := 590.0 if not _undo_snapshot.is_empty() else 700.0
+	if not won and _undo_snapshot.is_empty():
+		button_y = 620.0
+	_result_undo_rect = Rect2(140, button_y, 440, button_height) if not _undo_snapshot.is_empty() else Rect2()
+	_result_next_rect = Rect2(140, button_y + (button_height + button_gap if not _undo_snapshot.is_empty() else 0.0), 440, button_height)
+	_result_retry_rect = Rect2(140, _result_next_rect.position.y + button_height + button_gap, 440, button_height)
+	_result_menu_rect = Rect2(140, _result_retry_rect.position.y + button_height + button_gap, 440, button_height)
 	var next_label := "СЛЕДУЮЩИЙ УРОВЕНЬ" if _level_index + 1 < _campaign_levels.size() else "ВЫБРАТЬ ГЛАВУ"
 	if not won:
 		next_label = "ВЫБРАТЬ ДРУГОЙ УРОВЕНЬ"
+	if not _undo_snapshot.is_empty():
+		_draw_shell_button(font, _result_undo_rect, "ВЕРНУТЬ ПОСЛЕДНИЙ ХОД")
 	_draw_shell_button(font, _result_next_rect, next_label, true)
 	_draw_shell_button(font, _result_retry_rect, "ПОВТОРИТЬ УРОВЕНЬ")
 	_draw_shell_button(font, _result_menu_rect, "ГЛАВНОЕ МЕНЮ")
 
 
 func _handle_result_tap(point: Vector2) -> void:
+	if not _undo_snapshot.is_empty() and _result_undo_rect.has_point(point):
+		_undo_last_turn()
+		return
 	if _result_next_rect.has_point(point):
 		if _strategic_engine.get_outcome() == "won" and _level_index + 1 < _campaign_levels.size():
 			_load_level(_level_index + 1)
@@ -450,6 +461,32 @@ func _handle_pause_tap(point: Vector2) -> void:
 	queue_redraw()
 
 
+func _undo_last_turn() -> void:
+	if _undo_snapshot.is_empty():
+		_status = "Пока нечего отменять. Сначала завершите ход."
+		queue_redraw()
+		return
+	var restore_result: Dictionary = _strategic_engine.restore_snapshot(_undo_snapshot, _colony, _board)
+	if not restore_result.get("valid", false):
+		_status = _error_ru(String(restore_result.get("errors", ["Не удалось отменить ход."])[0]))
+		queue_redraw()
+		return
+	_undo_snapshot.clear()
+	_is_animating = false
+	_turn_animation_progress = 1.0
+	_turn_animation_moves.clear()
+	if _turn_animation_tween != null and _turn_animation_tween.is_running():
+		_turn_animation_tween.kill()
+	if _feedback_tween != null and _feedback_tween.is_running():
+		_feedback_tween.kill()
+	_feedback_progress = 1.0
+	_feedback_cell = Vector2i(-1, -1)
+	_app_screen = "game"
+	_status = "Последний ход отменён. Можно изменить приказы и попробовать иначе."
+	_trigger_haptic(18)
+	queue_redraw()
+
+
 func _open_pause() -> void:
 	_stop_auto_run()
 	_app_screen = "pause"
@@ -467,11 +504,14 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 62), "МУРАВЕЙНИК", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
 	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 570, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
-	draw_string(font, Vector2(448, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 138, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
-	var pause_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
-	_pause_rect = Rect2(720.0 - pause_size - 16.0, 18.0, pause_size, pause_size)
+	var control_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
+	_undo_rect = Rect2(720.0 - control_size * 2.0 - 30.0, 18.0, control_size, control_size)
+	_pause_rect = Rect2(720.0 - control_size - 16.0, 18.0, control_size, control_size)
+	draw_string(font, Vector2(330, 62), "%03d / %03d" % [_level_index + 1, _campaign_levels.size()], HORIZONTAL_ALIGNMENT_RIGHT, 138, ResponsiveLayoutScript.font_size(17, _ui_scale), COLOR_TEXT)
+	draw_rect(_undo_rect, COLOR_PANEL_LIGHT if not _undo_snapshot.is_empty() else Color("#1a251f"))
+	draw_string(font, _undo_rect.position + Vector2(0, control_size * 0.65), "↶", HORIZONTAL_ALIGNMENT_CENTER, _undo_rect.size.x, ResponsiveLayoutScript.font_size(24, _ui_scale), COLOR_GOLD if not _undo_snapshot.is_empty() else COLOR_GRID)
 	draw_rect(_pause_rect, COLOR_PANEL_LIGHT)
-	draw_string(font, _pause_rect.position + Vector2(0, pause_size * 0.65), "Ⅱ", HORIZONTAL_ALIGNMENT_CENTER, _pause_rect.size.x, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
+	draw_string(font, _pause_rect.position + Vector2(0, control_size * 0.65), "Ⅱ", HORIZONTAL_ALIGNMENT_CENTER, _pause_rect.size.x, ResponsiveLayoutScript.font_size(22, _ui_scale), COLOR_TEXT)
 
 	var level_id := String(_campaign_levels[_level_index].get("id", "")) if not _campaign_levels.is_empty() else ""
 	var translated_level: Dictionary = _ru_localization.get("levels", {}).get(level_id, {})
@@ -849,6 +889,12 @@ func _handle_tap(point: Vector2) -> void:
 	if _app_screen == "result":
 		_handle_result_tap(point)
 		return
+	if _undo_rect.has_point(point):
+		if _is_animating:
+			return
+		_stop_auto_run()
+		_undo_last_turn()
+		return
 	if _pause_rect.has_point(point):
 		_open_pause()
 		return
@@ -1075,11 +1121,13 @@ func _advance_strategic_turn() -> void:
 		var squad: Dictionary = _colony.get_squad(squad_id)
 		if squad.get("deployed", false):
 			previous_positions[squad_id] = squad.get("position", _board.start)
+	var undo_candidate: Dictionary = _strategic_engine.create_snapshot(_colony, _board)
 	var result: Dictionary = _strategic_engine.advance_turn(_colony, _board)
 	if not result.get("valid", false):
 		_status = _error_ru(String(result.get("errors", ["Не удалось завершить ход."])[0]))
 		queue_redraw()
 		return
+	_undo_snapshot = undo_candidate
 	_turn_animation_moves.clear()
 	for squad_id in result.get("moved", []):
 		var squad_after: Dictionary = _colony.get_squad(String(squad_id))
