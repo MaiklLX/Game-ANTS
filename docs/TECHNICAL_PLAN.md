@@ -1,89 +1,82 @@
 # Technical Plan
 
-**Version:** 0.1  
-**Status:** Provisional; validate with a minimal mobile prototype
+**Version:** 0.2  
+**Engine:** Godot 4.7.2-stable  
+**Status:** Active implementation on feat/kt-015-strategic-puzzle
 
-## 1. Engine recommendation
+## 1. Platforms and delivery
 
-Use **Godot 4.x with GDScript** for the initial 2D, pixel-art, mobile-first prototype.
+- Android portrait is the first release target.
+- Core campaign is offline-first; no network connection is required to play authored levels.
+- iOS export and desktop/web builds are future validation targets.
+- Ordinary validation does not require signing secrets. Debug APK export is a separate CI workflow.
+- No direct commits to main; work remains on a feature branch and is reviewed through a draft PR.
 
-Why:
-- lightweight 2D workflow and strong scene system;
-- fast iteration for grid logic and touch UI;
-- open-source toolchain without per-install engine royalties;
-- Android export path and a viable iOS export path;
-- GDScript keeps the prototype approachable and easy to review.
+## 2. Runtime layers
 
-Do not lock an exact engine minor version until the development environment and export templates are checked. Re-evaluate only if a concrete technical blocker appears.
+### Rules and simulation
+- BoardModel: grid geometry, resources, blocked cells, deterministic pathfinding.
+- ColonyModel: squad roster, carrying capacity, deployment slots, movement, delivery.
+- StrategicTurnEngine: explicit orders, shared day budget, deterministic simultaneous turn resolution.
+- TurnResolver: objective completion and terminal outcome checks.
+- LevelDefinition / LevelLoader: validation and loading of authored JSON levels.
 
-## 2. Target platforms
+Rules are independent of rendering and animation. The simulation commits state first; presentation visualizes the resulting transition.
 
-- Primary first validation: Android phones.
-- Secondary target: iOS after the core loop and export pipeline are stable.
-- Portrait orientation first.
-- Offline-first campaign; no network dependency for core levels.
+### Campaign and persistence
+- CampaignCatalog expands a manifest and chapter packs into stable level records.
+- ProgressStore stores completed level IDs, last selected level ID, and tutorial completion.
+- SettingsStore stores accessibility/feedback preferences; currently reduced motion and haptic feedback.
+- Saves use temporary writes and preserve a previous valid version. Corrupt data is preserved before recovery; unsupported future schemas are not overwritten.
 
-## 3. Architecture principles
+### Presentation and app shell
+- game_screen.gd currently owns responsive custom-drawn UI and interaction routing.
+- App states: main menu, chapter selection, settings, gameplay, pause.
+- App focus loss/backgrounding stops automatic expedition playback and opens pause.
+- Reduced motion changes movement transition duration; haptic feedback is invoked only for meaningful actions and only when enabled.
+- Gameplay state, rules, and progress are not reset by opening settings or pausing.
 
-Separate the project into clear layers:
+## 3. Persistence contracts
 
-- **Game rules:** board state, squad state, valid moves, route search, collection, win/loss.
-- **Level data:** deterministic board layouts, objectives, squad queues, solution metadata.
-- **Presentation:** grid rendering, ant sprites, trails, particles, sound, camera.
-- **UI:** HUD, slots, pause, retry, level complete.
-- **Persistence:** `ProgressStore` stores completed level IDs, last selected level, and first-session tutorial completion in a versioned local save. Settings and in-progress board snapshots remain future scope.
+### Campaign progress
+- File: user://campaign_progress.json, schema version 1.
+- Stores completed stable level IDs, last selected stable level ID, and tutorial completion.
+- Never stores campaign array indices.
+- Preserves a previous save as .bak; malformed JSON is preserved as .corrupt.
+- Unsupported future schemas are left intact and disable writes.
 
-The simulation must not depend on animation completion or frame rate. Animations visualize already-determined state transitions.
+### Settings
+- File: user://app_settings.json, schema version 1.
+- Current keys: reduced_motion, haptics_enabled.
+- Defaults: reduced motion off; haptics on.
+- Unknown keys are rejected by the runtime API. Unsupported future schemas are not overwritten.
+- Settings are independent of campaign progress.
 
-## 4. Proposed modules
+## 4. Input and lifecycle
 
-- `BoardModel`: grid dimensions, cells, resources, obstacles, gates.
-- `ColonyModel`: nest, squads, capacity, active routes.
-- `Pathfinder`: deterministic route finding and reachability.
-- `TurnResolver`: validates and applies player actions.
-- `LevelValidator`: checks level data and solvability metadata.
-- `LevelLoader`: loads versioned local level resources.
-- `GamePresenter`: translates state changes into visual effects.
-- `ProgressStore`: local campaign progress with a versioned schema and stable level IDs.
+- Touch and mouse share the same hit-test path.
+- Escape/Back opens pause during gameplay and resumes from pause.
+- App focus loss or backgrounding stops auto-run and pauses the session.
+- Auto-run only advances existing explicit orders; it never chooses targets or issues new orders.
+- Animation is not allowed to block the rules engine; input is gated only while a committed movement animation is resolving.
 
-Names may change as the implementation takes shape; boundaries should remain clear.
+## 5. Testing strategy
 
-### Current local progress contract
+- Headless tests for board, level schema, colony, turn engine, campaign catalog, progress persistence, settings persistence, and tutorial contracts.
+- Campaign audit checks geometry/signature duplication and route/workload progression.
+- CI imports the project, runs tests, audits the campaign, launches the main scene, and captures software-rendered portrait layouts.
+- Android debug export is independent from validation.
+- CI screenshots are software-rendered viewport captures, not proof of physical-device behavior.
 
-- File: `user://campaign_progress.json`; schema version 1.
-- Stores completed level IDs and the last selected level ID. It never stores array indices, so inserting or reorganizing chapter packs does not redirect a saved player to the wrong level.
-- Writes use a temporary file and rotate the previous valid save to a backup. Malformed JSON is preserved in a `.corrupt` sidecar before recovery; an unsupported future schema is not overwritten.
-- IDs removed from the current campaign are ignored safely. A missing or removed last-selected ID falls back to the first current level.
-- The level picker displays completion marks and a cleared-level count. All 100 levels remain directly selectable; sequential unlock gating has deliberately not been introduced.
-- Current scope does not include in-progress board snapshots, scores, stars, cloud sync, or settings. On restart, the last selected level reloads from its initial board state.
+## 6. Near-term architecture backlog
 
+1. Split the monolithic screen controller into app navigation, gameplay presenter, and reusable UI components without changing game rules.
+2. Add a robust turn snapshot/undo contract after the turn engine exposes safe serialization.
+3. Add pause-safe audio lifecycle and sound buses before exposing audio settings.
+4. Add a dedicated level-result/reward presentation and chapter completion summary.
+5. Validate Android system-bar/safe-area behavior on physical devices.
+6. Add automated level solvability proofs under the strategic turn rules, not only the legacy campaign solver.
 
-## 5. Determinism and testing
+## 7. Explicit non-goals
 
-- Same level + same sequence of actions must produce the same result.
-- Use stable ordering for pathfinding tie-breaks.
-- Test blocked paths, unreachable resources, full slots, empty squads, partial loads, and terminal states.
-- Add a headless test path for core rules where practical.
-- Validate every authored level against its intended solution.
-
-## 6. Performance and mobile UX
-
-- Avoid one scene node per tiny pixel if it creates unnecessary overhead; benchmark a TileMap/mesh/custom draw approach.
-- Use object pooling only when profiling demonstrates a need.
-- Respect safe areas and variable portrait aspect ratios.
-- Use touch targets suitable for small screens.
-- Pause simulation and audio correctly when the app is backgrounded.
-- Keep animations interruptible and avoid blocking input during nonessential effects.
-
-## 7. Repository and automation
-
-- GitHub Issues are the only task source.
-- Feature branches and pull requests are mandatory.
-- No direct agent commits to `main`; no autonomous merge.
-- GitHub Actions should run project validation and tests on pull requests.
-- Keep CI deterministic and avoid requiring signing secrets for ordinary validation.
-
-## 8. Development workflow without external agents
-The project will be developed directly with ChatGPT and the connected GitHub tools. DeepSeek Harness and other external autonomous coding agents are not part of the current plan. No local agent installation or complex agent infrastructure is required.
-
-ChatGPT can inspect and edit repository text files, create branches, Issues, and pull requests, and review CI results through connected tools. Actual Godot editor execution, Android/iOS exports, and physical-device testing require a suitable local or hosted development environment; these must not be claimed until actually run and verified.
+No accounts, cloud sync, online services, monetization, ads, analytics, procedural generation, or external autonomous coding agents in the current foundation.
