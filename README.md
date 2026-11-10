@@ -16,8 +16,10 @@ The experience is designed to be friendly, calm, tactile, and readable on mobile
 - Explicit collection and return orders; no automatic dispatch.
 - Route previews, carrying capacity, deployment slots, win/loss states.
 - Persistent campaign progress by stable level IDs.
-- Main menu, chapter selection, settings, gameplay, and pause shell.
+- Main menu, chapter selection, settings, gameplay, pause, and victory/retry result screens.
+- One-turn undo that restores board, colony, active orders, and shared day budget.
 - Reduced-motion and haptic-feedback preferences.
+- Next-level continuation is saved after victory; undo restores the current level as the continue target.
 - Responsive portrait layout and software-rendered mobile QA workflow.
 - Offline campaign; no accounts or network dependency.
 
