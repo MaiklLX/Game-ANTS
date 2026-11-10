@@ -263,7 +263,7 @@ func _draw_main_menu(font: Font) -> void:
 	_menu_chapters_rect = Rect2(button_x, button_y + (button_height + button_gap) * 2.0, button_width, button_height)
 	_menu_settings_rect = Rect2(button_x, button_y + (button_height + button_gap) * 3.0, button_width, button_height)
 	_draw_shell_button(font, _menu_continue_rect, "ПРОДОЛЖИТЬ", true)
-	_draw_shell_button(font, _menu_new_rect, "НОВАЯ ИГРА")
+	_draw_shell_button(font, _menu_new_rect, "НАЧАТЬ СНАЧАЛА")
 	_draw_shell_button(font, _menu_chapters_rect, "ГЛАВЫ КАМПАНИИ")
 	_draw_shell_button(font, _menu_settings_rect, "НАСТРОЙКИ")
 	draw_string(font, Vector2(0, 1192), "ИГРА РАБОТАЕТ ОФЛАЙН  ·  ПРОГРЕСС СОХРАНЯЕТСЯ", HORIZONTAL_ALIGNMENT_CENTER, 720, ResponsiveLayoutScript.font_size(12, _ui_scale), COLOR_MUTED)
@@ -1205,6 +1205,11 @@ func _mark_level_completed() -> void:
 		var save_result: Dictionary = _progress_store.mark_level_completed(level_id)
 		if not save_result.get("valid", false):
 			_progress_warning = String(save_result.get("warning", "Не удалось сохранить прогресс."))
+	if _progress_store != null and _level_index + 1 < _campaign_levels.size():
+		var next_level_id := String(_campaign_levels[_level_index + 1]["id"])
+		var continue_result: Dictionary = _progress_store.set_last_selected_level(next_level_id)
+		if not continue_result.get("valid", false):
+			_progress_warning = String(continue_result.get("warning", "Не удалось сохранить следующий уровень."))
 
 
 func _position_along_last_path(progress: float) -> Vector2:
