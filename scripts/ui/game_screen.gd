@@ -967,6 +967,7 @@ func _load_level(index: int) -> void:
 		_feedback_tween.kill()
 	_feedback_progress = 1.0
 	_feedback_cell = Vector2i(-1, -1)
+	_undo_snapshot.clear()
 	_is_animating = false
 	_returning_to_nest = false
 	_ant_progress = 0.0
