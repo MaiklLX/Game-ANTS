@@ -92,6 +92,7 @@ var _settings_warning: String = ""
 var _app_screen: String = "menu"
 var _settings_return_screen: String = "menu"
 var _chapter_rects: Array[Rect2] = []
+var _chapter_records: Array[Dictionary] = []
 var _menu_continue_rect := Rect2()
 var _menu_new_rect := Rect2()
 var _menu_chapters_rect := Rect2()
@@ -257,15 +258,25 @@ func _draw_chapters_screen(font: Font) -> void:
 	draw_string(font, Vector2(44, 100), "ПУТЕШЕСТВИЕ КОЛОНИИ", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(30, _ui_scale), COLOR_GOLD)
 	draw_string(font, Vector2(44, 138), "Выберите место для следующей экспедиции", HORIZONTAL_ALIGNMENT_LEFT, 630, ResponsiveLayoutScript.font_size(15, _ui_scale), COLOR_MUTED)
 	_chapter_rects.clear()
-	var chapter_map: Dictionary = {}
+	_chapter_records.clear()
 	for record in _campaign_levels:
 		var chapter_id := String(record.get("chapter_id", ""))
-		if not chapter_map.has(chapter_id):
-			chapter_map[chapter_id] = {"title": String(record.get("chapter_title", chapter_id)), "first": int(record.get("global_index", 0)), "count": 0}
-		chapter_map[chapter_id]["count"] += 1
+		var chapter_index := -1
+		for existing_index in range(_chapter_records.size()):
+			if String(_chapter_records[existing_index].get("id", "")) == chapter_id:
+				chapter_index = existing_index
+				break
+		if chapter_index < 0:
+			_chapter_records.append({
+				"id": chapter_id,
+				"title": String(record.get("chapter_title", chapter_id)),
+				"first": int(record.get("global_index", 0)),
+				"count": 1,
+			})
+		else:
+			_chapter_records[chapter_index]["count"] = int(_chapter_records[chapter_index]["count"]) + 1
 	var y := 220.0
-	for chapter_id in chapter_map:
-		var chapter: Dictionary = chapter_map[chapter_id]
+	for chapter in _chapter_records:
 		var rect := Rect2(44, y, 632, 170)
 		_chapter_rects.append(rect)
 		draw_rect(rect, COLOR_PANEL)
@@ -346,26 +357,10 @@ func _handle_chapters_tap(point: Vector2) -> void:
 		return
 	for index in range(_chapter_rects.size()):
 		if _chapter_rects[index].has_point(point):
-			var chapter_index := 0
-			for record_index in range(_campaign_levels.size()):
-				if _campaign_levels[record_index].get("chapter_id", "") == _campaign_levels[_chapter_index_to_global(index)].get("chapter_id", ""):
-					chapter_index = record_index
-					break
-			_load_level(chapter_index)
+			_load_level(int(_chapter_records[index].get("first", 0)))
 			_app_screen = "game"
 			queue_redraw()
 			return
-
-
-func _chapter_index_to_global(chapter_index: int) -> int:
-	var seen: Array[String] = []
-	for record_index in range(_campaign_levels.size()):
-		var chapter_id := String(_campaign_levels[record_index].get("chapter_id", ""))
-		if not seen.has(chapter_id):
-			seen.append(chapter_id)
-			if seen.size() - 1 == chapter_index:
-				return record_index
-	return 0
 
 
 func _handle_settings_tap(point: Vector2) -> void:
