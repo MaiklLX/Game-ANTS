@@ -99,3 +99,14 @@ The application foundation has also begun:
 The original campaign remains intact at 100 levels. Chapter selection uses the manifest's order and enters at the first level in each pack. The five-level picker remains navigation only.
 
 Latest implementation is on the existing feature branch and PR #12 remains Draft. No merge to main is authorized. CI must pass on the final checkpoint before an APK is offered as a new test build; physical Android QA remains separate.
+
+
+### Undo and terminal flow
+
+- Board, colony, and turn engine expose in-memory snapshots with compatibility checks.
+- The UI stores the state immediately before the latest committed turn.
+- Undo restores collected resources, squad positions and cargo, active route orders, day budget, turn count, and terminal outcome together.
+- Only the latest committed turn is undoable; a new level clears the snapshot.
+- Victory and day-expiry loss use a dedicated result overlay. The player can undo the terminal turn, continue to the next level, replay, choose another chapter, or return to the main menu.
+- Campaign completion remains recorded once achieved; undo changes the live board state but does not erase the player's historical completion record.
+- The Continue target advances after victory and returns to the current level if the player undoes that victory.
