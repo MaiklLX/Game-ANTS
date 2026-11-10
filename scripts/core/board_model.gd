@@ -178,3 +178,7 @@ func find_path(start_cell: Vector2i, goal_cell: Vector2i) -> Array[Vector2i]:
 		path.push_front(cursor)
 		cursor = came_from[cursor]
 	return path
+
+
+func _failure(message: String) -> Dictionary:
+	return {"valid": false, "errors": [message]}
