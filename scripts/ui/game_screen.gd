@@ -262,7 +262,8 @@ func _draw_main_menu(font: Font) -> void:
 	_menu_new_rect = Rect2(button_x, button_y + button_height + button_gap, button_width, button_height)
 	_menu_chapters_rect = Rect2(button_x, button_y + (button_height + button_gap) * 2.0, button_width, button_height)
 	_menu_settings_rect = Rect2(button_x, button_y + (button_height + button_gap) * 3.0, button_width, button_height)
-	var has_saved_progress := _progress_store != null and (_progress_store.get_completed_count() > 0 or _progress_store.is_tutorial_completed() or _progress_store.get_last_selected_level_id() != String(_campaign_levels[0].get("id", "")))
+	var first_level_id := String(_campaign_levels[0].get("id", "")) if not _campaign_levels.is_empty() else ""
+	var has_saved_progress := _progress_store != null and (_progress_store.get_completed_count() > 0 or _progress_store.is_tutorial_completed() or _progress_store.get_last_selected_level_id() != first_level_id)
 	_draw_shell_button(font, _menu_continue_rect, "ПРОДОЛЖИТЬ" if has_saved_progress else "НАЧАТЬ ИГРУ", true)
 	_draw_shell_button(font, _menu_new_rect, "НАЧАТЬ СНАЧАЛА")
 	_draw_shell_button(font, _menu_chapters_rect, "ГЛАВЫ КАМПАНИИ")
