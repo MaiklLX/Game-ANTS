@@ -502,7 +502,7 @@ func _trigger_haptic(duration_ms: int) -> void:
 
 
 func _draw_header(font: Font) -> void:
-	draw_string(font, Vector2(42, 62), "МУРАВЕЙНИК", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
+	draw_string(font, Vector2(42, 62), "МУРАВЬИШКИ", HORIZONTAL_ALIGNMENT_LEFT, -1, ResponsiveLayoutScript.font_size(32, _ui_scale), COLOR_GOLD)
 	var chapter_title := String(_campaign_levels[_level_index].get("chapter_title", "КАМПАНИЯ")) if not _campaign_levels.is_empty() else "ДАННЫЕ КАМПАНИИ"
 	draw_string(font, Vector2(44, 91), "ПОЛЕВЫЕ ЗАМЕТКИ  /  " + _chapter_title_ru(chapter_title), HORIZONTAL_ALIGNMENT_LEFT, 420, ResponsiveLayoutScript.font_size(13, _ui_scale), COLOR_MUTED)
 	var control_size := ResponsiveLayoutScript.minimum_touch_extent(_ui_scale, 64.0)
