@@ -473,6 +473,8 @@ func _undo_last_turn() -> void:
 		queue_redraw()
 		return
 	_undo_snapshot.clear()
+	if _progress_store != null and not _campaign_levels.is_empty():
+		_progress_store.set_last_selected_level(String(_campaign_levels[_level_index]["id"]))
 	_is_animating = false
 	_turn_animation_progress = 1.0
 	_turn_animation_moves.clear()
