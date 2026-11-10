@@ -8,6 +8,10 @@ on:
     branches:
       - "feat/kt-015-strategic-puzzle"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
