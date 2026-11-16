@@ -10,8 +10,8 @@ const GAP := 4.0
 const BOARD_TOP := 330.0
 const NEST := Vector2(360.0, 842.0)
 const BUTTONS := {"teal": Rect2(36, 970, 204, 142), "coral": Rect2(258, 970, 204, 142), "gold": Rect2(480, 970, 204, 142)}
-const PAUSE := Rect2(38, 48, 116, 54)
-const SPEED := Rect2(566, 48, 116, 54)
+const PAUSE := Rect2(38, 178, 116, 54)
+const SPEED := Rect2(566, 178, 116, 54)
 const BG := Color("#111b1b")
 const PANEL := Color("#1b2929")
 const EDGE := Color("#334848")
@@ -153,7 +153,7 @@ func _draw_header(font: Font) -> void:
 	draw_string(font, Vector2(42, 139), "СОБИРАЙ МОЗАИКУ ЦВЕТ ЗА ЦВЕТОМ", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, MUTED)
 	_pill(PAUSE, "Ⅱ  ПАУЗА" if not paused else "▶  ИГРАТЬ", font)
 	_pill(SPEED, "×2" if speed > 1.5 else "×1", font)
-	draw_line(Vector2(38, 164), Vector2(682, 164), EDGE, 2.0)
+	draw_line(Vector2(38, 250), Vector2(682, 250), EDGE, 2.0)
 
 
 func _draw_board(font: Font) -> void:
@@ -168,7 +168,7 @@ func _draw_board(font: Font) -> void:
 		draw_rect(rect, COLORS[color_name], true)
 		draw_rect(Rect2(rect.position + Vector2(3, 3), Vector2(CELL - 6, 4)), Color(1, 1, 1, 0.16), true, 2.0)
 	draw_string(font, Vector2(40, 294), "ПИКСЕЛЬНАЯ МОЗАИКА", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, MUTED)
-	draw_string(font, Vector2(680, 294), "%d ОСТАЛОСЬ" % board.get_remaining_count(), HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, TXT)
+	draw_string(font, Vector2(40, 294), "%d ОСТАЛОСЬ" % board.get_remaining_count(), HORIZONTAL_ALIGNMENT_RIGHT, 640, 14, TXT)
 
 
 func _draw_progress(font: Font) -> void:
@@ -179,7 +179,7 @@ func _draw_progress(font: Font) -> void:
 	draw_rect(Rect2(40, 730, 640, 12), Color("#263737"), true, 6.0)
 	draw_rect(Rect2(40, 730, 640.0 * ratio, 12), Color("#67c8a9"), true, 6.0)
 	draw_string(font, Vector2(40, 766), "ПРОГРЕСС", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, MUTED)
-	draw_string(font, Vector2(680, 766), "%d%%" % int(round(ratio * 100.0)), HORIZONTAL_ALIGNMENT_RIGHT, -1, 15, TXT)
+	draw_string(font, Vector2(40, 766), "%d%%" % int(round(ratio * 100.0)), HORIZONTAL_ALIGNMENT_RIGHT, 640, 15, TXT)
 
 
 func _draw_nest(font: Font) -> void:
@@ -214,7 +214,7 @@ func _draw_controls(font: Font) -> void:
 		var tint: Color = COLORS[color]
 		var enabled := int(stock[color]) > 0 and not paused and not won
 		draw_rect(rect, Color("#233434") if enabled else Color("#1a2828"), true)
-		draw_rect(rect, Color(tint, 0.85) if enabled else EDGE, false, 14.0, true)
+		draw_rect(rect, Color(tint, 0.85) if enabled else EDGE, false, 2.0, true)
 		draw_circle(rect.position + Vector2(26, 29), 7, tint)
 		draw_string(font, rect.position + Vector2(46, 34), String(LABELS[color]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, TXT if enabled else MUTED)
 		draw_string(font, rect.position + Vector2(20, 83), "%02d" % int(stock[color]), HORIZONTAL_ALIGNMENT_LEFT, -1, 32, tint if enabled else MUTED)
@@ -226,13 +226,13 @@ func _draw_controls(font: Font) -> void:
 
 func _pill(rect: Rect2, label: String, font: Font) -> void:
 	draw_rect(rect, PANEL, true)
-	draw_rect(rect, EDGE, false, 12.0, true)
+	draw_rect(rect, EDGE, false, 2.0, true)
 	draw_string(font, rect.position + Vector2(rect.size.x * 0.5, 34), label, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 8, 15, TXT)
 
 
 func _draw_victory(font: Font) -> void:
 	draw_rect(Rect2(42, 470, 636, 280), Color("#142321"), true)
-	draw_rect(Rect2(42, 470, 636, 280), Color("#67c8a9"), false, 24.0, true)
+	draw_rect(Rect2(42, 470, 636, 280), Color("#67c8a9"), false, 2.0, true)
 	draw_string(font, Vector2(360, 560), "МОЗАИКА ОЖИЛА!", HORIZONTAL_ALIGNMENT_CENTER, -1, 30, TXT)
 	draw_string(font, Vector2(360, 606), "Все пиксели очищены", HORIZONTAL_ALIGNMENT_CENTER, -1, 17, MUTED)
 	draw_string(font, Vector2(360, 686), "КОСНИСЬ, ЧТОБЫ СЫГРАТЬ ЕЩЁ", HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color("#67c8a9"))
