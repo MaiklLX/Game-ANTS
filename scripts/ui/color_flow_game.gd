@@ -160,12 +160,12 @@ func _draw_board(font: Font) -> void:
 	var width := float(board.width) * CELL + float(board.width - 1) * GAP
 	var height := float(board.height) * CELL + float(board.height - 1) * GAP
 	var frame := Rect2((720.0 - width) * 0.5 - 20, BOARD_TOP - 20, width + 40, height + 40)
-	draw_rect(frame, Color("#172625"), true, 18.0)
+	draw_rect(frame, Color("#172625"), true)
 	draw_rect(frame, EDGE, false, 2.0, true)
 	for cell in board.pixels:
 		var color_name := String(board.pixels[cell])
 		var rect := Rect2(_cell_center(cell) - Vector2(CELL, CELL) * 0.5, Vector2(CELL, CELL))
-		draw_rect(rect, COLORS[color_name], true, 5.0)
+		draw_rect(rect, COLORS[color_name], true)
 		draw_rect(Rect2(rect.position + Vector2(3, 3), Vector2(CELL - 6, 4)), Color(1, 1, 1, 0.16), true, 2.0)
 	draw_string(font, Vector2(40, 294), "ПИКСЕЛЬНАЯ МОЗАИКА", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, MUTED)
 	draw_string(font, Vector2(680, 294), "%d ОСТАЛОСЬ" % board.get_remaining_count(), HORIZONTAL_ALIGNMENT_RIGHT, -1, 14, TXT)
@@ -213,7 +213,7 @@ func _draw_controls(font: Font) -> void:
 		var rect: Rect2 = BUTTONS[color]
 		var tint: Color = COLORS[color]
 		var enabled := int(stock[color]) > 0 and not paused and not won
-		draw_rect(rect, Color("#233434") if enabled else Color("#1a2828"), true, 14.0)
+		draw_rect(rect, Color("#233434") if enabled else Color("#1a2828"), true)
 		draw_rect(rect, Color(tint, 0.85) if enabled else EDGE, false, 14.0, true)
 		draw_circle(rect.position + Vector2(26, 29), 7, tint)
 		draw_string(font, rect.position + Vector2(46, 34), String(LABELS[color]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, TXT if enabled else MUTED)
@@ -225,13 +225,13 @@ func _draw_controls(font: Font) -> void:
 
 
 func _pill(rect: Rect2, label: String, font: Font) -> void:
-	draw_rect(rect, PANEL, true, 12.0)
+	draw_rect(rect, PANEL, true)
 	draw_rect(rect, EDGE, false, 12.0, true)
 	draw_string(font, rect.position + Vector2(rect.size.x * 0.5, 34), label, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x - 8, 15, TXT)
 
 
 func _draw_victory(font: Font) -> void:
-	draw_rect(Rect2(42, 470, 636, 280), Color("#142321"), true, 24.0)
+	draw_rect(Rect2(42, 470, 636, 280), Color("#142321"), true)
 	draw_rect(Rect2(42, 470, 636, 280), Color("#67c8a9"), false, 24.0, true)
 	draw_string(font, Vector2(360, 560), "МОЗАИКА ОЖИЛА!", HORIZONTAL_ALIGNMENT_CENTER, -1, 30, TXT)
 	draw_string(font, Vector2(360, 606), "Все пиксели очищены", HORIZONTAL_ALIGNMENT_CENTER, -1, 17, MUTED)
