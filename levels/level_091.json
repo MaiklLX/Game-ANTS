@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "colony_091",
+  "title": "First Light at the Nest",
+  "objective": "A narrow trunk gate leads to a paired amber harvest, while a teal seed waits on the near side.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 1,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 4,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "obstacle"
+    }
+  ]
+}

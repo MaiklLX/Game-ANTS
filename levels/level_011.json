@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "meadow_011",
+  "title": "The Long Amber Shift",
+  "objective": "Carry the two amber seeds from opposite ends of the far bank in one full-capacity trip, then return for the near-side scouts.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_gatherers",
+      "color": "teal",
+      "capacity": 1
+    },
+    {
+      "id": "coral_scouts",
+      "color": "coral",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "type": "obstacle"
+    }
+  ]
+}

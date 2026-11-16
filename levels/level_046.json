@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "root_046",
+  "title": "The Stair of Roots",
+  "objective": "Climb through the first opening, then descend through the second to reach the far harvest.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 1,
+  "squads": [
+    {
+      "id": "amber_scouts",
+      "color": "amber",
+      "capacity": 1
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "type": "obstacle"
+    }
+  ]
+}

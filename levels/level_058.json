@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "root_058",
+  "title": "The Heartwood Pocket",
+  "objective": "A single open notch reaches the resource tucked inside a ring of heartwood.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 1,
+  "squads": [
+    {
+      "id": "amber_scouts",
+      "color": "amber",
+      "capacity": 1
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    },
+    {
+      "id": "coral_scouts",
+      "color": "coral",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 3,
+      "y": 2,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
+    }
+  ]
+}

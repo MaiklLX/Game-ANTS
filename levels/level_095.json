@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "colony_095",
+  "title": "The Shared Passage",
+  "objective": "Amber and teal full loads must pass through the same narrow gate, with only one squad allowed in the field.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 1,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_carriers",
+      "color": "teal",
+      "capacity": 2
+    }
+  ],
+  "tiles": [
+    {
+      "x": 4,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "obstacle"
+    }
+  ]
+}

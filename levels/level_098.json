@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "id": "colony_098",
+  "title": "Four Branches, One Nest",
+  "objective": "Four single-seed squads occupy four distinct branches; two slots demand a precise rotation plan.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "amber_scouts",
+      "color": "amber",
+      "capacity": 1
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    },
+    {
+      "id": "coral_scouts",
+      "color": "coral",
+      "capacity": 1
+    },
+    {
+      "id": "violet_scouts",
+      "color": "violet",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 1,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "obstacle"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "id": "colony_100",
+  "title": "The Colony Heart",
+  "objective": "Eight seeds lie in paired pockets on opposite sides of one root gate. Every two-seed carrier must cross the shared passage and return before the colony is complete.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 3,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "teal_carriers",
+      "color": "teal",
+      "capacity": 2
+    },
+    {
+      "id": "coral_carriers",
+      "color": "coral",
+      "capacity": 2
+    },
+    {
+      "id": "violet_carriers",
+      "color": "violet",
+      "capacity": 2
+    }
+  ],
+  "tiles": [
+    {
+      "x": 1,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "type": "resource",
+      "color": "violet"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 A mobile-first ant-colony logic puzzle game.
 
 **Working title:** ANTWORKS  
-**Status:** Concept / foundation  
+**Status:** Godot project bootstrap in progress  
 **Repository:** MaiklLX/Game-ANTS
 
 ## Vision
@@ -29,7 +29,9 @@ Build an original, polished mobile puzzle game inspired by the broad gameplay sp
 
 ## Current milestone
 
-**KT-001 — Project foundation and game direction**
+**KT-002 — Godot bootstrap and graybox foundation**
+
+The project baseline is pinned to **Godot 4.7.2-stable (Standard)**. See [Local Setup](docs/SETUP.md) for installation and validation instructions.
 
 See:
 - [Game Design](docs/GAME_DESIGN.md)
@@ -39,4 +41,4 @@ See:
 
 ## Current status
 
-No playable build exists yet. The repository is being initialized with the concept, technical direction, development rules, and GitHub workflow before implementation begins.
+The Godot project skeleton and launch placeholder are being developed on a feature branch. An internal Android Debug export preset and CI APK workflow are now configured; the first successful export and physical-device validation are still pending. The current launch scene remains a technical placeholder, not the finished game.

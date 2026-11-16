@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "root_034",
+  "title": "The Root Weave",
+  "objective": "A pair of narrow turns separates the two chambers from the nest.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "amber_scouts",
+      "color": "amber",
+      "capacity": 1
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    },
+    {
+      "id": "coral_scouts",
+      "color": "coral",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 2,
+      "y": 0,
+      "type": "obstacle"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "obstacle"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "teal"
+    }
+  ]
+}

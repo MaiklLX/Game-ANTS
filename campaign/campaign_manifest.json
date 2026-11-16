@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "campaign_id": "antworks_main",
+  "title": "ANTWORKS — The Colony Campaign",
+  "packs": [
+    {
+      "file": "res://campaign/packs/meadow/pack.json"
+    },
+    {
+      "file": "res://campaign/packs/root_labyrinth/pack.json"
+    },
+    {
+      "file": "res://campaign/packs/amber_orchard/pack.json"
+    },
+    {
+      "file": "res://campaign/packs/colony_heart/pack.json"
+    }
+  ]
+}

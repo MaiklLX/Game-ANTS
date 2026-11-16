@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "amber_orchard",
+  "title": "The Amber Orchard",
+  "description": "Plan efficient multi-seed expeditions, match carrier capacity to clustered harvests, and coordinate specialized squads.",
+  "levels": [
+    {
+      "id": "orchard_061",
+      "file": "res://levels/level_061.json"
+    },
+    {
+      "id": "orchard_062",
+      "file": "res://levels/level_062.json"
+    },
+    {
+      "id": "orchard_063",
+      "file": "res://levels/level_063.json"
+    },
+    {
+      "id": "orchard_064",
+      "file": "res://levels/level_064.json"
+    },
+    {
+      "id": "orchard_065",
+      "file": "res://levels/level_065.json"
+    },
+    {
+      "id": "orchard_066",
+      "file": "res://levels/level_066.json"
+    },
+    {
+      "id": "orchard_067",
+      "file": "res://levels/level_067.json"
+    },
+    {
+      "id": "orchard_068",
+      "file": "res://levels/level_068.json"
+    },
+    {
+      "id": "orchard_069",
+      "file": "res://levels/level_069.json"
+    },
+    {
+      "id": "orchard_070",
+      "file": "res://levels/level_070.json"
+    },
+    {
+      "id": "orchard_071",
+      "file": "res://levels/level_071.json"
+    },
+    {
+      "id": "orchard_072",
+      "file": "res://levels/level_072.json"
+    },
+    {
+      "id": "orchard_073",
+      "file": "res://levels/level_073.json"
+    },
+    {
+      "id": "orchard_074",
+      "file": "res://levels/level_074.json"
+    },
+    {
+      "id": "orchard_075",
+      "file": "res://levels/level_075.json"
+    },
+    {
+      "id": "orchard_076",
+      "file": "res://levels/level_076.json"
+    },
+    {
+      "id": "orchard_077",
+      "file": "res://levels/level_077.json"
+    },
+    {
+      "id": "orchard_078",
+      "file": "res://levels/level_078.json"
+    },
+    {
+      "id": "orchard_079",
+      "file": "res://levels/level_079.json"
+    },
+    {
+      "id": "orchard_080",
+      "file": "res://levels/level_080.json"
+    },
+    {
+      "id": "orchard_081",
+      "file": "res://levels/level_081.json"
+    },
+    {
+      "id": "orchard_082",
+      "file": "res://levels/level_082.json"
+    },
+    {
+      "id": "orchard_083",
+      "file": "res://levels/level_083.json"
+    },
+    {
+      "id": "orchard_084",
+      "file": "res://levels/level_084.json"
+    },
+    {
+      "id": "orchard_085",
+      "file": "res://levels/level_085.json"
+    },
+    {
+      "id": "orchard_086",
+      "file": "res://levels/level_086.json"
+    },
+    {
+      "id": "orchard_087",
+      "file": "res://levels/level_087.json"
+    },
+    {
+      "id": "orchard_088",
+      "file": "res://levels/level_088.json"
+    },
+    {
+      "id": "orchard_089",
+      "file": "res://levels/level_089.json"
+    },
+    {
+      "id": "orchard_090",
+      "file": "res://levels/level_090.json"
+    }
+  ]
+}

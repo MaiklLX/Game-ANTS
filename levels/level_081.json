@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "orchard_081",
+  "title": "The Bent Orchard",
+  "objective": "A squared root bend separates two amber seeds from a coral pocket; use the open side of the grove to bring both loads home.",
+  "width": 6,
+  "height": 5,
+  "start": [
+    0,
+    2
+  ],
+  "goal": [
+    5,
+    0
+  ],
+  "deployment_slots": 2,
+  "squads": [
+    {
+      "id": "amber_carriers",
+      "color": "amber",
+      "capacity": 2
+    },
+    {
+      "id": "coral_scouts",
+      "color": "coral",
+      "capacity": 1
+    },
+    {
+      "id": "teal_scouts",
+      "color": "teal",
+      "capacity": 1
+    }
+  ],
+  "tiles": [
+    {
+      "x": 5,
+      "y": 0,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "type": "resource",
+      "color": "amber"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "resource",
+      "color": "coral"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "type": "resource",
+      "color": "teal"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "obstacle"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "type": "obstacle"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "obstacle"
+    }
+  ]
+}
