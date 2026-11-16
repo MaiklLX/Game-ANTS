@@ -12,6 +12,7 @@ func _initialize() -> void:
 	_check(board.get_remaining_count("teal") > 0, "mosaic should contain teal pixels")
 	_check(board.get_remaining_count("coral") > 0, "mosaic should contain coral pixels")
 	_check(board.get_remaining_count("gold") > 0, "mosaic should contain gold pixels")
+	var total_before := board.get_remaining_count()
 	var teal_cells := board.get_cells_for_color("teal")
 	_check(not teal_cells.is_empty(), "teal target list should not be empty")
 	if not teal_cells.is_empty():
@@ -19,7 +20,7 @@ func _initialize() -> void:
 		_check(not board.clear_pixel(first, "coral"), "wrong-color ant must not clear a pixel")
 		_check(board.clear_pixel(first, "teal"), "matching ant should clear a pixel")
 		_check(not board.clear_pixel(first, "teal"), "cleared pixel cannot be cleared twice")
-	_check(board.get_remaining_count() == int(board.initial_counts.values().reduce(func(a, b): return int(a) + int(b), 0)) - 1, "remaining count should decrease exactly once")
+	_check(board.get_remaining_count() == total_before - 1, "remaining count should decrease exactly once")
 	for cell in board.get_cells_for_color("teal").duplicate():
 		_check(board.clear_pixel(cell, "teal"), "all remaining teal pixels should be clearable by matching ants")
 	for cell in board.get_cells_for_color("coral").duplicate():
