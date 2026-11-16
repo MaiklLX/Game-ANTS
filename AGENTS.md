@@ -7,12 +7,10 @@
 - If an issue conflicts with an approved document, stop and report the conflict instead of silently choosing.
 
 ## Branch and PR policy
-- Never commit directly to `main`.
-- Work only on a dedicated branch for the assigned issue, e.g. `feat/issue-12-short-description`.
-- Keep changes scoped to the issue.
-- Open a pull request to `main`; explain behavior, files changed, tests run, risks, and screenshots/video when visual behavior changes.
-- Never merge a pull request. A human owner reviews and merges.
-- Do not rewrite history or force-push unless explicitly authorized.
+- Default policy: work on a dedicated branch and open a pull request; never merge a pull request.
+- Exception: when the project owner explicitly authorizes direct iteration on `main`, make small, reversible commits there so the owner can test immediately.
+- Keep meaningful checkpoints and preserve prior implementations on their existing branches/PRs.
+- Never rewrite history or force-push unless explicitly authorized.
 
 ## Before coding
 1. Read this file, README, and the relevant design/technical documents.
