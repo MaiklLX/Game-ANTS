@@ -2,19 +2,19 @@ extends RefCounted
 ## Deterministic pixel-board state for the continuous color-flow prototype.
 
 const DEFAULT_PATTERN: Array[String] = [
-	"....TTT...TTT....",
-	"...TTTTT.TTTTT...",
-	"..TTTTTTTTTTTTT..",
-	".TTTTTTTTTTTTTTT.",
-	"TTTTTTTGT TTTTTTTT".replace(" ", ""),
-	"TTTTCCCTG TCCCTTTT".replace(" ", ""),
-	".TTTCCCTGCCCTTT.",
-	"..TTTTTTGTTTTT..",
-	"...TTTTTGTTTT...",
-	"....TTTTGTTT....",
-	".....TTT.TTT.....",
-	"......T...T......",
-	"......T...T......"
+	"....TTT...TTT.....",
+	"...TTTTT.TTTTT....",
+	"..TTTTTTTTTTTTT...",
+	".TTTTTTTTTTTTTTT..",
+	"TTTTTTTGTTTTTTTTT",
+	"TTTTCCCTGTCCCTTTT",
+	".TTTCCCTGCCCTTT..",
+	"..TTTTTTGTTTTT...",
+	"...TTTTTGTTTT....",
+	"....TTTTGTTT.....",
+	".....TTT.TTT......",
+	"......T...T.......",
+	"......T...T......."
 ]
 
 const COLOR_VALUES := {
