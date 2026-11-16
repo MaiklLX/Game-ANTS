@@ -8,6 +8,7 @@ on:
       - "feat/**"
   push:
     branches:
+      - main
       - "feat/**"
       - "foundation/**"
   workflow_dispatch:
@@ -41,6 +42,9 @@ jobs:
 
       - name: Run deterministic core tests
         run: timeout 60s godot --headless --path . --script res://tests/test_board_model.gd
+
+      - name: Run continuous color-flow board tests
+        run: timeout 60s godot --headless --path . --script res://tests/test_color_flow_board.gd
 
       - name: Run level data validation tests
         run: timeout 60s godot --headless --path . --script res://tests/test_level_definition.gd
